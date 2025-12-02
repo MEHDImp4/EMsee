@@ -83,7 +83,7 @@ ProjetJS/
 
 ### 1. Cloner le dépôt
 ```bash
-git clone <url-du-dépôt>
+git clone https://github.com/MEHDImp4/ProjetJS.git
 cd ProjetJS
 ```
 
@@ -173,13 +173,6 @@ npm run build
 cd backend
 npm run build
 ```
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues !
-
-1. Ouvrir une issue pour discuter d'une fonctionnalité ou d'un bug
-2. Proposer une pull request claire et documentée
 
 ## 📄 Licence
 
@@ -353,23 +346,6 @@ JWT_SECRET=...
 REACT_APP_API_URL=http://localhost:5000
 ```
 
-## **Contribution**
-
-- Ouvrir une issue pour discuter d'une fonctionnalité ou d'un bug.
-- Envoyer une pull request claire et ciblée.
-
 ## **Licence**
 
 Ce projet est sous licence **MIT**.
-
----
-
-## **Notes UI/UX (EMSISPHERE)**
-
-Un cahier de style détaillé est inclus ci-dessous dans le dépôt pour guider la conception (couleurs EMSI, layout 3-colonnes, badges, etc.). Il sert de base pour l'interface et la priorisation des tâches UI.
-
-``` 
-Pour toute modification majeure du README, préférez des PR séparées et une issue associée.
-```
-
-```
