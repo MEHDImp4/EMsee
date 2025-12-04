@@ -1,56 +1,55 @@
-# Copilot Instructions for ProjetJS
+# Copilot Instructions for ProjetJS (EMSISPHERE)
 
-## Project Overview
-- **ProjetJS** is a fullstack Twitter clone with a React/TypeScript frontend and a Node.js/Express/TypeScript backend.
-- The frontend and backend are in separate folders: `frontend/` and `backend/`.
-- The app supports user authentication, posting tweets (with optional images), following/unfollowing, likes, retweets, and user profiles.
+## Project Context
+"EMSISPHERE" is a Twitter-like social network for EMSI students and staff.
+- **Stack**: React 18 (Frontend), Node.js/Express (Backend), MySQL (Database).
+- **Language**: TypeScript (Strict mode) for both ends.
 
-## Architecture & Data Flow
-- **Frontend** (`frontend/src/`):
-  - Uses React 18, React Router, and Axios for API calls.
-  - Key folders: `components/` (with `common/` and `layout/`), `pages/`, `contexts/`, `hooks/`, `services/` (API logic), `types/`, `utils/`.
-  - State management is handled via React Contexts and custom hooks.
-  - API endpoints are configured via `REACT_APP_API_URL` in `.env`.
-- **Backend** (`backend/src/`):
-  - Uses Express.js, TypeScript, and JWT for authentication.
-  - Key folders: `controllers/` (route logic), `middlewares/` (auth, validation), `models/` (data models), `routes/`, `services/` (business logic), `types/`, `utils/`.
-  - Environment variables are set in `.env` (see `.env.example`).
+## Architecture & Code Organization
 
-## Developer Workflows
-- **Install dependencies:**
-  - `cd frontend && npm install`
-  - `cd backend && npm install`
-- **Run in development:**
-  - Frontend: `npm start` (or `npm run dev`)
-  - Backend: `npm run dev`
-- **Build for production:**
-  - Frontend: `npm run build`
-  - Backend: `npm run build`
-- **Lint/Format:**
-  - `npm run lint` and `npm run format` in both frontend and backend
-- **Testing:**
-  - Frontend: `npm test`
-  - Backend: (add tests if present)
+### Backend (`backend/`)
+- **Pattern**: Controller-Service-Layered architecture.
+- **Directory Structure**:
+  - `src/controllers/`: Handle HTTP requests, validate input, send responses. **No business logic here.**
+  - `src/services/`: Implement core business logic and database interactions.
+  - `src/routes/`: Define API endpoints and map them to controllers.
+  - `src/middlewares/`: Authentication (JWT), error handling, request validation.
+  - `src/models/` & `src/types/`: TypeScript interfaces and database models.
+- **Key Principles**:
+  - Keep controllers "thin".
+  - Centralize error handling.
 
-## Project Conventions
-- **TypeScript everywhere**: All code is in TypeScript, types are defined in `types/` folders.
-- **API communication**: Use Axios in frontend, endpoints are defined in `services/`.
-- **Component structure**: Prefer splitting into `common/` (reusable) and `layout/` (structural) components.
-- **Environment config**: Always copy `.env.example` to `.env` and fill required values.
-- **Backend structure**: Keep business logic in `services/`, route logic in `controllers/`, and validation/auth in `middlewares/`.
+### Frontend (`frontend/`)
+- **Directory Structure**:
+  - `src/components/`: Reusable UI elements (e.g., `TweetCard`, `Sidebar`, `Composer`).
+  - `src/pages/`: Full page views mapped to routes.
+  - `src/services/`: Axios instances and API call functions.
+  - `src/contexts/`: Global state (AuthContext, ThemeContext).
+  - `src/hooks/`: Custom hooks for logic reuse.
+- **Design System**:
+  - **Colors**: Primary EMSI Green (`#006837`), Accent Orange.
+  - **Layout**: 3-column responsive (Sidebar, Feed, Widgets).
+  - **Features**: Code highlighting (PrismJS/Highlight.js), Polls, Media support.
 
-## Integration Points
-- **Frontend <-> Backend**: Communicate via REST API, base URL from `.env`.
-- **Authentication**: JWT-based, handled in backend, token stored in frontend (usually localStorage or context).
-- **Real-time features**: If implemented, use WebSocket/Socket.IO (see bonus features in README).
+## Development Workflow
+1. **Environment**:
+   - Ensure `.env` exists in both `backend/` and `frontend/` (copied from `.env.example`).
+   - Backend runs on port 5000, Frontend on port 3000.
+2. **Commands**:
+   - `npm run dev`: Start development server (backend).
+   - `npm start`: Start React app (frontend).
+   - `npm run build`: Compile TypeScript/build for production.
+   - `npm run lint` / `npm run format`: Ensure code quality.
 
-## Examples
-- To add a new API call: create a function in `frontend/src/services/`, use Axios, and type responses.
-- To add a new backend route: define in `backend/src/routes/`, implement logic in `controllers/`, and business logic in `services/`.
+## Coding Conventions
+- **TypeScript**: Use explicit types for all props, state, and API responses. Avoid `any`.
+- **API Integration**:
+  - Define types for all API requests and responses in a shared or dedicated types file.
+  - Handle loading and error states explicitly in UI components.
+- **Styling**: Follow the established pattern (CSS Modules or standard CSS) to maintain the EMSI theme.
+- **Comments**: Document complex logic, especially in `services/`.
 
-## References
-- See `README.md` for more details on structure, scripts, and environment variables.
-- Example environment files: `frontend/.env.example`, `backend/.env.example`.
-
----
-For any unclear conventions or missing documentation, consult the `README.md` or ask for clarification.
+## Specific Features to Keep in Mind
+- **User Roles**: Student (🎓), Professor (👨‍🏫), Admin (🛡️), BDE (⚙️).
+- **Feed**: "For You" vs "My Class" filtering.
+- **Code Snippets**: Special rendering for code blocks in posts.

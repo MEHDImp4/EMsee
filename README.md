@@ -1,36 +1,31 @@
 # ProjetJS — Clone Twitter (EMSI) 🐦⚙️
 
-> Fullstack éducatif : Frontend React + TypeScript et Backend Node.js/Express + TypeScript. Démo fonctionnelle d’un réseau social léger (posts texte/images, likes, retweets, follow, profils). 🚀
+> Projet fullstack éducatif : React + TypeScript côté frontend, Node.js/Express + TypeScript côté backend. Une mini-plateforme sociale avec posts texte/images, likes, retweets, follows, profils, notifications… le tout pensé pour l’apprentissage. 🚀
 
 ## Présentation 📚
-ProjetJS illustre une architecture moderne fullstack pour des besoins pédagogiques : authentification JWT, création/affichage de posts, interactions sociales et séparation frontend/backend. 🧩
+ProjetJS propose une architecture moderne et claire : authentification JWT, fil d’actualité personnalisé, interactions sociales et séparation nette frontend/backend. Le tout sert de support à des travaux pratiques pour étudiants.
 
-## Fonctionnalités principales ✨
-- 🔐 Authentification (inscription / connexion / JWT)
-- 📝 Publication de tweets : texte, image optionnelle, bloc code, sondage
-- 🧾 Fil d’actualité personnalisé (posts des personnes suivies)
-- ➕/➖ Follow / unfollow
-- ❤️ Likes, 🔁 retweets, 💬 commentaires
-- 👤 Profils utilisateurs (avatar, bio, liste de posts)
-- #️⃣ Hashtags, @️⃣ mentions
-- 🔔 Notifications temps réel (Socket.IO) — optionnel
-- 🌴 Mode « vacances » (désactivation notifications)
-- 🎵 Intégration Spotify (partage musique) — optionnel
-- 💻 Partage de snippet code avec coloration syntaxique
+## Fonctionnalités ✨
+- 🔐 Inscription / connexion / JWT  
+- 📝 Tweets (texte, image optionnelle, bloc code, sondage)  
+- 🧾 Feed personnalisé (personnes suivies)  
+- ➕/➖ Follow / unfollow  
+- ❤️ Likes — 🔁 Retweets — 💬 Commentaires  
+- 👤 Profils (avatar, bio, posts)  
+- #️⃣ Hashtags et @️⃣ mentions  
+- 🔔 Notifications temps réel (Socket.IO) — optionnel  
+- 🌴 Mode « vacances » (mute des notifications)  
+- 🎵 Partage musique (Spotify) — optionnel  
+- 💻 Snippets de code avec coloration syntaxique  
 
-## Technologies 🛠️
-- Frontend : React 18, React Router, Axios ⚛️
-- Backend : Node.js, Express, JWT 🔐
-- DB : MySQL (configurable selon besoin) 🗄️
+## Stack technique 🛠️
+- **Frontend** : React 18, React Router, Axios  
+- **Backend** : Node.js, Express, JWT  
+- **Base de données** : MySQL (configurable)
 
 ## Structure du dépôt 📂
-ProjetJS/
-- backend/ — serveur Express (controllers, routes, services, middlewares, models, types)
-- frontend/ — application React (components, pages, services, contexts, hooks, types)
-- README.md, LICENSE
-
-Arborescence (extrait)
 ```
+
 ProjetJS/
 ├─ backend/
 │  ├─ src/
@@ -41,58 +36,64 @@ ProjetJS/
 │  ├─ .env.example
 │  └─ package.json
 └─ README.md
-```
 
-## Installation & Lancement (développement) ⚙️
+````
 
-1. Cloner le dépôt
+## Installation & Lancement ⚙️
+
+### 1. Cloner
 ```bash
 git clone https://github.com/MEHDImp4/ProjetJS.git
 cd ProjetJS
-```
+````
 
-2. Backend
+### 2. Backend
+
 ```bash
 cd backend
 npm install
-# Linux/macOS
-cp .env.example .env
-# Windows PowerShell
-copy .env.example .env
-# remplir backend/.env
+cp .env.example .env   # ou 'copy .env.example .env' sous Windows
 npm run dev
 ```
 
-3. Frontend
+Remplir les variables dans `backend/.env`.
+
+### 3. Frontend
+
 ```bash
 cd frontend
 npm install
-cp .env.example .env     # ou `copy .env.example .env` sous PowerShell
-# remplir frontend/.env
+cp .env.example .env
 npm start
 ```
 
+Remplir `frontend/.env`.
+
 Accès :
-- Frontend : http://localhost:3000 🖥️
-- Backend : http://localhost:5000 (modifiable via .env) 🔁
+
+* Frontend : [http://localhost:3000](http://localhost:3000)
+* Backend : [http://localhost:5000](http://localhost:5000) (modifiable dans `.env`)
 
 ## Scripts utiles 🧩
-Backend (dans backend/)
-- npm run dev — démarre en dev (ts-node / nodemon) 🛠️
-- npm run build — compile TypeScript 📦
-- npm start — start production 🚀
-- npm run lint — ESLint ✅
-- npm run format — Prettier 🎨
 
-Frontend (dans frontend/)
-- npm start — dev 🏃
-- npm run build — build production 📦
-- npm test — tests ✅
-- npm run lint / npm run format 🧹
+### Backend
 
-## Configuration des variables d’environnement 🔑
+* `npm run dev` — développement (nodemon + ts-node)
+* `npm run build` — compilation TypeScript
+* `npm start` — mode production
+* `npm run lint` / `npm run format` — qualité du code
 
-backend/.env (exemple)
+### Frontend
+
+* `npm start` — développement
+* `npm run build` — build production
+* `npm test` — tests unitaires
+* `npm run lint` / `npm run format` — qualité du code
+
+## Variables d’environnement 🔑
+
+### backend/.env
+
 ```env
 PORT=5000
 NODE_ENV=development
@@ -100,40 +101,51 @@ DATABASE_URL=mysql://user:pass@host:port/dbname
 JWT_SECRET=your_jwt_secret
 ```
 
-frontend/.env (exemple)
+### frontend/.env
+
 ```env
 REACT_APP_API_URL=http://localhost:5000
 ```
 
-## Tests & build 🧪
-- Frontend : cd frontend && npm test
-- Build production :
-	- Frontend : cd frontend && npm run build
-	- Backend : cd backend && npm run build
+## Tests & Build 🧪
 
-## Design UI/UX — EMSISPHERE 🎨
-Objectif : clone Twitter adapté EMSI (étudiants, profs, admins)
-- Palette : primaire vert EMSI (#006837), accent orange pour alertes, thèmes light/dark 🌗
-- Layout : 3 colonnes (sidebar gauche, feed central, widgets droite) 🧭
-- Composants clés : Sidebar, Composer (texte/image/sondage/code), TweetCard, Rightbar (recherche, tendances, suggestions) 🧩
-- Spécificités scolaires : badges (🎓 étudiant, 👨‍🏫 prof, 🛡️ admin, ⚙️ BDE), filtrage « Pour vous » / « Ma Classe », affichage de code (PrismJS/Highlight.js) 💡
+* Tests frontend : `cd frontend && npm test`
+* Build production :
 
-Backlog priorisé 🔜 :
-1. Thème global + typographie
-2. Layout responsive 3→2→1 colonnes
-3. Routes et Sidebar de base
+  * `cd frontend && npm run build`
+  * `cd backend && npm run build`
+
+## UI/UX — EMSISPHERE 🎨
+
+Objectif graphique : un Twitter version EMSI, sobre et académique.
+
+* Couleurs : vert EMSI (#006837) + orange pour les alertes.
+* Thèmes light/dark.
+* Arrangement 3 colonnes (sidebar, feed, widgets).
+* Composants principaux : Sidebar, Composer, TweetCard, Rightbar.
+* Fonctions scolaires : badges (étudiant, prof, admin, BDE), onglets « Pour vous » / « Ma Classe », affichage code (PrismJS/Highlight.js).
+
+### Backlog priorisé
+
+1. Thème & typographie
+2. Responsive (3 → 2 → 1 colonnes)
+3. Routing + Sidebar
 4. Composer (UI d’abord)
-5. TweetCard (UI puis API)
-6. Rightbar (mock → API)
+5. TweetCard
+6. Rightbar
 7. Tabs « Pour vous » / « Ma Classe »
 
 ## Contribution 🤝
-- Copier .env.example dans chaque dossier et remplir les variables.
-- Respecter TypeScript partout, organiser la logique métier dans services/, routes dans controllers/, validations/middlewares séparés.
-- Voir README.md racine pour conventions et workflows (install, lint, format).
+
+* Copier `.env.example` dans chaque dossier.
+* Respecter TypeScript, séparer logique métier (services), contrôleurs (routes), middlewares et validations.
+* Voir le README racine pour workflow complet (lint, format, conventions).
 
 ## Licence 📜
+
 MIT — voir fichier LICENSE.
 
---- 
-Pour toute précision sur une section (API, modèles, endpoints, contrats TypeScript), indiquer la partie à détailler. ✉️
+```
+
+Si tu veux une version encore plus courte, ou avec des badges GitHub (build, licence, tech stack), je peux t’en préparer une autre.
+```
