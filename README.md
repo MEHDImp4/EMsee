@@ -1,351 +1,139 @@
-# ProjetJS — Clône de Twitter
+# ProjetJS — Clone Twitter (EMSI) 🐦⚙️
 
-> Projet fullstack : Frontend React/TypeScript & Backend Node.js/Express/TypeScript
+> Fullstack éducatif : Frontend React + TypeScript et Backend Node.js/Express + TypeScript. Démo fonctionnelle d’un réseau social léger (posts texte/images, likes, retweets, follow, profils). 🚀
 
-## 📋 Présentation
+## Présentation 📚
+ProjetJS illustre une architecture moderne fullstack pour des besoins pédagogiques : authentification JWT, création/affichage de posts, interactions sociales et séparation frontend/backend. 🧩
 
-ProjetJS est une application web inspirée de Twitter permettant aux utilisateurs de publier des tweets (texte et images), de suivre d'autres profils, d'aimer et de retweeter des publications, et de gérer leur profil. Ce projet vise à illustrer une architecture moderne fullstack avec React, TypeScript et Node.js.
+## Fonctionnalités principales ✨
+- 🔐 Authentification (inscription / connexion / JWT)
+- 📝 Publication de tweets : texte, image optionnelle, bloc code, sondage
+- 🧾 Fil d’actualité personnalisé (posts des personnes suivies)
+- ➕/➖ Follow / unfollow
+- ❤️ Likes, 🔁 retweets, 💬 commentaires
+- 👤 Profils utilisateurs (avatar, bio, liste de posts)
+- #️⃣ Hashtags, @️⃣ mentions
+- 🔔 Notifications temps réel (Socket.IO) — optionnel
+- 🌴 Mode « vacances » (désactivation notifications)
+- 🎵 Intégration Spotify (partage musique) — optionnel
+- 💻 Partage de snippet code avec coloration syntaxique
 
-## ✨ Fonctionnalités principales
+## Technologies 🛠️
+- Frontend : React 18, React Router, Axios ⚛️
+- Backend : Node.js, Express, JWT 🔐
+- DB : MySQL (configurable selon besoin) 🗄️
 
-- 🔐 Authentification (inscription, connexion, déconnexion) via JWT
-- 📝 Publication de tweets (texte, image optionnelle)
-- 📰 Fil d'actualité personnalisé (posts des utilisateurs suivis)
-- 👥 Système de follow/unfollow
-- ❤️ Likes et retweets
-- 👤 Profils utilisateurs (bio, avatar, liste de tweets)
+## Structure du dépôt 📂
+ProjetJS/
+- backend/ — serveur Express (controllers, routes, services, middlewares, models, types)
+- frontend/ — application React (components, pages, services, contexts, hooks, types)
+- README.md, LICENSE
 
-### 🎁 Fonctionnalités bonus
-
-- #️⃣ Hashtags et mentions
-- 🔔 Notifications en temps réel (WebSocket/Socket.IO)
-- 🏖️ Mode « vacances » (désactivation notifications)
-- 🎵 Intégration Spotify (partage de musique)
-
-## 🛠️ Technologies utilisées
-
-### Frontend
-- React 18, TypeScript
-- React Router
-- Axios (requêtes API)
-- Context API & hooks personnalisés
-
-### Backend
-- Node.js, Express.js, TypeScript
-- JWT (authentification)
-- CORS, dotenv
-- Base de données (PostgreSQL, MongoDB, etc.)
-
-## 📁 Structure du projet
-
+Arborescence (extrait)
 ```
 ProjetJS/
-├── backend/
-│   ├── src/
-│   │   ├── config/         # Configuration (DB, env)
-│   │   ├── controllers/    # Logique des routes
-│   │   ├── middlewares/    # Auth, validation, etc.
-│   │   ├── models/         # Modèles de données
-│   │   ├── routes/         # Définition des routes
-│   │   ├── services/       # Logique métier
-│   │   ├── types/          # Types TypeScript
-│   │   ├── utils/          # Fonctions utilitaires
-│   │   └── index.ts        # Entrée serveur
-│   ├── .env.example
-│   ├── package.json
-│   └── tsconfig.json
-│
-├── frontend/
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── assets/
-│   │   │   ├── images/
-│   │   │   └── styles/
-│   │   ├── components/
-│   │   │   ├── common/
-│   │   │   └── layout/
-│   │   ├── contexts/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── types/
-│   │   ├── utils/
-│   │   ├── App.tsx
-│   │   └── index.tsx
-│   ├── .env.example
-│   ├── package.json
-│   └── tsconfig.json
-└── README.md
+├─ backend/
+│  ├─ src/
+│  ├─ .env.example
+│  └─ package.json
+├─ frontend/
+│  ├─ src/
+│  ├─ .env.example
+│  └─ package.json
+└─ README.md
 ```
 
-## 🚀 Installation & Lancement
+## Installation & Lancement (développement) ⚙️
 
-### 1. Cloner le dépôt
+1. Cloner le dépôt
 ```bash
 git clone https://github.com/MEHDImp4/ProjetJS.git
 cd ProjetJS
 ```
 
-### 2. Installer les dépendances
-
-#### Backend
+2. Backend
 ```bash
 cd backend
 npm install
+# Linux/macOS
 cp .env.example .env
-# Remplir les variables d'environnement dans .env
-```
-
-#### Frontend
-```bash
-cd frontend
-npm install
-cp .env.example .env
-# Remplir les variables d'environnement dans .env
-```
-
-### 3. Lancer en développement
-
-#### Backend
-```bash
+# Windows PowerShell
+copy .env.example .env
+# remplir backend/.env
 npm run dev
 ```
 
-#### Frontend
+3. Frontend
 ```bash
+cd frontend
+npm install
+cp .env.example .env     # ou `copy .env.example .env` sous PowerShell
+# remplir frontend/.env
 npm start
 ```
 
-### 4. Accès
-- Frontend : http://localhost:3000
-- Backend : http://localhost:5000 (modifiable dans .env)
+Accès :
+- Frontend : http://localhost:3000 🖥️
+- Backend : http://localhost:5000 (modifiable via .env) 🔁
 
-## 📜 Scripts disponibles
+## Scripts utiles 🧩
+Backend (dans backend/)
+- npm run dev — démarre en dev (ts-node / nodemon) 🛠️
+- npm run build — compile TypeScript 📦
+- npm start — start production 🚀
+- npm run lint — ESLint ✅
+- npm run format — Prettier 🎨
 
-### Backend
-- `npm run dev` : Démarre le serveur en mode développement
-- `npm run build` : Compile le TypeScript
-- `npm start` : Démarre le serveur en production
-- `npm run lint` : Lint du code avec ESLint
-- `npm run format` : Formatage avec Prettier
+Frontend (dans frontend/)
+- npm start — dev 🏃
+- npm run build — build production 📦
+- npm test — tests ✅
+- npm run lint / npm run format 🧹
 
-### Frontend
-- `npm start` : Démarre l'application en développement
-- `npm run build` : Build de production
-- `npm test` : Lance les tests
-- `npm run lint` : Lint du code
-- `npm run format` : Formatage du code
+## Configuration des variables d’environnement 🔑
 
-## ⚙️ Configuration des variables d'environnement
-
-### Backend (`backend/.env`)
+backend/.env (exemple)
 ```env
 PORT=5000
 NODE_ENV=development
-DATABASE_URL=    # URL de la base de données
-JWT_SECRET=      # Clé secrète JWT
+DATABASE_URL=mysql://user:pass@host:port/dbname
+JWT_SECRET=your_jwt_secret
 ```
 
-### Frontend (`frontend/.env`)
+frontend/.env (exemple)
 ```env
 REACT_APP_API_URL=http://localhost:5000
 ```
 
-## 🧪 Tests & Build
+## Tests & build 🧪
+- Frontend : cd frontend && npm test
+- Build production :
+	- Frontend : cd frontend && npm run build
+	- Backend : cd backend && npm run build
 
-### Lancer les tests frontend
-```bash
-cd frontend
-npm test
-```
+## Design UI/UX — EMSISPHERE 🎨
+Objectif : clone Twitter adapté EMSI (étudiants, profs, admins)
+- Palette : primaire vert EMSI (#006837), accent orange pour alertes, thèmes light/dark 🌗
+- Layout : 3 colonnes (sidebar gauche, feed central, widgets droite) 🧭
+- Composants clés : Sidebar, Composer (texte/image/sondage/code), TweetCard, Rightbar (recherche, tendances, suggestions) 🧩
+- Spécificités scolaires : badges (🎓 étudiant, 👨‍🏫 prof, 🛡️ admin, ⚙️ BDE), filtrage « Pour vous » / « Ma Classe », affichage de code (PrismJS/Highlight.js) 💡
 
-### Build de production
+Backlog priorisé 🔜 :
+1. Thème global + typographie
+2. Layout responsive 3→2→1 colonnes
+3. Routes et Sidebar de base
+4. Composer (UI d’abord)
+5. TweetCard (UI puis API)
+6. Rightbar (mock → API)
+7. Tabs « Pour vous » / « Ma Classe »
 
-#### Frontend
-```bash
-cd frontend
-npm run build
-```
+## Contribution 🤝
+- Copier .env.example dans chaque dossier et remplir les variables.
+- Respecter TypeScript partout, organiser la logique métier dans services/, routes dans controllers/, validations/middlewares séparés.
+- Voir README.md racine pour conventions et workflows (install, lint, format).
 
-#### Backend
-```bash
-cd backend
-npm run build
-```
+## Licence 📜
+MIT — voir fichier LICENSE.
 
-## 📄 Licence
-
-Ce projet est sous licence MIT (voir fichier LICENSE).
-
----
-
-## 🧩 Design UI/UX — EMSISPHERE (EMSI)
-
-> Objectif: un clone Twitter adapté à l’EMSI, équilibrant social (étudiants) et professionnel (administration/profs).
-
-### 1) Identité visuelle (Look & Feel)
-- Couleurs:
-	- Primaire: Vert EMSI `#006837` (alternatif `#009540`) pour CTA, liens actifs et accents.
-	- Secondaire: Orange pour notifications/alertes importantes (ex. examen reporté).
-	- Fond: Light (blanc cassé) et Dark (gris foncé bleuté) — support du thème système + toggle.
-- Typographie: Inter, Roboto ou Open Sans (sans-serif, lisible pour contenu académique).
-
-### 2) Layout 3 colonnes
-- Barre latérale gauche (fixe au scroll):
-	- Logo EMSI en haut.
-	- Menu: Accueil, Officiel (annonces admin/profs), Emploi du temps (ENT/aperçu), Clubs, Notifications, Messages, Profil.
-	- CTA: gros bouton vert « Publier ».
-- Colonne centrale (feed):
-	- Header avec titre (ex. « Accueil ») + effet glassmorphism.
-	- Zone de création: placeholder « Quoi de neuf, futur ingénieur ? » avec actions Image, Sondage, Bloc de code (coloration syntaxique).
-	- Carte Post: avatar, nom + badge (voir « Badges »), contenu texte + média, actions: J’aime (cœur vert), Commenter, Reposter.
-- Barre latérale droite (widgets):
-	- Recherche: « Rechercher un cours, un prof… »
-	- Tendances EMSI: `#PFE`, `#Rattrapage`, `#Hackathon`, `#3IIR` (ou classe active).
-	- À suivre: suggestions de profs et présidents de clubs.
-
-### 3) Spécificités « École »
-- Badges de vérification:
-	- 🎓 Étudiant
-	- 👨‍🏫 Professeur (badge vert)
-	- 🛡️ Administration (badge doré)
-	- ⚙️ BDE / Clubs (badge bleu)
-- Affichage de code: blocs de code avec coloration syntaxique (ex. PrismJS/Highlight.js côté frontend).
-- Filtres de feed: onglets « Pour vous » (algo) et « Ma Classe » (promo seulement).
-
-### 4) Découpage technique (frontend)
-- `components/layout/`: Sidebar gauche, Header central, Rightbar widgets.
-- `components/common/`: TweetCard, Composer, Badge, IconButton, Tabs, SearchBar.
-- `pages/`: Accueil (feed), Officiel, Clubs, Notifications, Messages, Profil.
-- `services/`: tendances, suggestions, sondages, uploads images.
-- `contexts/` + `hooks/`: thème (light/dark), auth, onglets feed, badges.
-
-### 5) Backlog initial UI/UX (priorisé)
-1. Thème + variables couleur (light/dark) et typographie globale.
-2. Layout 3 colonnes responsive (≥1024px: 3 colonnes; <1024px: 2/1 colonne).
-3. Sidebar gauche + routes de base (Accueil, Officiel, Clubs, Profil).
-4. Composer (texte, image, sondage, bloc code — UI, sans logique d’envoi d’abord).
-5. TweetCard avec badges et actions (non-fonctionnelles d’abord, puis wiring API).
-6. Rightbar: Recherche, Tendances EMSI, À suivre (mock, puis données API).
-7. Tabs « Pour vous » / « Ma Classe » (état + placeholder de contenus).
-
-```markdown
-# ProjetJS — Clone Twitter léger
-
-> Fullstack demo: `React` + `TypeScript` (frontend) et `Node.js` + `Express` + `TypeScript` (backend).
-
-**Courte description**: ProjetJS est un clone éducatif de Twitter — posts (texte & images), likes, retweets, follow/unfollow, et profils utilisateurs — conçu pour illustrer une architecture moderne fullstack.
-
-**Table des matières**
-- **Présentation**
-- **Fonctionnalités**
-- **Technologies**
-- **Structure**
-- **Installation & démarrage**
-- **Scripts utiles**
-- **Configuration**
-- **Contribution**
-- **Licence**
-
-## **Présentation**
-
-ProjetJS est une application web didactique qui démontre les patterns communs d'une application sociale : authentification, gestion de posts, interactions sociales et architecture client-serveur claire.
-
-## **Fonctionnalités**
-
-- **Authentification**: inscription / connexion / JWT
-- **Publications**: texte + image optionnelle
-- **Fil d'actualité**: posts des personnes suivies
-- **Interactions**: likes, retweets, commentaires
-- **Profils**: avatar, bio, liste des posts
-- **(Optionnel)**: hashtags, mentions, notifications temps réel
-
-## **Technologies**
-
-- **Frontend**: `React 18`, `TypeScript`, `React Router`, `Axios`
-- **Backend**: `Node.js`, `Express`, `TypeScript`, `JWT`
-- **DB**: adaptable (Postgres / MongoDB / autre)
-
-## **Structure du projet**
-
-- `backend/`: serveur Express, routes, contrôleurs, services
-- `frontend/`: app React, composants, pages, services
-- `database/`: scripts ou fichiers liés à la base de données
-
-Arborescence (extrait):
-
-```
-ProjetJS/
-├─ backend/
-├─ frontend/
-└─ README.md
-```
-
-## **Installation & démarrage**
-
-1. Cloner le dépôt et se placer dans le dossier:
-
-```pwsh
-git clone <url-du-dépôt>
-cd ProjetJS
-```
-
-2. Installer et configurer chaque package:
-
-```pwsh
-# Backend
-cd backend
-npm install
-copy .env.example .env
-# remplir `backend/.env`
-
-# Frontend
-cd ../frontend
-npm install
-copy .env.example .env
-# remplir `frontend/.env`
-```
-
-3. Lancer en développement (depuis les dossiers respectifs):
-
-```pwsh
-# backend
-npm run dev
-
-# frontend
-npm start
-```
-
-Par défaut:
-- Frontend: `http://localhost:3000`
-- Backend: `http://localhost:5000` (modifiable via `.env`)
-
-## **Scripts utiles**
-
-- `npm start` : démarre (frontend)
-- `npm run dev` : démarre en mode développement (backend)
-- `npm run build` : build production
-- `npm test` : lancer les tests (frontend)
-- `npm run lint` / `npm run format` : qualité du code
-
-## **Configuration**
-
-- Backend (`backend/.env`):
-
-```
-PORT=5000
-NODE_ENV=development
-DATABASE_URL=...
-JWT_SECRET=...
-```
-
-- Frontend (`frontend/.env`):
-
-```
-REACT_APP_API_URL=http://localhost:5000
-```
-
-## **Licence**
-
-Ce projet est sous licence **MIT**.
+--- 
+Pour toute précision sur une section (API, modèles, endpoints, contrats TypeScript), indiquer la partie à détailler. ✉️
