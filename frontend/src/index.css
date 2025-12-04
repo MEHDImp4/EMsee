@@ -1,0 +1,128 @@
+:root {
+  --primary: #4ADE80; /* Green accent */
+  --primary-hover: #22c55e;
+  --secondary: #FB923C; /* Orange accent */
+  --secondary-hover: #f97316;
+  --bg-soft: #FDFBF7; /* Warm off-white background */
+  --text-main: #1F2937;
+  --text-muted: #6B7280;
+  --card-bg: #FFFFFF;
+  --border-radius: 1rem;
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+  --header-bg: rgba(253, 251, 247, 0.9);
+  --footer-bg: #F3F4F6;
+}
+
+[data-theme="dark"] {
+  --bg-soft: #111827; /* Dark gray background */
+  --text-main: #F9FAFB;
+  --text-muted: #9CA3AF;
+  --card-bg: #1F2937;
+  --header-bg: rgba(17, 24, 39, 0.9);
+  --footer-bg: #1F2937;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-soft);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-outline {
+  border: 1px solid var(--text-muted);
+  background: transparent;
+  color: var(--text-main);
+}
+
+.btn-outline:hover {
+  border-color: var(--text-main);
+  background: var(--card-bg);
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.grid-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 4rem 0;
+}
+
+.feature-card {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}

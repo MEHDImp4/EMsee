@@ -115,7 +115,7 @@ REACT_APP_API_URL=http://localhost:5000
   * `cd frontend && npm run build`
   * `cd backend && npm run build`
 
-## UI/UX — EMSISPHERE 🎨
+## UI/UX 🎨
 
 Objectif graphique : un Twitter version EMSI, sobre et académique.
 
