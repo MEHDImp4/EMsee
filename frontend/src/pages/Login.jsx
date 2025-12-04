@@ -2,59 +2,44 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
+import './Login.css';
 
 const Login = () => {
     return (
-        <div style={{ padding: '4rem 0', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div className="container" style={{ width: '100%', maxWidth: '400px' }}>
+        <div className="auth-page">
+            <div className="container auth-container">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--border-radius)', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                    className="auth-card"
                 >
-                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                        <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>Bon retour !</h1>
-                        <p style={{ color: 'var(--text-muted)' }}>Connectez-vous pour accéder à votre feed.</p>
+                    <div className="auth-header">
+                        <h1 className="auth-title">Bon retour !</h1>
+                        <p className="auth-subtitle">Connectez-vous pour accéder à votre feed.</p>
                     </div>
 
-                    <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
-                            <div style={{ position: 'relative' }}>
-                                <Mail size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    <form className="auth-form">
+                        <div className="form-group">
+                            <label className="form-label">Email</label>
+                            <div className="input-wrapper">
+                                <Mail size={20} className="input-icon" />
                                 <input
                                     type="email"
                                     placeholder="votre@email.com"
-                                    style={{
-                                        width: '100%',
-                                        padding: '0.75rem 1rem 0.75rem 3rem',
-                                        borderRadius: '0.5rem',
-                                        border: '1px solid var(--text-muted)',
-                                        background: 'transparent',
-                                        color: 'var(--text-main)',
-                                        fontSize: '1rem'
-                                    }}
+                                    className="form-input"
                                 />
                             </div>
                         </div>
 
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Mot de passe</label>
-                            <div style={{ position: 'relative' }}>
-                                <Lock size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                        <div className="form-group">
+                            <label className="form-label">Mot de passe</label>
+                            <div className="input-wrapper">
+                                <Lock size={20} className="input-icon" />
                                 <input
                                     type="password"
                                     placeholder="••••••••"
-                                    style={{
-                                        width: '100%',
-                                        padding: '0.75rem 1rem 0.75rem 3rem',
-                                        borderRadius: '0.5rem',
-                                        border: '1px solid var(--text-muted)',
-                                        background: 'transparent',
-                                        color: 'var(--text-main)',
-                                        fontSize: '1rem'
-                                    }}
+                                    className="form-input"
                                 />
                             </div>
                         </div>
@@ -62,8 +47,8 @@ const Login = () => {
                         <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Se connecter</button>
                     </form>
 
-                    <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                        Pas encore de compte ? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: '600' }}>Créer un compte</Link>
+                    <div className="auth-footer">
+                        Pas encore de compte ? <Link to="/register" className="auth-link">Créer un compte</Link>
                     </div>
                 </motion.div>
             </div>

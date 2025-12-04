@@ -1,55 +1,52 @@
-# Copilot Instructions for ProjetJS (EMSISPHERE)
+# Copilot Instructions for ProjetJS
 
 ## Project Context
-"EMSISPHERE" is a Twitter-like social network for EMSI students and staff.
-- **Stack**: React 18 (Frontend), Node.js/Express (Backend), MySQL (Database).
-- **Language**: TypeScript (Strict mode) for both ends.
+"ProjetJS" is a Twitter-like social network project for EMSI.
+- **Current Status**: Frontend-focused development (React 19 + Vite). Backend is planned but currently empty.
+- **Goal**: Educational fullstack project (Social features, Auth, Feed).
+
+## Tech Stack & Dependencies
+- **Frontend**: 
+  - React 19 (Vite)
+  - JavaScript (JSX) - *Note: Project is currently JS, not TS.*
+  - `react-router-dom` v7
+  - `lucide-react` (Icons)
+  - `framer-motion` (Animations)
+- **Backend (Planned)**: Node.js, Express, MySQL.
 
 ## Architecture & Code Organization
 
-### Backend (`backend/`)
-- **Pattern**: Controller-Service-Layered architecture.
-- **Directory Structure**:
-  - `src/controllers/`: Handle HTTP requests, validate input, send responses. **No business logic here.**
-  - `src/services/`: Implement core business logic and database interactions.
-  - `src/routes/`: Define API endpoints and map them to controllers.
-  - `src/middlewares/`: Authentication (JWT), error handling, request validation.
-  - `src/models/` & `src/types/`: TypeScript interfaces and database models.
-- **Key Principles**:
-  - Keep controllers "thin".
-  - Centralize error handling.
-
 ### Frontend (`frontend/`)
+- **Entry Point**: `src/main.jsx` mounts `App.jsx`.
+- **Routing**: `src/App.jsx` handles `BrowserRouter` and routes (`/`, `/login`, `/register`).
 - **Directory Structure**:
-  - `src/components/`: Reusable UI elements (e.g., `TweetCard`, `Sidebar`, `Composer`).
-  - `src/pages/`: Full page views mapped to routes.
-  - `src/services/`: Axios instances and API call functions.
-  - `src/contexts/`: Global state (AuthContext, ThemeContext).
-  - `src/hooks/`: Custom hooks for logic reuse.
-- **Design System**:
-  - **Colors**: Primary EMSI Green (`#006837`), Accent Orange.
-  - **Layout**: 3-column responsive (Sidebar, Feed, Widgets).
-  - **Features**: Code highlighting (PrismJS/Highlight.js), Polls, Media support.
+  - `src/components/`: Reusable UI elements (e.g., `Header.jsx`, `Footer.jsx`).
+  - `src/pages/`: Full page views (e.g., `Landing.jsx`, `Login.jsx`).
+  - `src/assets/`: Static assets.
+- **Styling**:
+  - **Global Variables**: Defined in `src/index.css` (e.g., `--primary`, `--bg-soft`).
+  - **Theming**: Dark/Light mode supported via `data-theme` attribute on `<html>`.
+  - **Pattern**: Mix of global CSS classes (e.g., `.btn`, `.container`) and inline styles for specific layout tweaks.
+
+### Backend (`backend/`)
+- *Currently empty/under construction.*
+- **Target Architecture**: Controller-Service-Layered pattern (Node.js/Express).
 
 ## Development Workflow
-1. **Environment**:
-   - Ensure `.env` exists in both `backend/` and `frontend/` (copied from `.env.example`).
-   - Backend runs on port 5000, Frontend on port 3000.
-2. **Commands**:
-   - `npm run dev`: Start development server (backend).
-   - `npm start`: Start React app (frontend).
-   - `npm run build`: Compile TypeScript/build for production.
-   - `npm run lint` / `npm run format`: Ensure code quality.
+- **Frontend**:
+  - Run: `npm run dev` (in `frontend/` directory).
+  - Build: `npm run build`.
+  - Lint: `npm run lint`.
 
 ## Coding Conventions
-- **TypeScript**: Use explicit types for all props, state, and API responses. Avoid `any`.
-- **API Integration**:
-  - Define types for all API requests and responses in a shared or dedicated types file.
-  - Handle loading and error states explicitly in UI components.
-- **Styling**: Follow the established pattern (CSS Modules or standard CSS) to maintain the EMSI theme.
-- **Comments**: Document complex logic, especially in `services/`.
+- **Language**: JavaScript (JSX). Use `.jsx` extension for components.
+- **Components**: Functional components with Hooks (`useState`, `useEffect`).
+- **Icons**: Always use `lucide-react` for icons (e.g., `import { Menu, X } from 'lucide-react'`).
+- **Styling**: 
+  - Use CSS variables for colors to ensure theme compatibility.
+  - Example: `background: 'var(--card-bg)', color: 'var(--text-main)'`.
+- **Routing**: Use `Link` from `react-router-dom` for internal navigation.
 
-## Specific Features to Keep in Mind
-- **User Roles**: Student (🎓), Professor (👨‍🏫), Admin (🛡️), BDE (⚙️).
-- **Feed**: "For You" vs "My Class" filtering.
-- **Code Snippets**: Special rendering for code blocks in posts.
+## Key Features to Maintain
+- **Responsive Design**: Mobile-first approach (visible in `Header.jsx` media queries).
+- **Theme Awareness**: Components should respect system color preference (handled in `App.jsx`).

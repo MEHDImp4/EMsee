@@ -11,6 +11,7 @@
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   --header-bg: rgba(253, 251, 247, 0.9);
   --footer-bg: #F3F4F6;
+  --input-border: #D1D5DB;
 }
 
 [data-theme="dark"] {
@@ -20,6 +21,7 @@
   --card-bg: #1F2937;
   --header-bg: rgba(17, 24, 39, 0.9);
   --footer-bg: #1F2937;
+  --input-border: #374151;
 }
 
 html {
@@ -105,6 +107,29 @@ button {
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+/* Fix for select options in dark mode */
+select option {
+  background-color: var(--card-bg);
+  color: var(--text-main);
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--input-border);
+  background: transparent;
+  color: var(--text-main);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
 }
 
 .grid-features {
