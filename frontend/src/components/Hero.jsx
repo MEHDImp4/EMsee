@@ -32,7 +32,7 @@ const Hero = ({ theme }) => {
                         transition={{ duration: 0.5, delay: 0.4 }}
                         style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
                     >
-                        <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>Rejoindre EMSI</button>
+                        <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>Rejoindre EMsee</button>
                         <button className="btn btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>En savoir plus</button>
                     </motion.div>
                 </div>
@@ -60,7 +60,7 @@ const Hero = ({ theme }) => {
                     }}></div>
                     <img
                         src={theme === 'dark' ? mockupFeedDark : mockupFeed}
-                        alt="Interface de l'application EMSI"
+                        alt="Interface de l'application EMsee"
                         style={{
                             width: '100%',
                             height: 'auto',

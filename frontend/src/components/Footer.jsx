@@ -1,16 +1,16 @@
 import React from 'react';
 import { Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
 
+import logo from '../assets/logo.svg';
+
 const Footer = () => {
     return (
         <footer style={{ background: 'var(--footer-bg)', padding: '4rem 0 2rem' }}>
             <div className="container">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', textAlign: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div style={{ width: '32px', height: '32px', background: 'var(--text-main)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--bg-soft)', fontWeight: 'bold' }}>
-                            E
-                        </div>
-                        <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>EMSI</span>
+                        <img src={logo} alt="EMsee Logo" style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'contain' }} />
+                        <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>EMsee</span>
                     </div>
 
                     <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -29,8 +29,12 @@ const Footer = () => {
 
                     <div style={{ width: '100%', height: '1px', background: '#E5E7EB', margin: '1rem 0' }}></div>
 
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                        Contributeurs : <span style={{ fontWeight: '600' }}>Diouri Mehdi, Rkha Adam, Belaoud Mehdi, El Kharazi Ibtihal</span>
+                    </p>
+
                     <p style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
-                        © {new Date().getFullYear()} EMSI Social. Fait avec ❤️ pour les étudiants.
+                        © {new Date().getFullYear()} EMsee Social. Fait avec ❤️ pour les étudiants.
                     </p>
                 </div>
             </div>

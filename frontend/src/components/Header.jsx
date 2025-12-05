@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
+import logo from '../assets/logo.svg';
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -9,10 +11,8 @@ const Header = () => {
     <header style={{ padding: '1.5rem 0', position: 'sticky', top: 0, background: 'var(--header-bg)', backdropFilter: 'blur(10px)', zIndex: 50, transition: 'background-color 0.3s ease' }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-          <div style={{ width: '40px', height: '40px', background: 'var(--primary)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>
-            E
-          </div>
-          <span style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)' }}>EMSI</span>
+          <img src={logo} alt="EMsee Logo" style={{ width: '40px', height: '40px', borderRadius: '12px', objectFit: 'contain' }} />
+          <span style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)' }}>EMsee</span>
         </Link>
 
         {/* Desktop Nav */}

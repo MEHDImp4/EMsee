@@ -33,7 +33,7 @@ const Register = () => {
                 >
                     <div className="auth-header">
                         <h1 className="auth-title">Rejoignez-nous</h1>
-                        <p className="auth-subtitle">Créez votre compte EMSI dès maintenant.</p>
+                        <p className="auth-subtitle">Créez votre compte EMsee dès maintenant.</p>
                     </div>
 
                     {/* Account Type Selector */}
