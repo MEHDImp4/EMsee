@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, GraduationCap, School, CheckCircle, AlertCircle, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import './css/Register.css';
 
 const Register = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [accountType, setAccountType] = useState('student'); // 'student' | 'professor'
     const [email, setEmail] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(null);
+    const [fullName, setFullName] = useState('');
+    const [password, setPassword] = useState('');
 
     useEffect(() => {
         validateEmail(email, accountType);
@@ -22,6 +26,16 @@ const Register = () => {
         }
         const domain = type === 'student' ? '@emsi-edu.ma' : '@emsi.ma';
         setIsEmailValid(value.endsWith(domain));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // mock register: store token and redirect to feed
+        localStorage.setItem('token', 'mock-token');
+        localStorage.setItem('userEmail', email || 'user@example.com');
+        localStorage.setItem('userName', fullName || 'New User');
+        localStorage.setItem('firstVisit', 'true');
+        navigate('/feed');
     };
 
     return (
@@ -67,6 +81,8 @@ const Register = () => {
                                     type="text"
                                     placeholder="John Doe"
                                     className="form-input"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -141,11 +157,13 @@ const Register = () => {
                                     type="password"
                                     placeholder="••••••••"
                                     className="form-input"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
                         </div>
 
-                        <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isEmailValid === false}>
+                        <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isEmailValid === false} onClick={handleSubmit}>
                             {t('auth.register_btn')}
                         </button>
                     </form>

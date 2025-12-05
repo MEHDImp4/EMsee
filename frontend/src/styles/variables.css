@@ -1,0 +1,28 @@
+:root {
+  /* Common */
+  --primary: #4ADE80; /* Original Lime Green */
+  --primary-hover: #22c55e;
+  --secondary: #FB923C; /* Original Orange */
+  --danger: #ef4444;
+  --radius: 1rem;
+  
+  /* Light Mode */
+  --bg-main: #FDFBF7; /* Warm off-white */
+  --bg-sidebar: #FDFBF7; /* Same as main for seamless look, or slightly darker if needed */
+  --bg-card: #FFFFFF;
+  --text-main: #1F2937;
+  --text-muted: #6B7280;
+  --border: #D1D5DB; /* Lighter border for light mode */
+  --hover: #F3F4F6;
+}
+
+[data-theme="dark"] {
+  /* Dark Mode */
+  --bg-main: #111827; /* Dark Gray */
+  --bg-sidebar: #111827;
+  --bg-card: #1F2937;
+  --text-main: #F9FAFB;
+  --text-muted: #9CA3AF;
+  --border: #374151;
+  --hover: #374151;
+}

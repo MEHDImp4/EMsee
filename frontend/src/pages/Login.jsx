@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import './css/Login.css';
 
 const Login = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // mock auth: store a fake token and redirect to /feed
+        localStorage.setItem('token', 'mock-token');
+        localStorage.setItem('userEmail', email || 'user@example.com');
+        localStorage.setItem('firstVisit', 'true');
+        navigate('/feed');
+    };
 
     return (
         <div className="auth-page">
@@ -22,7 +35,7 @@ const Login = () => {
                         <p className="auth-subtitle">{t('auth.login_subtitle')}</p>
                     </div>
 
-                    <form className="auth-form">
+                    <form className="auth-form" onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label className="form-label">{t('auth.email')}</label>
                             <div className="input-wrapper">
@@ -31,6 +44,8 @@ const Login = () => {
                                     type="email"
                                     placeholder={t('auth.email_placeholder')}
                                     className="form-input"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -43,6 +58,8 @@ const Login = () => {
                                     type="password"
                                     placeholder="••••••••"
                                     className="form-input"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
                         </div>

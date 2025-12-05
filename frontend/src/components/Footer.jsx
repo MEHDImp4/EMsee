@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import logo from '../assets/logo.svg';
 
-const Footer = () => {
+const Footer = ({ themeMode, setThemeMode }) => {
     const { i18n, t } = useTranslation();
 
     const toggleLanguage = () => {
@@ -47,26 +47,52 @@ const Footer = () => {
                             © {new Date().getFullYear()} EMsee Social. {t('footer.made_with_love')}
                         </p>
 
-                        <button
-                            onClick={toggleLanguage}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                color: 'var(--text-muted)',
-                                cursor: 'pointer',
-                                fontSize: '0.8rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.25rem',
-                                opacity: 0.7,
-                                transition: 'opacity 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.target.style.opacity = '1'}
-                            onMouseLeave={(e) => e.target.style.opacity = '0.7'}
-                        >
-                            <Globe size={14} />
-                            <span>{i18n.language === 'fr' ? 'Français' : 'English'}</span>
-                        </button>
+                        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                            {/* Language Toggle */}
+                            <button
+                                onClick={toggleLanguage}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--text-muted)',
+                                    cursor: 'pointer',
+                                    fontSize: '0.8rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.25rem',
+                                    opacity: 0.7,
+                                    transition: 'opacity 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.target.style.opacity = '1'}
+                                onMouseLeave={(e) => e.target.style.opacity = '0.7'}
+                            >
+                                <Globe size={14} />
+                                <span>{i18n.language === 'fr' ? 'Français' : 'English'}</span>
+                            </button>
+
+                            {/* Theme Toggle */}
+                            <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '99px', border: '1px solid var(--border)' }}>
+                                {['light', 'dark', 'auto'].map((mode) => (
+                                    <button
+                                        key={mode}
+                                        onClick={() => setThemeMode(mode)}
+                                        style={{
+                                            padding: '0.25rem 0.5rem',
+                                            borderRadius: '99px',
+                                            fontSize: '0.75rem',
+                                            cursor: 'pointer',
+                                            border: 'none',
+                                            background: themeMode === mode ? 'var(--primary)' : 'transparent',
+                                            color: themeMode === mode ? 'white' : 'var(--text-muted)',
+                                            transition: 'all 0.2s',
+                                            textTransform: 'capitalize'
+                                        }}
+                                    >
+                                        {mode}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

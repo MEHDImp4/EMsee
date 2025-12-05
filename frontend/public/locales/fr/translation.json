@@ -79,5 +79,26 @@
         "mission_desc": "Faciliter la vie étudiante en centralisant les outils de communication et d'entraide. Nous croyons en la force de la communauté pour réussir ses études.",
         "team_title": "L'Équipe",
         "team_desc": "Un projet réalisé avec passion par des étudiants, pour des étudiants."
+    },
+    "sidebar": {
+        "home": "Accueil",
+        "explore": "Explorer",
+        "notifications": "Notifications",
+        "bookmarks": "Signets",
+        "community": "Communauté",
+        "settings": "Paramètres",
+        "logout": "Déconnexion"
+    },
+    "settings": {
+        "appearance": "Apparence",
+        "theme_desc": "Choisissez votre thème préféré.",
+        "language": "Langue"
+    },
+    "feed": {
+        "title": "Fil d'actualité",
+        "onboarding_title": "Bienvenue",
+        "onboarding_body": "Commencez par suivre des sujets et des personnes pour remplir votre feed.",
+        "onboarding_dismiss": "Plus tard",
+        "onboarding_get_started": "C'est parti"
     }
 }

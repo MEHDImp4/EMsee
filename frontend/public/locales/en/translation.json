@@ -79,5 +79,26 @@
         "mission_desc": "To facilitate student life by centralizing communication and mutual aid tools. We believe in the strength of the community to succeed in studies.",
         "team_title": "The Team",
         "team_desc": "A project made with passion by students, for students."
+    },
+    "sidebar": {
+        "home": "Home",
+        "explore": "Explore",
+        "notifications": "Notifications",
+        "bookmarks": "Bookmarks",
+        "community": "Community",
+        "settings": "Settings",
+        "logout": "Logout"
+    },
+    "settings": {
+        "appearance": "Appearance",
+        "theme_desc": "Choose your preferred theme.",
+        "language": "Language"
+    },
+    "feed": {
+        "title": "News Feed",
+        "onboarding_title": "Welcome",
+        "onboarding_body": "Start by following topics and people to fill your feed.",
+        "onboarding_dismiss": "Later",
+        "onboarding_get_started": "Let's go"
     }
 }
