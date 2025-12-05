@@ -1,0 +1,66 @@
+{
+    "hero": {
+        "title": "Le réseau social <1>étudiant</1> qui vous connecte.",
+        "subtitle": "Partagez vos idées, collaborez sur des projets et restez informés de la vie du campus. Une communauté bienveillante vous attend.",
+        "join": "Rejoindre EMsee",
+        "learn_more": "En savoir plus"
+    },
+    "header": {
+        "login": "Se connecter",
+        "register": "S'inscrire"
+    },
+    "footer": {
+        "about": "À propos",
+        "privacy": "Confidentialité",
+        "terms": "Conditions",
+        "contact": "Contact",
+        "contributors": "Contributeurs :",
+        "made_with_love": "Fait avec ❤️ pour les étudiants."
+    },
+    "features": {
+        "title": "Tout ce dont vous avez besoin",
+        "subtitle": "Une suite complète d'outils pour interagir.",
+        "discussions_title": "Discussions",
+        "discussions_desc": "Partagez du texte et échangez avec la communauté.",
+        "medias_title": "Médias",
+        "medias_desc": "Publiez vos meilleures photos et créations.",
+        "polls_title": "Sondages",
+        "polls_desc": "Demandez l'avis des autres étudiants facilement.",
+        "code_title": "Code Snippets",
+        "code_desc": "Partagez et débuggez du code ensemble.",
+        "likes_title": "Likes",
+        "likes_desc": "Montrez votre appréciation pour les posts.",
+        "retweets_title": "Retweets",
+        "retweets_desc": "Relayez les informations importantes.",
+        "mentions_title": "Mentions",
+        "mentions_desc": "Taguez vos amis pour les notifier."
+    },
+    "auth": {
+        "welcome_back": "Bon retour !",
+        "login_subtitle": "Connectez-vous pour accéder à votre feed.",
+        "email": "Email",
+        "password": "Mot de passe",
+        "login_btn": "Se connecter",
+        "no_account": "Pas encore de compte ?",
+        "create_account": "Créer un compte",
+        "join_us": "Rejoignez-nous",
+        "register_subtitle": "Créez votre compte EMsee dès maintenant.",
+        "student": "Étudiant",
+        "professor": "Professeur",
+        "full_name": "Nom complet",
+        "study_level": "Niveau d'étude",
+        "select_level": "Sélectionner un niveau",
+        "year_1_prepa": "1ère année prépa",
+        "year_2_prepa": "2ème année prépa",
+        "year_3_iir": "3ème année IIR",
+        "year_4_iir": "4ème année IIR",
+        "year_5_iir": "5ème année IIR",
+        "class": "Classe",
+        "register_btn": "S'inscrire",
+        "already_account": "Déjà un compte ?",
+        "email_error": "L'email doit se terminer par",
+        "student_placeholder": "etudiant@emsi-edu.ma",
+        "professor_placeholder": "prof@emsi.ma",
+        "email_placeholder": "votre@email.com"
+    }
+}

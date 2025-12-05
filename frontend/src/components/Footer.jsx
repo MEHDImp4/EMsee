@@ -1,9 +1,17 @@
 import React from 'react';
-import { Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
+import { Twitter, Instagram, Linkedin, Mail, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import logo from '../assets/logo.svg';
 
 const Footer = () => {
+    const { i18n, t } = useTranslation();
+
+    const toggleLanguage = () => {
+        const newLang = i18n.language === 'fr' ? 'en' : 'fr';
+        i18n.changeLanguage(newLang);
+    };
+
     return (
         <footer style={{ background: 'var(--footer-bg)', padding: '4rem 0 2rem' }}>
             <div className="container">
@@ -14,10 +22,10 @@ const Footer = () => {
                     </div>
 
                     <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>À propos</a>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>Confidentialité</a>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>Conditions</a>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>Contact</a>
+                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.about')}</a>
+                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.privacy')}</a>
+                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.terms')}</a>
+                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.contact')}</a>
                     </div>
 
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
@@ -30,12 +38,35 @@ const Footer = () => {
                     <div style={{ width: '100%', height: '1px', background: '#E5E7EB', margin: '1rem 0' }}></div>
 
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                        Contributeurs : <span style={{ fontWeight: '600' }}>Diouri Mehdi, Rkha Adam, Belaoud Mehdi, El Kharazi Ibtihal</span>
+                        {t('footer.contributors')} <span style={{ fontWeight: '600' }}>Diouri Mehdi, Rkha Adam, Belaoud Mehdi, El Kharazi Ibtihal</span>
                     </p>
 
-                    <p style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
-                        © {new Date().getFullYear()} EMsee Social. Fait avec ❤️ pour les étudiants.
-                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                        <p style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
+                            © {new Date().getFullYear()} EMsee Social. {t('footer.made_with_love')}
+                        </p>
+
+                        <button
+                            onClick={toggleLanguage}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                fontSize: '0.8rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.25rem',
+                                opacity: 0.7,
+                                transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.target.style.opacity = '1'}
+                            onMouseLeave={(e) => e.target.style.opacity = '0.7'}
+                        >
+                            <Globe size={14} />
+                            <span>{i18n.language === 'fr' ? 'Français' : 'English'}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>

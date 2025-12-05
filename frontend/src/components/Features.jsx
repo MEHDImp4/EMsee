@@ -1,16 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Image, MessageSquare, BarChart2, Code, Heart, Repeat, AtSign } from 'lucide-react';
-
-const features = [
-    { icon: <MessageSquare size={32} />, title: "Discussions", desc: "Partagez du texte et échangez avec la communauté." },
-    { icon: <Image size={32} />, title: "Médias", desc: "Publiez vos meilleures photos et créations." },
-    { icon: <BarChart2 size={32} />, title: "Sondages", desc: "Demandez l'avis des autres étudiants facilement." },
-    { icon: <Code size={32} />, title: "Code Snippets", desc: "Partagez et débuggez du code ensemble." },
-    { icon: <Heart size={32} />, title: "Likes", desc: "Montrez votre appréciation pour les posts." },
-    { icon: <Repeat size={32} />, title: "Retweets", desc: "Relayez les informations importantes." },
-    { icon: <AtSign size={32} />, title: "Mentions", desc: "Taguez vos amis pour les notifier." },
-];
+import { useTranslation } from 'react-i18next';
 
 const container = {
     hidden: { opacity: 0 },
@@ -28,6 +19,18 @@ const item = {
 };
 
 const Features = () => {
+    const { t } = useTranslation();
+
+    const features = [
+        { icon: <MessageSquare size={32} />, title: t('features.discussions_title'), desc: t('features.discussions_desc') },
+        { icon: <Image size={32} />, title: t('features.medias_title'), desc: t('features.medias_desc') },
+        { icon: <BarChart2 size={32} />, title: t('features.polls_title'), desc: t('features.polls_desc') },
+        { icon: <Code size={32} />, title: t('features.code_title'), desc: t('features.code_desc') },
+        { icon: <Heart size={32} />, title: t('features.likes_title'), desc: t('features.likes_desc') },
+        { icon: <Repeat size={32} />, title: t('features.retweets_title'), desc: t('features.retweets_desc') },
+        { icon: <AtSign size={32} />, title: t('features.mentions_title'), desc: t('features.mentions_desc') },
+    ];
+
     return (
         <section style={{ padding: '6rem 0', background: 'var(--bg-soft)' }}>
             <div className="container">
@@ -39,7 +42,7 @@ const Features = () => {
                         transition={{ duration: 0.6 }}
                         style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}
                     >
-                        Tout ce dont vous avez besoin
+                        {t('features.title')}
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -48,7 +51,7 @@ const Features = () => {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}
                     >
-                        Une suite complète d'outils pour interagir.
+                        {t('features.subtitle')}
                     </motion.p>
                 </div>
 

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import logo from '../assets/logo.svg';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <header style={{ padding: '1.5rem 0', position: 'sticky', top: 0, background: 'var(--header-bg)', backdropFilter: 'blur(10px)', zIndex: 50, transition: 'background-color 0.3s ease' }}>
@@ -23,8 +25,8 @@ const Header = () => {
               .mobile-actions { display: none !important; }
             }
           `}</style>
-          <Link to="/login" className="btn btn-secondary">Se connecter</Link>
-          <Link to="/register" className="btn btn-primary">Créer un compte</Link>
+          <Link to="/login" className="btn btn-secondary">{t('header.login')}</Link>
+          <Link to="/register" className="btn btn-primary">{t('header.register')}</Link>
         </nav>
 
         {/* Mobile Toggle */}
@@ -49,8 +51,8 @@ const Header = () => {
           flexDirection: 'column',
           gap: '1rem'
         }}>
-          <Link to="/login" className="btn btn-secondary" style={{ width: '100%', textAlign: 'center' }} onClick={() => setIsMenuOpen(false)}>Se connecter</Link>
-          <Link to="/register" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }} onClick={() => setIsMenuOpen(false)}>Créer un compte</Link>
+          <Link to="/login" className="btn btn-secondary" style={{ width: '100%', textAlign: 'center' }} onClick={() => setIsMenuOpen(false)}>{t('header.login')}</Link>
+          <Link to="/register" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }} onClick={() => setIsMenuOpen(false)}>{t('header.register')}</Link>
         </div>
       )}
     </header>

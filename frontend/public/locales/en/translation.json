@@ -1,0 +1,66 @@
+{
+    "hero": {
+        "title": "The <1>student</1> social network that connects you.",
+        "subtitle": "Share your ideas, collaborate on projects, and stay informed about campus life. A caring community awaits you.",
+        "join": "Join EMsee",
+        "learn_more": "Learn more"
+    },
+    "header": {
+        "login": "Login",
+        "register": "Register"
+    },
+    "footer": {
+        "about": "About",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "contact": "Contact",
+        "contributors": "Contributors:",
+        "made_with_love": "Made with ❤️ for students."
+    },
+    "features": {
+        "title": "Everything you need",
+        "subtitle": "A complete suite of tools to interact.",
+        "discussions_title": "Discussions",
+        "discussions_desc": "Share text and exchange with the community.",
+        "medias_title": "Media",
+        "medias_desc": "Post your best photos and creations.",
+        "polls_title": "Polls",
+        "polls_desc": "Ask other students for their opinion easily.",
+        "code_title": "Code Snippets",
+        "code_desc": "Share and debug code together.",
+        "likes_title": "Likes",
+        "likes_desc": "Show your appreciation for posts.",
+        "retweets_title": "Retweets",
+        "retweets_desc": "Relay important information.",
+        "mentions_title": "Mentions",
+        "mentions_desc": "Tag your friends to notify them."
+    },
+    "auth": {
+        "welcome_back": "Welcome back!",
+        "login_subtitle": "Login to access your feed.",
+        "email": "Email",
+        "password": "Password",
+        "login_btn": "Login",
+        "no_account": "No account yet?",
+        "create_account": "Create an account",
+        "join_us": "Join us",
+        "register_subtitle": "Create your EMsee account now.",
+        "student": "Student",
+        "professor": "Professor",
+        "full_name": "Full Name",
+        "study_level": "Study Level",
+        "select_level": "Select a level",
+        "year_1_prepa": "1st year prepa",
+        "year_2_prepa": "2nd year prepa",
+        "year_3_iir": "3rd year IIR",
+        "year_4_iir": "4th year IIR",
+        "year_5_iir": "5th year IIR",
+        "class": "Class",
+        "register_btn": "Register",
+        "already_account": "Already have an account?",
+        "email_error": "Email must end with",
+        "student_placeholder": "student@emsi-edu.ma",
+        "professor_placeholder": "professor@emsi.ma",
+        "email_placeholder": "your@email.com"
+    }
+}
