@@ -1,6 +1,7 @@
 import React from 'react';
 import { Twitter, Instagram, Linkedin, Mail, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import logo from '../assets/logo.svg';
 
@@ -22,10 +23,10 @@ const Footer = () => {
                     </div>
 
                     <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.about')}</a>
+                        <Link to="/about" style={{ color: 'var(--text-muted)' }}>{t('footer.about')}</Link>
                         <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.privacy')}</a>
                         <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.terms')}</a>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.contact')}</a>
+                        <Link to="/contact" style={{ color: 'var(--text-muted)' }}>{t('footer.contact')}</Link>
                     </div>
 
                     <div style={{ display: 'flex', gap: '1.5rem' }}>

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { User, Mail, Lock, GraduationCap, School, CheckCircle, AlertCircle, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import './Register.css';
+import './css/Register.css';
 
 const Register = () => {
     const { t } = useTranslation();

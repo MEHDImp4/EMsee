@@ -5,6 +5,8 @@ import Footer from './components/Footer';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Contact from './pages/Contact';
+import About from './pages/About';
 
 function App() {
   const [theme, setTheme] = useState('light');
@@ -37,6 +39,8 @@ function App() {
             <Route path="/" element={<Landing theme={theme} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </main>
         <Footer />

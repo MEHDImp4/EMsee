@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import './Login.css';
+import './css/Login.css';
 
 const Login = () => {
     const { t } = useTranslation();

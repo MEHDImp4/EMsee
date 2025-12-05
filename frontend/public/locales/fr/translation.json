@@ -62,5 +62,22 @@
         "student_placeholder": "etudiant@emsi-edu.ma",
         "professor_placeholder": "prof@emsi.ma",
         "email_placeholder": "votre@email.com"
+    },
+    "contact_page": {
+        "title": "Contactez-nous",
+        "subtitle": "Une question ? Une suggestion ? N'hésitez pas à nous écrire.",
+        "name": "Nom complet",
+        "email": "Email",
+        "message": "Message",
+        "send": "Envoyer",
+        "success_message": "Votre message a été envoyé avec succès !"
+    },
+    "about_page": {
+        "title": "À propos de EMsee",
+        "description": "EMsee est plus qu'un simple réseau social. C'est un espace numérique conçu spécifiquement pour les étudiants de l'EMSI, permettant de connecter, partager et grandir ensemble.",
+        "mission_title": "Notre Mission",
+        "mission_desc": "Faciliter la vie étudiante en centralisant les outils de communication et d'entraide. Nous croyons en la force de la communauté pour réussir ses études.",
+        "team_title": "L'Équipe",
+        "team_desc": "Un projet réalisé avec passion par des étudiants, pour des étudiants."
     }
 }

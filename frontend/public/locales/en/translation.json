@@ -62,5 +62,22 @@
         "student_placeholder": "student@emsi-edu.ma",
         "professor_placeholder": "professor@emsi.ma",
         "email_placeholder": "your@email.com"
+    },
+    "contact_page": {
+        "title": "Contact Us",
+        "subtitle": "A question? A suggestion? Don't hesitate to write to us.",
+        "name": "Full Name",
+        "email": "Email",
+        "message": "Message",
+        "send": "Send",
+        "success_message": "Your message has been sent successfully!"
+    },
+    "about_page": {
+        "title": "About EMsee",
+        "description": "EMsee is more than just a social network. It is a digital space designed specifically for EMSI students, allowing them to connect, share, and grow together.",
+        "mission_title": "Our Mission",
+        "mission_desc": "To facilitate student life by centralizing communication and mutual aid tools. We believe in the strength of the community to succeed in studies.",
+        "team_title": "The Team",
+        "team_desc": "A project made with passion by students, for students."
     }
 }

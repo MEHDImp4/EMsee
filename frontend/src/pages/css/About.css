@@ -1,0 +1,94 @@
+
+.about-section {
+    padding: 4rem 0;
+    min-height: 80vh;
+}
+
+.about-container-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.about-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--primary);
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+}
+
+.about-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+}
+
+.about-description {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.about-features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 4rem 0;
+}
+
+.about-feature-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); /* Match other cards */
+    transition: transform 0.2s ease;
+}
+
+.about-feature-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.about-feature-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.about-feature-text {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.team-description {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.team-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.team-member-card {
+    flex: 1 1 200px;
+    max-width: 300px;
+    padding: 1rem;
+    background: var(--bg-soft);
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-main);
+}
