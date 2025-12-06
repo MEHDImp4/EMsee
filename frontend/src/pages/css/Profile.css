@@ -1,0 +1,253 @@
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 4rem;
+}
+
+/* Banner */
+.profile-banner {
+    height: 200px;
+    width: 100%;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 3rem; /* Space for avatar overlap */
+    background-color: var(--bg-card);
+}
+
+.banner-gradient {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    opacity: 0.9;
+}
+
+/* Header Content */
+.profile-header-content {
+    position: relative;
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar-wrapper {
+    position: absolute;
+    top: -80px; /* Overlap banner */
+    left: 1.5rem;
+    padding: 4px;
+    background-color: var(--bg-main); /* Match page bg */
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.profile-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background-color: var(--bg-card);
+    border: 4px solid var(--bg-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--text-main);
+    font-weight: 800;
+    overflow: hidden;
+    background-image: linear-gradient(45deg, var(--bg-card), var(--hover));
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.btn-edit-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-edit-profile:hover {
+    background-color: var(--hover);
+    border-color: var(--text-muted);
+}
+
+/* Identity */
+.profile-identity {
+    margin-top: 3rem;
+}
+
+.profile-name {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.profile-role-badge {
+    font-size: 0.875rem;
+    padding: 0.2rem 0.6rem;
+    background-color: var(--primary);
+    color: #fff;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    vertical-align: middle;
+    opacity: 0.9;
+}
+
+.profile-handle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-top: 0.25rem;
+}
+
+.profile-bio-text {
+    margin-top: 1rem;
+    color: var(--text-main);
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+/* Meta Info Row */
+.profile-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Stats Row */
+.profile-stats-row {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: var(--text-main);
+    font-size: 1.1rem;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* Grid for Cards */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1.5rem;
+    margin-top: 2rem;
+}
+
+.info-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon-wrapper.blue {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.card-icon-wrapper.green {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.card-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+@media (max-width: 640px) {
+    .profile-banner {
+        height: 120px;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 3rem;
+    }
+    
+    .profile-avatar-wrapper {
+        top: -50px;
+    }
+    
+    .profile-actions {
+        margin-top: 0.5rem;
+    }
+    
+    .profile-name {
+        font-size: 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .profile-meta-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

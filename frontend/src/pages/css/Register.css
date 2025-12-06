@@ -8,14 +8,184 @@
 
 .auth-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 480px; /* Slightly wider for the wizard */
 }
 
 .auth-card {
-  background: var(--card-bg);
-  padding: 2rem;
-  border-radius: var(--border-radius);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  background: var(--bg-card);
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.auth-subtitle {
+  color: var(--text-muted);
+}
+
+/* Wizard Specifics */
+.wizard-progress-container {
+  width: 100%;
+  height: 6px;
+  background-color: var(--hover);
+  border-radius: 99px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.wizard-progress-bar {
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.wizard-back-btn:hover {
+  color: var(--text-main);
+  background-color: var(--hover);
+  border-radius: 50%;
+}
+
+/* Large Type Selector Buttons */
+.type-btn-large {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 1.5rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+}
+
+.type-btn-large:hover {
+  border-color: var(--primary);
+  background: var(--hover);
+}
+
+.type-btn-large.active {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
+  color: var(--text-main);
+}
+
+.type-btn-large .icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: var(--hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+}
+
+.type-btn-large.active .icon-box {
+  background: var(--primary);
+  color: white;
+}
+
+.type-btn-large h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.check-icon {
+  position: absolute;
+  right: 1.5rem;
+  color: var(--primary);
+}
+
+/* Form Elements */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.input-status-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.error-message {
+  color: var(--danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.student-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-footer {
+  margin-top: auto;
+  padding-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.auth-link {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.auth-card {
+  background: var(--bg-card);
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .auth-header {

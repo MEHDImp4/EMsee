@@ -1,68 +1,110 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Home, Compass, Bell, Bookmark, Users, Settings, LogOut } from 'lucide-react';
+import { Home, Compass, Bell, Bookmark, Users, Settings, LogOut, PenTool, MessageSquare } from 'lucide-react';
 import logo from '../assets/logo.svg';
+import LogoutModal from './LogoutModal';
 
 const Sidebar = () => {
     const { t } = useTranslation();
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     const navItems = [
         { icon: Home, label: t('sidebar.home', 'Accueil'), path: '/feed' },
         { icon: Compass, label: t('sidebar.explore', 'Explorer'), path: '/explore' },
+        { icon: MessageSquare, label: t('sidebar.messages', 'Messages'), path: '/messages' },
         { icon: Bell, label: t('sidebar.notifications', 'Notifications'), path: '/notifications' },
         { icon: Bookmark, label: t('sidebar.bookmarks', 'Signets'), path: '/bookmarks' },
         { icon: Users, label: t('sidebar.community', 'Communauté'), path: '/community' },
         { icon: Settings, label: t('sidebar.settings', 'Paramètres'), path: '/settings' },
     ];
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    };
+
     return (
         <aside className="sidebar">
-            <div className="logo-area">
-                <img src={logo} alt="Logo" style={{ width: 32, height: 32 }} />
-                <span>ProjetJS</span>
-            </div>
+            <div className="sidebar-content">
+                <div className="logo-area">
+                    <div className="logo-circle">
+                        <img src={logo} alt="Logo" style={{ width: 38, height: 38 }} />
+                    </div>
+                </div>
 
-            <nav style={{ flex: 1 }}>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    {navItems.map((item) => (
-                        <li key={item.path}>
-                            <NavLink
-                                to={item.path}
-                                className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-                            >
-                                <item.icon size={24} />
-                                <span>{item.label}</span>
-                            </NavLink>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
+                <nav className="main-nav">
+                    <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        {navItems.map((item) => (
+                            <li key={item.path}>
+                                <NavLink
+                                    to={item.path}
+                                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                                >
+                                    <item.icon size={26} strokeWidth={2.5} />
+                                    <span className="nav-label">{item.label}</span>
+                                </NavLink>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
 
-            <div className="user-area" style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-                <button
-                    onClick={() => {
-                        localStorage.removeItem('token');
-                        window.location.href = '/';
-                    }}
-                    className="nav-item"
-                    style={{ width: '100%', marginBottom: '1rem', color: 'var(--danger)', justifyContent: 'flex-start' }}
-                >
-                    <LogOut size={24} />
-                    <span>{t('sidebar.logout', 'Déconnexion')}</span>
+                <button className="post-btn-large">
+                    <span className="post-btn-text">{t('sidebar.publish', 'Publier')}</span>
+                    <span className="post-btn-icon"><PenTool size={24} /></span>
                 </button>
 
-                {/* Placeholder for user profile at bottom */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--text-main)' }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'black', fontWeight: 'bold' }}>
-                        MA
-                    </div>
-                    <div>
-                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Mohammed Alami</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>@m.alami.emsi</div>
+                <div className="user-area-container">
+                    <div className="user-profile-card">
+                        <NavLink
+                            to="/profile"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                flex: 1,
+                                textDecoration: 'none',
+                                color: 'inherit',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <div className="avatar-circle">
+                                MA
+                            </div>
+                            <div className="user-info">
+                                <div className="user-name">Mohammed Alami</div>
+                                <div className="user-handle">@m.alami.emsi</div>
+                            </div>
+                        </NavLink>
+
+                        <button
+                            onClick={() => setShowLogoutModal(true)}
+                            className="logout-btn-mini"
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--danger)',
+                                cursor: 'pointer',
+                                padding: '0.5rem',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'background 0.2s'
+                            }}
+                            title={t('sidebar.logout', 'Déconnexion')}
+                        >
+                            <LogOut size={20} />
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <LogoutModal
+                isOpen={showLogoutModal}
+                onClose={() => setShowLogoutModal(false)}
+                onConfirm={handleLogout}
+            />
         </aside>
     );
 };

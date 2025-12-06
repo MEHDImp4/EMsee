@@ -1,28 +1,32 @@
 :root {
-  /* Common */
-  --primary: #4ADE80; /* Original Lime Green */
-  --primary-hover: #22c55e;
-  --secondary: #FB923C; /* Original Orange */
-  --danger: #ef4444;
+  /* Matching Gradient Palette */
+  --primary: #A3CFCD; /* Light Teal/Aqua - The Highlight */
+  --primary-hover: #82A0AA; /* Muted Blue-Grey for hover */
+  --secondary: #677381; /* Mid Grey-Blue */
+  --danger: #EF4444;
   --radius: 1rem;
   
   /* Light Mode */
-  --bg-main: #FDFBF7; /* Warm off-white */
-  --bg-sidebar: #FDFBF7; /* Same as main for seamless look, or slightly darker if needed */
+  --bg-main: #FFFFFF; 
+  --bg-sidebar: #F8FAFC;
   --bg-card: #FFFFFF;
-  --text-main: #1F2937;
-  --text-muted: #6B7280;
-  --border: #D1D5DB; /* Lighter border for light mode */
-  --hover: #F3F4F6;
+  --text-main: #2A272A; /* Dark Charcoal for text */
+  --text-muted: #677381; /* Grey Blue */
+  --border: #E5E7EB;
+  --hover: #A3CFCD30; /* Light Teal transparent */
 }
 
 [data-theme="dark"] {
-  /* Dark Mode */
-  --bg-main: #111827; /* Dark Gray */
-  --bg-sidebar: #111827;
-  --bg-card: #1F2937;
-  --text-main: #F9FAFB;
-  --text-muted: #9CA3AF;
-  --border: #374151;
-  --hover: #374151;
+  /* Dark Mode - Gradient Base */
+  --bg-main: #000000; /* Pure Black */
+  --bg-sidebar: #000000;
+  --bg-card: #2A272A; /* Dark Charcoal */
+  --text-main: #FFFFFF;
+  --text-muted: #82A0AA; /* Light Grey Blue for better readability on dark */
+  --border: #4B4A54; /* Dark Grey border */
+  --hover: #2A272A; /* Charcoal hover */
+  
+  /* Accents */
+  --primary: #A3CFCD; /* The POP color */
+  --primary-hover: #82A0AA;
 }

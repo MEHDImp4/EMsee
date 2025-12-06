@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
   <!-- Abstract E shape formed by network nodes/bubbles -->
-  <path d="M30 25H75" stroke="#FB923C" stroke-width="12" stroke-linecap="round"/>
-  <path d="M30 50H65" stroke="#4ADE80" stroke-width="12" stroke-linecap="round"/>
-  <path d="M30 75H75" stroke="#FB923C" stroke-width="12" stroke-linecap="round"/>
+  <path d="M30 25H75" stroke="#00C9A3" stroke-width="12" stroke-linecap="round"/>
+  <path d="M30 50H65" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"/>
+  <path d="M30 75H75" stroke="#00C9A3" stroke-width="12" stroke-linecap="round"/>
   
   <!-- Vertical connecting line -->
-  <path d="M30 25V75" stroke="#FB923C" stroke-width="12" stroke-linecap="round"/>
+  <path d="M30 25V75" stroke="#00C9A3" stroke-width="12" stroke-linecap="round"/>
   
   <!-- Decorative dots/nodes -->
-  <circle cx="75" cy="25" r="6" fill="#4ADE80"/>
-  <circle cx="65" cy="50" r="6" fill="#FB923C"/>
-  <circle cx="75" cy="75" r="6" fill="#4ADE80"/>
+  <circle cx="75" cy="25" r="6" fill="#FFFFFF"/>
+  <circle cx="65" cy="50" r="6" fill="#00C9A3"/>
+  <circle cx="75" cy="75" r="6" fill="#FFFFFF"/>
 </svg>

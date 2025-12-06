@@ -11,7 +11,11 @@ import Register from './pages/Register';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Feed from './pages/Feed';
+import Messages from './pages/Messages';
+import Explore from './pages/Explore';
 import Settings from './pages/Settings';
+import Profile from './pages/Profile';
+import Notifications from './pages/Notifications';
 
 function App() {
   const [themeMode, setThemeMode] = useState(localStorage.getItem('themeMode') || 'auto');
@@ -64,9 +68,11 @@ function App() {
           </ProtectedRoute>
         }>
           <Route path="/feed" element={<Feed />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings themeMode={themeMode} setThemeMode={setThemeMode} />} />
-          <Route path="/explore" element={<div className="container" style={{ padding: '2rem' }}><h2>Explorer</h2><p>Coming Soon</p></div>} />
-          <Route path="/notifications" element={<div className="container" style={{ padding: '2rem' }}><h2>Notifications</h2><p>Coming Soon</p></div>} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/bookmarks" element={<div className="container" style={{ padding: '2rem' }}><h2>Signets</h2><p>Coming Soon</p></div>} />
           <Route path="/community" element={<div className="container" style={{ padding: '2rem' }}><h2>Communauté</h2><p>Coming Soon</p></div>} />
         </Route>

@@ -40,6 +40,10 @@
         "login_subtitle": "Login to access your feed.",
         "email": "Email",
         "password": "Password",
+        "confirm_password": "Confirm Password",
+        "password_requirements": "Min 8 chars, 1 uppercase.",
+        "password_hint": "Must contain 8 chars and 1 uppercase.",
+        "password_mismatch": "Passwords do not match.",
         "login_btn": "Login",
         "no_account": "No account yet?",
         "create_account": "Create an account",
@@ -47,21 +51,12 @@
         "register_subtitle": "Create your EMsee account now.",
         "student": "Student",
         "professor": "Professor",
+        "username": "Username",
+        "username_placeholder": "john.doe",
+        "username_error": "Lowercase and dots only.",
         "full_name": "Full Name",
         "study_level": "Study Level",
-        "select_level": "Select a level",
-        "year_1_prepa": "1st year prepa",
-        "year_2_prepa": "2nd year prepa",
-        "year_3_iir": "3rd year IIR",
-        "year_4_iir": "4th year IIR",
-        "year_5_iir": "5th year IIR",
-        "class": "Class",
-        "register_btn": "Register",
-        "already_account": "Already have an account?",
-        "email_error": "Email must end with",
-        "student_placeholder": "student@emsi-edu.ma",
-        "professor_placeholder": "professor@emsi.ma",
-        "email_placeholder": "your@email.com"
+        "select_level": "Select a level"
     },
     "contact_page": {
         "title": "Contact Us",
@@ -80,25 +75,65 @@
         "team_title": "The Team",
         "team_desc": "A project made with passion by students, for students."
     },
+    "explore": {
+        "search_placeholder": "Search EMsee",
+        "trends_for_you": "Trends for you",
+        "coming_soon": "Content coming soon...",
+        "tabs": {
+            "foryou": "For you",
+            "trending": "Trending",
+            "clubs": "Clubs",
+            "events": "Events"
+        }
+    },
+    "right_sidebar": {
+        "search": "Search",
+        "trends_for_you": "Trends for you",
+        "show_more": "Show more",
+        "suggestions": "Suggestions",
+        "follow": "Follow"
+    },
+    "feed": {
+        "title": "News Feed",
+        "placeholder": "What's happening at EMSI?",
+        "onboarding_title": "Welcome",
+        "onboarding_body": "Start by following topics and people to fill your feed.",
+        "onboarding_dismiss": "Later",
+        "onboarding_get_started": "Let's go",
+        "everyone_can_reply": "Everyone can reply",
+        "tabs": {
+            "foryou": "For you",
+            "class": "My Class"
+        }
+    },
+    "notifications": {
+        "tabs": {
+            "all": "All",
+            "verified": "Verified",
+            "mentions": "Mentions"
+        }
+    },
+    "profile": {
+        "edit": "Edit",
+        "level": "Level",
+        "class": "Class",
+        "joined": "Member since",
+        "bio": "Biography"
+    },
     "sidebar": {
+        "publish": "Post",
         "home": "Home",
         "explore": "Explore",
+        "messages": "Messages",
         "notifications": "Notifications",
         "bookmarks": "Bookmarks",
         "community": "Community",
         "settings": "Settings",
-        "logout": "Logout"
-    },
-    "settings": {
-        "appearance": "Appearance",
-        "theme_desc": "Choose your preferred theme.",
-        "language": "Language"
-    },
-    "feed": {
-        "title": "News Feed",
-        "onboarding_title": "Welcome",
-        "onboarding_body": "Start by following topics and people to fill your feed.",
-        "onboarding_dismiss": "Later",
-        "onboarding_get_started": "Let's go"
+        "profile": "Profile",
+        "logout": "Logout",
+        "logout_confirm": "Log out of EMsee?",
+        "logout_desc": "You can always log back in at any time. If you just want to switch accounts, you can add an existing account.",
+        "logout_btn": "Log out",
+        "cancel": "Cancel"
     }
 }

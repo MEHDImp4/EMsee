@@ -1,4 +1,7 @@
 {
+    "app_name": "ProjetJS",
+    "step": "Étape",
+    "next": "Suivant",
     "hero": {
         "title": "Le réseau social <1>étudiant</1> qui vous connecte.",
         "subtitle": "Partagez vos idées, collaborez sur des projets et restez informés de la vie du campus. Une communauté bienveillante vous attend.",
@@ -37,16 +40,18 @@
     },
     "auth": {
         "welcome_back": "Bon retour !",
-        "login_subtitle": "Connectez-vous pour accéder à votre feed.",
+        "join_us": "Rejoignez-nous !",
+        "login_subtitle": "Connectez-vous pour accéder à votre fil d'actualité.",
+        "student": "Étudiant",
+        "professor": "Professeur",
         "email": "Email",
         "password": "Mot de passe",
         "login_btn": "Se connecter",
         "no_account": "Pas encore de compte ?",
+        "already_account": "Déjà un compte ?",
+        "register_btn": "S'inscrire",
         "create_account": "Créer un compte",
-        "join_us": "Rejoignez-nous",
-        "register_subtitle": "Créez votre compte EMsee dès maintenant.",
-        "student": "Étudiant",
-        "professor": "Professeur",
+        "username_error": "Minuscules et points uniquement.",
         "full_name": "Nom complet",
         "study_level": "Niveau d'étude",
         "select_level": "Sélectionner un niveau",
@@ -56,8 +61,7 @@
         "year_4_iir": "4ème année IIR",
         "year_5_iir": "5ème année IIR",
         "class": "Classe",
-        "register_btn": "S'inscrire",
-        "already_account": "Déjà un compte ?",
+        "field_required": "Ce champ est requis.",
         "email_error": "L'email doit se terminer par",
         "student_placeholder": "etudiant@emsi-edu.ma",
         "professor_placeholder": "prof@emsi.ma",
@@ -80,25 +84,65 @@
         "team_title": "L'Équipe",
         "team_desc": "Un projet réalisé avec passion par des étudiants, pour des étudiants."
     },
+    "explore": {
+        "search_placeholder": "Rechercher sur EMsee",
+        "trends_for_you": "Tendances pour vous",
+        "coming_soon": "Contenu à venir...",
+        "tabs": {
+            "foryou": "Pour vous",
+            "trending": "Tendances",
+            "clubs": "Clubs",
+            "events": "Événements"
+        }
+    },
+    "right_sidebar": {
+        "search": "Rechercher",
+        "trends_for_you": "Tendances pour vous",
+        "show_more": "Voir plus",
+        "suggestions": "Suggestions",
+        "follow": "Suivre"
+    },
+    "feed": {
+        "title": "Fil d'actualité",
+        "placeholder": "Quoi de neuf à l'EMSI ?",
+        "onboarding_title": "Bienvenue",
+        "onboarding_body": "Commencez par suivre des sujets et des personnes pour remplir votre feed.",
+        "onboarding_dismiss": "Plus tard",
+        "onboarding_get_started": "C'est parti",
+        "everyone_can_reply": "Tout le monde peut répondre",
+        "tabs": {
+            "foryou": "Pour vous",
+            "class": "Ma Classe"
+        }
+    },
+    "notifications": {
+        "tabs": {
+            "all": "Tous",
+            "verified": "Vérifié",
+            "mentions": "Mentions"
+        }
+    },
+    "profile": {
+        "edit": "Modifier",
+        "level": "Niveau",
+        "class": "Classe",
+        "joined": "Membre depuis",
+        "bio": "Biographie"
+    },
     "sidebar": {
+        "publish": "Publier",
         "home": "Accueil",
         "explore": "Explorer",
+        "messages": "Messages",
         "notifications": "Notifications",
         "bookmarks": "Signets",
         "community": "Communauté",
         "settings": "Paramètres",
-        "logout": "Déconnexion"
-    },
-    "settings": {
-        "appearance": "Apparence",
-        "theme_desc": "Choisissez votre thème préféré.",
-        "language": "Langue"
-    },
-    "feed": {
-        "title": "Fil d'actualité",
-        "onboarding_title": "Bienvenue",
-        "onboarding_body": "Commencez par suivre des sujets et des personnes pour remplir votre feed.",
-        "onboarding_dismiss": "Plus tard",
-        "onboarding_get_started": "C'est parti"
+        "profile": "Profil",
+        "logout": "Déconnexion",
+        "logout_confirm": "Se déconnecter de EMsee ?",
+        "logout_desc": "Vous pourrez toujours vous reconnecter à tout moment. Si vous voulez juste changer de compte, vous pouvez ajouter un compte existant.",
+        "logout_btn": "Se déconnecter",
+        "cancel": "Annuler"
     }
 }
