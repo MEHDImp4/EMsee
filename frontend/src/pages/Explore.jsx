@@ -22,9 +22,9 @@ const Explore = () => {
     ];
 
     return (
-        <div className="main-content" style={{ flex: 1, borderRight: '1px solid var(--border)' }}>
+        <div className="explore-page" style={{ flex: 1, borderRight: '1px solid var(--border)' }}>
             {/* Search Header */}
-            <div className="feed-header" style={{ padding: '0.5rem 1rem' }}>
+            <div className="feed-header sticky-header" style={{ padding: '0.5rem 1rem' }}>
                 <div className="search-bar" style={{ width: '100%' }}>
                     <Search size={20} className="search-icon" />
                     <input
@@ -53,16 +53,16 @@ const Explore = () => {
             <div style={{ paddingBottom: '2rem' }}>
                 {activeTab === 'foryou' && (
                     <div className="trends-list">
-                         <h3 style={{ padding: '1rem', fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
+                        <h3 style={{ padding: '1rem', fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
                             {t('explore.trends_for_you', 'Tendances pour vous')}
                         </h3>
                         {trends.map((trend, index) => (
-                            <div 
-                                key={index} 
-                                className="trend-item" 
-                                style={{ 
-                                    padding: '1rem', 
-                                    display: 'flex', 
+                            <div
+                                key={index}
+                                className="trend-item"
+                                style={{
+                                    padding: '1rem',
+                                    display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'flex-start',
                                     borderBottom: '1px solid var(--border)',
@@ -88,7 +88,7 @@ const Explore = () => {
                         ))}
                     </div>
                 )}
-                
+
                 {activeTab !== 'foryou' && (
                     <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
                         <p>{t('explore.coming_soon', 'Contenu à venir...')}</p>

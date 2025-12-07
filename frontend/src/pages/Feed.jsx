@@ -89,6 +89,60 @@ const Feed = () => {
           </div>
         </div>
       </div>
+
+      {/* Posts List */}
+      <div className="posts-list">
+        {posts.map(post => (
+          <div key={post.id} className="post-card">
+            <div className="post-avatar-col">
+              <div className="avatar-circle">
+                {post.user.charAt(0)}
+              </div>
+            </div>
+
+            <div className="post-content-col" style={{ flex: 1 }}>
+              <div className="post-header">
+                <div className="post-info-row">
+                  <span className="post-name">{post.user}</span>
+                  <span className="post-handle">{post.handle}</span>
+                  <span className="post-dot">·</span>
+                  <span className="post-time">{post.time}</span>
+                  {post.isProf && <span className="prof-badge">Professeur</span>}
+                </div>
+                <button className="more-options-btn">•••</button>
+              </div>
+
+              <div className="post-text">
+                {post.content}
+              </div>
+
+              {post.code && (
+                <div className="code-block">
+                  <pre>{post.code}</pre>
+                </div>
+              )}
+
+              <div className="post-actions">
+                <button className="action-btn comment">
+                  <div className="icon-wrapper"><MessageCircle size={18} /></div>
+                  <span>{post.comments}</span>
+                </button>
+                <button className="action-btn retweet">
+                  <div className="icon-wrapper"><Repeat size={18} /></div>
+                  <span>0</span>
+                </button>
+                <button className="action-btn like">
+                  <div className="icon-wrapper"><Heart size={18} /></div>
+                  <span>{post.likes}</span>
+                </button>
+                <button className="action-btn share">
+                  <div className="icon-wrapper"><Share size={18} /></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

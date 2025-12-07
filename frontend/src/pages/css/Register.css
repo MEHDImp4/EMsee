@@ -291,3 +291,47 @@
   color: var(--primary);
   font-weight: 600;
 }
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+  }
+  
+  .auth-container {
+    padding: 0 1rem;
+    max-width: 100%;
+  }
+
+  .auth-title {
+    font-size: 1.75rem;
+  }
+  
+  /* Wizard adjustments */
+  .type-btn-large {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .type-btn-large .icon-box {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+  
+  .check-icon {
+    right: 1rem;
+    font-size: 1rem;
+  }
+  
+  .wizard-progress-container {
+    margin-bottom: 1.5rem;
+  }
+  
+  .auth-form {
+      gap: 1rem;
+  }
+}

@@ -6,8 +6,8 @@ const Messages = () => {
     const { t } = useTranslation();
 
     return (
-        <div className="main-content" style={{ flex: 1, borderRight: '1px solid var(--border)' }}>
-            <div className="feed-header" style={{ padding: '1rem' }}>
+        <div className="messages-page" style={{ flex: 1, borderRight: '1px solid var(--border)' }}>
+            <div className="feed-header sticky-header" style={{ padding: '0.5rem 1rem' }}>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0 }}>Messages</h2>
             </div>
 

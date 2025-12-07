@@ -5,7 +5,7 @@ import { Home, Compass, Bell, Bookmark, Users, Settings, LogOut, PenTool, Messag
 import logo from '../assets/logo.svg';
 import LogoutModal from './LogoutModal';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -25,21 +25,43 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="sidebar">
+        <aside className={`sidebar ${isOpen ? 'drawer-open' : ''}`}>
+            {/* Drawer Header for mobile */}
+            <div className="drawer-header mobile-only">
+                <div className="drawer-profile-info">
+                    <div className="avatar-circle-large">MA</div>
+                    <div className="drawer-user-details">
+                        <span className="drawer-name">Mohammed Alami</span>
+                        <span className="drawer-handle">@m.alami.emsi</span>
+                    </div>
+                    <div className="drawer-stats">
+                        <div className="stat-item">
+                            <span className="stat-value">142</span>
+                            <span className="stat-label">{t('profile.following', 'Abonnements')}</span>
+                        </div>
+                        <div className="stat-item">
+                            <span className="stat-value">584</span>
+                            <span className="stat-label">{t('profile.followers', 'Abonnés')}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className="sidebar-content">
-                <div className="logo-area">
+                <div className="logo-area desktop-only">
                     <div className="logo-circle">
                         <img src={logo} alt="Logo" style={{ width: 38, height: 38 }} />
                     </div>
                 </div>
 
                 <nav className="main-nav">
-                    <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <ul className="nav-list">
                         {navItems.map((item) => (
                             <li key={item.path}>
                                 <NavLink
                                     to={item.path}
                                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                                    onClick={onClose} /* Close drawer on click */
                                 >
                                     <item.icon size={26} strokeWidth={2.5} />
                                     <span className="nav-label">{item.label}</span>
@@ -49,12 +71,12 @@ const Sidebar = () => {
                     </ul>
                 </nav>
 
-                <button className="post-btn-large">
+                <button className="post-btn-large desktop-only">
                     <span className="post-btn-text">{t('sidebar.publish', 'Publier')}</span>
                     <span className="post-btn-icon"><PenTool size={24} /></span>
                 </button>
 
-                <div className="user-area-container">
+                <div className="user-area-container desktop-only">
                     <div className="user-profile-card">
                         <NavLink
                             to="/profile"
@@ -97,6 +119,18 @@ const Sidebar = () => {
                             <LogOut size={20} />
                         </button>
                     </div>
+                </div>
+
+                {/* Mobile Logout Button (at bottom of drawer list) */}
+                <div className="mobile-only" style={{ marginTop: 'auto', padding: '1rem' }}>
+                    <button
+                        onClick={() => setShowLogoutModal(true)}
+                        className="nav-item"
+                        style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--danger)' }}
+                    >
+                        <LogOut size={26} />
+                        <span className="nav-label" style={{ color: 'var(--danger)' }}>{t('sidebar.logout', 'Déconnexion')}</span>
+                    </button>
                 </div>
             </div>
 
