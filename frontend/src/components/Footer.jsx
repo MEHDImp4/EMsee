@@ -2,11 +2,13 @@ import React from 'react';
 import { Twitter, Instagram, Linkedin, Mail, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 import logo from '../assets/logo.svg';
 
-const Footer = ({ themeMode, setThemeMode }) => {
+const Footer = () => {
     const { i18n, t } = useTranslation();
+    const { themeMode, setThemeMode } = useTheme();
 
     const toggleLanguage = () => {
         const newLang = i18n.language === 'fr' ? 'en' : 'fr';

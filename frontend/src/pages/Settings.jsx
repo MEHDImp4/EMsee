@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Sun, Monitor } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import './css/Settings.css';
 
-const Settings = ({ themeMode, setThemeMode }) => {
+const Settings = () => {
     const { t, i18n } = useTranslation();
+    const { themeMode, setThemeMode } = useTheme();
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
