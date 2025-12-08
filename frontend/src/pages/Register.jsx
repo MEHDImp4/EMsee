@@ -150,23 +150,21 @@ const Register = () => {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="auth-card"
-                    style={{ minHeight: '520px', display: 'flex', flexDirection: 'column' }}
+                    className="auth-card auth-card-full"
                 >
-                    <div className="auth-header" style={{ position: 'relative', marginBottom: '1.5rem' }}>
+                    <div className="auth-header auth-header-relative">
                         {currentStep > 1 && (
                             <button
                                 onClick={handleBack}
                                 className="wizard-back-btn"
-                                style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-muted)' }}
                             >
                                 <ChevronLeft size={24} />
                             </button>
                         )}
-                        <h1 className="auth-title" style={{ fontSize: '1.5rem', margin: 0 }}>
+                        <h1 className="auth-title auth-title-large">
                             {currentStep === 1 ? t('auth.join_us') : t('auth.create_account')}
                         </h1>
-                        <p className="auth-subtitle" style={{ fontSize: '0.9rem' }}>
+                        <p className="auth-subtitle auth-subtitle-small">
                             {t('step')} {currentStep} / {totalSteps}
                         </p>
                     </div>
@@ -180,7 +178,7 @@ const Register = () => {
                         />
                     </div>
 
-                    <form className="auth-form" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <  form className="auth-form auth-form-flex">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={currentStep}
@@ -191,7 +189,7 @@ const Register = () => {
                                 style={{ flex: 1 }}
                             >
                                 {currentStep === 1 && (
-                                    <div className="account-type-selector" style={{ flexDirection: 'column', gap: '1rem', background: 'transparent', padding: 0 }}>
+                                    <div className="account-type-selector account-type-selector-col">
                                         <button
                                             type="button"
                                             onClick={() => setAccountType('student')}
@@ -200,7 +198,7 @@ const Register = () => {
                                             <div className="icon-box"><GraduationCap size={32} /></div>
                                             <div>
                                                 <h3>{t('auth.student')}</h3>
-                                                <p style={{ fontSize: '0.8rem', opacity: 0.8 }}>@emsi-edu.ma</p>
+                                                <p className="student-email-hint">@emsi-edu.ma</p>
                                             </div>
                                             {accountType === 'student' && <CheckCircle className="check-icon" size={24} />}
                                         </button>
@@ -212,7 +210,7 @@ const Register = () => {
                                             <div className="icon-box"><BookOpen size={32} /></div>
                                             <div>
                                                 <h3>{t('auth.professor')}</h3>
-                                                <p style={{ fontSize: '0.8rem', opacity: 0.8 }}>@emsi.ma</p>
+                                                <p className="student-email-hint">@emsi.ma</p>
                                             </div>
                                             {accountType === 'professor' && <CheckCircle className="check-icon" size={24} />}
                                         </button>
@@ -241,7 +239,7 @@ const Register = () => {
                                         <div className="form-group">
                                             <label className="form-label">{t('auth.username')}</label>
                                             <div className="input-wrapper">
-                                                <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>@</span>
+                                                <span className="input-prefix">@</span>
                                                 <input
                                                     type="text"
                                                     placeholder={t('auth.username_placeholder')}
@@ -262,7 +260,7 @@ const Register = () => {
 
                                         <div className="form-group">
                                             <label className="form-label">
-                                                {t('auth.email')} <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>({accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'})</span>
+                                                {t('auth.email')} <span className="student-email-hint">({accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'})</span>
                                             </label>
                                             <div className="input-wrapper">
                                                 <Mail size={20} className="input-icon" />
@@ -298,7 +296,7 @@ const Register = () => {
                                                     <label className="form-label">{t('auth.study_level')}</label>
                                                     <div className="input-wrapper">
                                                         <GraduationCap size={20} className="input-icon" />
-                                                        <select className="form-input" style={{ appearance: 'none' }}>
+                                                        <select className="form-input select-none-appearance">
                                                             <option value="">{t('auth.select_level')}</option>
                                                             <option value="1ap">{t('auth.year_1_prepa')}</option>
                                                             <option value="2ap">{t('auth.year_2_prepa')}</option>
@@ -324,32 +322,20 @@ const Register = () => {
                                         ) : (
                                             <div className="professor-fields">
                                                 <label className="form-label">{t('auth.subjects_taught')}</label>
-                                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.75rem', marginTop: '0.5rem' }}>
+                                                <div className="subject-grid">
                                                     {AVAILABLE_SUBJECTS.map(subject => (
                                                         <button
                                                             key={subject}
                                                             type="button"
                                                             onClick={() => toggleSubject(subject)}
                                                             className={`subject-badge ${selectedSubjects.includes(subject) ? 'active' : ''}`}
-                                                            style={{
-                                                                padding: '0.6rem 0.5rem',
-                                                                borderRadius: '8px',
-                                                                border: selectedSubjects.includes(subject) ? '1px solid var(--primary)' : '1px solid var(--border)',
-                                                                background: selectedSubjects.includes(subject) ? 'color-mix(in srgb, var(--primary) 10%, transparent)' : 'var(--bg-card)',
-                                                                color: selectedSubjects.includes(subject) ? 'var(--primary)' : 'var(--text-muted)',
-                                                                cursor: 'pointer',
-                                                                fontSize: '0.85rem',
-                                                                fontWeight: selectedSubjects.includes(subject) ? '600' : '500',
-                                                                transition: 'all 0.2s',
-                                                                textAlign: 'center'
-                                                            }}
                                                         >
                                                             {subject}
                                                         </button>
                                                     ))}
                                                 </div>
                                                 {showErrors && selectedSubjects.length === 0 && (
-                                                    <p className="error-message" style={{ marginTop: '1rem' }}>{t('auth.select_at_least_one')}</p>
+                                                    <p className="error-message error-mt">{t('auth.select_at_least_one')}</p>
                                                 )}
                                             </div>
                                         )}
@@ -377,12 +363,12 @@ const Register = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowPassword(!showPassword)}
-                                                    style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}
+                                                    className="password-toggle-btn"
                                                 >
                                                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                                 </button>
                                             </div>
-                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+                                            <p className="password-hint">
                                                 {t('auth.password_hint')}
                                             </p>
                                             {showErrors && !password && <p className="error-message">{t('auth.field_required')}</p>}
@@ -422,12 +408,11 @@ const Register = () => {
                             </motion.div>
                         </AnimatePresence>
 
-                        <div className="wizard-footer" style={{ marginTop: '2rem' }}>
+                        <div className="wizard-footer wizard-footer-gap">
                             {currentStep < 4 ? (
                                 <button
                                     type="button"
-                                    className="btn btn-primary"
-                                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                                    className="btn btn-primary btn-full-width btn-center-icon"
                                     onClick={handleNext}
                                 >
                                     {t('next')} <ChevronRight size={20} />
@@ -435,8 +420,7 @@ const Register = () => {
                             ) : (
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
-                                    style={{ width: '100%' }}
+                                    className="btn btn-primary btn-full-width"
                                     onClick={handleSubmit}
                                 >
                                     {t('auth.register_btn')}
