@@ -21,6 +21,7 @@ i18n
         interpolation: {
             escapeValue: false, // not needed for react as it escapes by default
         },
+        load: 'languageOnly', // prevents loading en-US which causes issues with SPA fallback
     });
 
 export default i18n;
