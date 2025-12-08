@@ -1,32 +1,33 @@
 :root {
-  /* Matching Gradient Palette */
-  --primary: #A3CFCD; /* Light Teal/Aqua - The Highlight */
-  --primary-hover: #82A0AA; /* Muted Blue-Grey for hover */
-  --secondary: #677381; /* Mid Grey-Blue */
-  --danger: #EF4444;
+  /* Ocean Sunset Vibes Palette */
+  --primary: #3E8893; /* Teal */
+  --primary-hover: #2A5F66;
+  --secondary: #6B8A99; /* Muted Navy Blue */
+  --danger: #E06C66; /* Salmon */
   --radius: 1rem;
   
   /* Light Mode */
   --bg-main: #FFFFFF; 
-  --bg-sidebar: #F8FAFC;
+  --bg-sidebar: #F0F6F9; /* Very light tint of the light blue */
   --bg-card: #FFFFFF;
-  --text-main: #2A272A; /* Dark Charcoal for text */
-  --text-muted: #677381; /* Grey Blue */
-  --border: #E5E7EB;
-  --hover: #A3CFCD30; /* Light Teal transparent */
+  --text-main: #1D3140; /* Dark Navy from palette */
+  --text-muted: #6B8A99; 
+  --border: #C5D9E2; /* Light Blue-Grey from palette */
+  --hover: #3E889320; 
 }
 
 [data-theme="dark"] {
-  /* Dark Mode - Gradient Base */
-  --bg-main: #000000; /* Pure Black */
-  --bg-sidebar: #000000;
-  --bg-card: #2A272A; /* Dark Charcoal */
-  --text-main: #FFFFFF;
-  --text-muted: #82A0AA; /* Light Grey Blue for better readability on dark */
-  --border: #4B4A54; /* Dark Grey border */
-  --hover: #2A272A; /* Charcoal hover */
+  /* Dark Mode - Ocean Sunset Theme */
+  --bg-main: #1D3140; /* Dark Navy Main BG */
+  --bg-sidebar: #15232E; /* Darker Navy */
+  --bg-card: #264052; /* Lighter Navy Card */
+  --text-main: #F0F6F9; /* Off-white / Very light blue */
+  --text-muted: #94AAB5; 
+  --border: #3E5463; 
+  --hover: #264052; 
   
   /* Accents */
-  --primary: #A3CFCD; /* The POP color */
-  --primary-hover: #82A0AA;
+  --primary: #3E8893; 
+  --primary-hover: #5AA6B0;
+  --danger: #E06C66;
 }

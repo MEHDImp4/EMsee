@@ -107,7 +107,7 @@ const Feed = () => {
                   <span className="post-handle">{post.handle}</span>
                   <span className="post-dot">·</span>
                   <span className="post-time">{post.time}</span>
-                  {post.isProf && <span className="prof-badge">Professeur</span>}
+                  {post.isProf && <span className="prof-badge">{t('feed.role.professor', 'Professeur')}</span>}
                 </div>
                 <button className="more-options-btn">•••</button>
               </div>

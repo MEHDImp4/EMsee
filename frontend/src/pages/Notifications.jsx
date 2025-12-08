@@ -71,9 +71,7 @@ const Notifications = () => {
                     <h2 className="mobile-only-title" style={{ display: 'block', fontSize: '1.25rem', fontWeight: 800 }}>
                         {t('sidebar.notifications', 'Notifications')}
                     </h2>
-                    <button className="icon-btn" style={{ color: 'var(--text-main)' }}>
-                        <Settings size={20} />
-                    </button>
+
                 </div>
 
                 <div className="feed-tabs">

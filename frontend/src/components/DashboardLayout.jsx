@@ -18,8 +18,47 @@ const DashboardLayout = ({ children }) => {
         setIsComposeOpen(false);
     }, [location]);
 
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchEnd, setTouchEnd] = useState(null);
+
+    // Swipe Thresholds
+    const minSwipeDistance = 50;
+    const edgeSwipeLimit = 40; // Only allow swipe-to-open from the left edge
+
+    const onTouchStart = (e) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        // Close Drawer on Swipe Left
+        if (isDrawerOpen && isLeftSwipe) {
+            setIsDrawerOpen(false);
+        }
+
+        // Open Drawer on Swipe Right (only if starting from left edge)
+        if (!isDrawerOpen && isRightSwipe && touchStart < edgeSwipeLimit) {
+            setIsDrawerOpen(true);
+        }
+    };
+
     return (
-        <div className="app-layout">
+        <div
+            className="app-layout"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+        >
             <MobileHeader onAvatarClick={() => setIsDrawerOpen(true)} />
 
             <Sidebar

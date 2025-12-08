@@ -21,23 +21,23 @@ const RightSidebar = () => {
                 <h3>{t('right_sidebar.trends_for_you', 'Tendances pour vous')}</h3>
 
                 <div className="trend-item">
-                    <div className="trend-meta">Tendances • Maroc</div>
+                    <div className="trend-meta">{t('right_sidebar.trending', 'Tendances')} • {t('right_sidebar.morocco', 'Maroc')}</div>
                     <div className="trend-name">#SaharaMarocain</div>
-                    <div className="trend-count">12.5k posts</div>
+                    <div className="trend-count">12.5k {t('right_sidebar.posts', 'posts')}</div>
                     <button className="more-btn"><MoreHorizontal size={16} /></button>
                 </div>
 
                 <div className="trend-item">
-                    <div className="trend-meta">Éducation • Tendance</div>
+                    <div className="trend-meta">{t('right_sidebar.education', 'Éducation')} • {t('right_sidebar.trending', 'Tendances')}</div>
                     <div className="trend-name">PFE 2025</div>
-                    <div className="trend-count">4,203 posts</div>
+                    <div className="trend-count">4,203 {t('right_sidebar.posts', 'posts')}</div>
                     <button className="more-btn"><MoreHorizontal size={16} /></button>
                 </div>
 
                 <div className="trend-item">
-                    <div className="trend-meta">Technologie • Tendance</div>
+                    <div className="trend-meta">{t('right_sidebar.technology', 'Technologie')} • {t('right_sidebar.trending', 'Tendances')}</div>
                     <div className="trend-name">React & Tailwind</div>
-                    <div className="trend-count">1,502 posts</div>
+                    <div className="trend-count">1,502 {t('right_sidebar.posts', 'posts')}</div>
                     <button className="more-btn"><MoreHorizontal size={16} /></button>
                 </div>
 

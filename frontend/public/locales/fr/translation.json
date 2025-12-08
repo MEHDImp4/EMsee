@@ -100,7 +100,12 @@
         "trends_for_you": "Tendances pour vous",
         "show_more": "Voir plus",
         "suggestions": "Suggestions",
-        "follow": "Suivre"
+        "follow": "Suivre",
+        "posts": "posts",
+        "trending": "Tendances",
+        "education": "Éducation",
+        "technology": "Technologie",
+        "morocco": "Maroc"
     },
     "feed": {
         "title": "Fil d'actualité",
@@ -113,6 +118,9 @@
         "tabs": {
             "foryou": "Pour vous",
             "class": "Ma Classe"
+        },
+        "role": {
+            "professor": "Professeur"
         }
     },
     "notifications": {

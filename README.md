@@ -21,23 +21,33 @@ ProjetJS propose une architecture moderne et claire : authentification JWT, fil 
 ## Stack technique 🛠️
 - **Frontend** : React 18, React Router, Axios  
 - **Backend** : Node.js, Express, JWT  
-- **Base de données** : MySQL (configurable)
+- **Base de données** : PostgreSQL 
 
 ## Structure du dépôt 📂
-```
 
+```
 ProjetJS/
 ├─ backend/
-│  ├─ src/
-│  ├─ .env.example
-│  └─ package.json
+│  ├─ src/                 # Code source du backend (controllers, services, models, routes...)
+│  ├─ dist/                # Fichiers compilés TypeScript
+│  ├─ node_modules/        # Dépendances du backend
+│  ├─ .env.example         # Exemple de variables d'environnement pour le backend
+│  ├─ package.json         # Dépendances et scripts du backend
+│  ├─ tsconfig.json        # Configuration TypeScript pour le backend
+│  └─ ...                  # Autres fichiers de configuration ou utilitaires
 ├─ frontend/
-│  ├─ src/
-│  ├─ .env.example
-│  └─ package.json
-└─ README.md
-
-````
+│  ├─ public/              # Fichiers statiques (index.html, assets)
+│  ├─ src/                 # Code source du frontend (composants, pages, services, styles...)
+│  ├─ build/               # Fichiers de production compilés
+│  ├─ node_modules/        # Dépendances du frontend
+│  ├─ .env.example         # Exemple de variables d'environnement pour le frontend
+│  ├─ package.json         # Dépendances et scripts du frontend
+│  ├─ tsconfig.json        # Configuration TypeScript pour le frontend
+│  └─ ...                  # Autres fichiers de configuration ou utilitaires
+├─ .gitignore              # Fichiers et dossiers à ignorer par Git
+├─ README.md               # Ce fichier
+└─ ...                     # Autres fichiers à la racine (ex: .git, LICENSE)
+```
 
 ## Installation & Lancement ⚙️
 

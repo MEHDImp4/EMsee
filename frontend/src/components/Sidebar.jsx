@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Home, Compass, Bell, Bookmark, Users, Settings, LogOut, PenTool, MessageSquare } from 'lucide-react';
 import logo from '../assets/logo.svg';
@@ -10,10 +10,10 @@ const Sidebar = ({ isOpen, onClose }) => {
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     const navItems = [
-        { icon: Home, label: t('sidebar.home', 'Accueil'), path: '/feed' },
-        { icon: Compass, label: t('sidebar.explore', 'Explorer'), path: '/explore' },
-        { icon: MessageSquare, label: t('sidebar.messages', 'Messages'), path: '/messages' },
-        { icon: Bell, label: t('sidebar.notifications', 'Notifications'), path: '/notifications' },
+        { icon: Home, label: t('sidebar.home', 'Accueil'), path: '/feed', hideOnMobile: true },
+        { icon: Compass, label: t('sidebar.explore', 'Explorer'), path: '/explore', hideOnMobile: true },
+        { icon: MessageSquare, label: t('sidebar.messages', 'Messages'), path: '/messages', hideOnMobile: true },
+        { icon: Bell, label: t('sidebar.notifications', 'Notifications'), path: '/notifications', hideOnMobile: true },
         { icon: Bookmark, label: t('sidebar.bookmarks', 'Signets'), path: '/bookmarks' },
         { icon: Users, label: t('sidebar.community', 'Communauté'), path: '/community' },
         { icon: Settings, label: t('sidebar.settings', 'Paramètres'), path: '/settings' },
@@ -49,15 +49,15 @@ const Sidebar = ({ isOpen, onClose }) => {
 
             <div className="sidebar-content">
                 <div className="logo-area desktop-only">
-                    <div className="logo-circle">
+                    <Link to="/feed" className="logo-circle">
                         <img src={logo} alt="Logo" style={{ width: 38, height: 38 }} />
-                    </div>
+                    </Link>
                 </div>
 
                 <nav className="main-nav">
                     <ul className="nav-list">
                         {navItems.map((item) => (
-                            <li key={item.path}>
+                            <li key={item.path} className={item.hideOnMobile ? 'desktop-only' : ''}>
                                 <NavLink
                                     to={item.path}
                                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
@@ -122,14 +122,13 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Mobile Logout Button (at bottom of drawer list) */}
-                <div className="mobile-only" style={{ marginTop: 'auto', padding: '1rem' }}>
+                <div className="mobile-only" style={{ marginTop: 'auto' }}>
                     <button
                         onClick={() => setShowLogoutModal(true)}
                         className="nav-item"
                         style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--danger)' }}
                     >
                         <LogOut size={26} />
-                        <span className="nav-label" style={{ color: 'var(--danger)' }}>{t('sidebar.logout', 'Déconnexion')}</span>
                     </button>
                 </div>
             </div>

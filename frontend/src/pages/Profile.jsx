@@ -38,17 +38,17 @@ const Profile = () => {
             {user.name.charAt(0)}
           </div>
         </div>
-        
+
         <div className="profile-actions">
           <button className="btn-edit-profile">
             <Edit2 size={16} />
-            <span>Modifier</span>
+            <span>{t('profile.edit', 'Modifier')}</span>
           </button>
         </div>
 
         <div className="profile-identity">
           <h1 className="profile-name">
-            {user.name} 
+            {user.name}
             <span className="profile-role-badge">{t(`auth.${user.role}`)}</span>
           </h1>
           <p className="profile-handle">{user.handle}</p>

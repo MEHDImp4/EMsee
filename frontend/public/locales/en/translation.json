@@ -91,7 +91,12 @@
         "trends_for_you": "Trends for you",
         "show_more": "Show more",
         "suggestions": "Suggestions",
-        "follow": "Follow"
+        "follow": "Follow",
+        "posts": "posts",
+        "trending": "Trending",
+        "education": "Education",
+        "technology": "Technology",
+        "morocco": "Morocco"
     },
     "feed": {
         "title": "News Feed",
@@ -104,6 +109,9 @@
         "tabs": {
             "foryou": "For you",
             "class": "My Class"
+        },
+        "role": {
+            "professor": "Professor"
         }
     },
     "notifications": {

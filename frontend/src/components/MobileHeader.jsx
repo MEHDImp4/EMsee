@@ -1,5 +1,6 @@
 import React from 'react';
-import { Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo.svg';
 
@@ -13,11 +14,13 @@ const MobileHeader = ({ onAvatarClick }) => {
             </div>
 
             <div className="mobile-header-center">
-                <img src={logo} alt="Logo" style={{ width: 28, height: 28 }} />
+                <Link to="/feed">
+                    <img src={logo} alt="Logo" style={{ width: 28, height: 28 }} />
+                </Link>
             </div>
 
-            <div className="mobile-header-right">
-                <Settings size={22} color="var(--text-main)" />
+            <div className="mobile-header-right" style={{ width: 32 }}>
+                {/* Empty to balance layout */}
             </div>
         </div>
     );

@@ -73,21 +73,3 @@
   color: var(--primary);
   font-weight: 600;
 }
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 1.5rem;
-    box-shadow: none; /* Simplify on mobile */
-    border: none; /* Make it feel native/flat on mobile */
-    background: transparent;
-  }
-  
-  .auth-container {
-    padding: 0 1rem;
-  }
-
-  .auth-title {
-    font-size: 1.75rem;
-  }
-}
