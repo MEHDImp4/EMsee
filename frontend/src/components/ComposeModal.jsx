@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { X, Image, BarChart2, Code, Smile, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +9,7 @@ const ComposeModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    return (
+    return ReactDOM.createPortal(
         <div className="compose-modal-overlay">
             <div className="compose-modal">
                 <div className="compose-modal-header">
@@ -49,7 +50,8 @@ const ComposeModal = ({ isOpen, onClose }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

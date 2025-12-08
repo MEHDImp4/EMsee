@@ -146,107 +146,131 @@ select option {
   to { transform: scale(1); }
 }
 
-/* Compose Modal Overlay (Desktop) */
-@media (min-width: 851px) {
-  .compose-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Darker backdrop */
-    backdrop-filter: blur(5px); /* Blur background content */
+/* Compose Modal Overlay (Responsive) */
+.compose-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Darker backdrop */
+  backdrop-filter: blur(5px); /* Blur background content */
+  display: flex;
+  align-items: flex-start; /* Default top align for mobile, possibly changed to center for desktop */
+  justify-content: center;
+  z-index: 9999; /* Very high z-index to sit on top of everything */
+  animation: fadeIn 0.2s forwards;
+  padding-top: 0; /* Full screen on mobile usually */
+}
+
+/* Base Modal (Mobile First - Full Screen) */
+.compose-modal {
+  background-color: var(--bg-main);
+  width: 100%;
+  height: 100%; /* Full screen on mobile */
+  max-width: 100%;
+  border-radius: 0; /* No radius on mobile full screen */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  border: none;
+  animation: scaleIn 0.2s forwards;
+  overflow-y: auto;
+}
+
+.compose-modal-header {
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 53px;
+    flex-shrink: 0;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text-main);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2000;
-    animation: fadeIn 0.2s forwards;
+    transition: background 0.2s;
+}
+
+.close-btn:hover {
+    background-color: var(--hover);
+}
+
+.compose-modal-content {
+    padding: 0 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.compose-user-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.compose-modal-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 1.25rem;
+    font-family: inherit;
+    color: var(--text-main);
+    resize: none;
+    outline: none;
+    min-height: 120px;
+    margin-top: 1rem;
+    flex: 1; /* Expand to fill space */
+}
+
+.compose-reply-permission {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+}
+
+.compose-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.compose-icons {
+    display: flex;
+    gap: 0.25rem;
+}
+
+/* Desktop overrides */
+@media (min-width: 600px) {
+  .compose-modal-overlay {
+    align-items: center; /* Center on larger screens */
+    padding-top: 0;
   }
 
   .compose-modal {
-    background-color: var(--bg-main);
     width: 600px;
     max-width: 90vw;
-    border-radius: 16px;
+    height: auto;
     min-height: 320px;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 1rem;
+    border-radius: 16px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.15); /* Softer shadow */
-    border: none; /* Cleaner look */
-    animation: scaleIn 0.2s forwards;
-  } 
-
-  .compose-modal-header {
-      padding: 0.5rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 53px;
+    flex: 0 1 auto; /* Don't force full height */
   }
 
-  .close-btn {
-      background: transparent;
-      border: none;
-      border-radius: 50%;
-      padding: 0.5rem;
-      cursor: pointer;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-  }
-  
-  .close-btn:hover {
-      background-color: var(--hover);
-  }
-
-  .compose-modal-content {
-      padding: 0 1rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-  }
-  
-  .compose-user-row {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 0.5rem;
-  }
-  
   .compose-modal-input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      font-size: 1.25rem;
-      font-family: inherit;
-      color: var(--text-main);
-      resize: none;
-      outline: none;
-      min-height: 120px;
-      margin-top: 1rem;
-  }
-  
-  .compose-reply-permission {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      padding: 0.5rem 0;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border);
-      width: 100%;
-  }
-  
-  .compose-modal-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-  }
-  
-  .compose-icons {
-      display: flex;
-      gap: 0.25rem;
+      flex: 0 0 auto; /* Allow auto height on desktop */
   }
 }
