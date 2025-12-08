@@ -17,27 +17,31 @@ const RegisterStep2 = ({
     return (
         <>
             <div className="form-group">
-                <label className="form-label">{t('auth.full_name')}</label>
+                <label className="form-label" htmlFor="fullName">{t('auth.full_name')}</label>
                 <div className="input-wrapper">
-                    <User size={20} className="input-icon" />
+                    <User size={20} className="input-icon" aria-hidden="true" />
                     <input
+                        id="fullName"
                         type="text"
                         placeholder={t('auth.fullname_placeholder', 'John Doe')}
                         className="form-input"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         autoFocus
+                        aria-invalid={showErrors && !fullName ? "true" : "false"}
+                        aria-describedby={showErrors && !fullName ? "fullname-error" : undefined}
                         style={{ borderColor: showErrors && !fullName ? 'var(--danger)' : undefined }}
                     />
                 </div>
-                {showErrors && !fullName && <p className="error-message">{t('auth.field_required')}</p>}
+                {showErrors && !fullName && <p id="fullname-error" className="error-message" role="alert">{t('auth.field_required')}</p>}
             </div>
 
             <div className="form-group">
-                <label className="form-label">{t('auth.username')}</label>
+                <label className="form-label" htmlFor="username">{t('auth.username')}</label>
                 <div className="input-wrapper">
-                    <span className="input-prefix">@</span>
+                    <span className="input-prefix" aria-hidden="true">@</span>
                     <input
+                        id="username"
                         type="text"
                         placeholder={t('auth.username_placeholder')}
                         className="form-input"
@@ -47,21 +51,24 @@ const RegisterStep2 = ({
                         }}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        aria-invalid={isUsernameValid === false ? "true" : "false"}
+                        aria-describedby="username-error"
                     />
-                    {isUsernameValid === true && <CheckCircle size={20} color="var(--primary)" className="input-status-icon" />}
-                    {isUsernameValid === false && <AlertCircle size={20} color="var(--danger)" className="input-status-icon" />}
+                    {isUsernameValid === true && <CheckCircle size={20} color="var(--primary)" className="input-status-icon" aria-hidden="true" />}
+                    {isUsernameValid === false && <AlertCircle size={20} color="var(--danger)" className="input-status-icon" aria-hidden="true" />}
                 </div>
-                {showErrors && !username && <p className="error-message">{t('auth.field_required')}</p>}
-                {isUsernameValid === false && <p className="error-message">{t('auth.username_error')}</p>}
+                {showErrors && !username && <p id="username-required" className="error-message" role="alert">{t('auth.field_required')}</p>}
+                {isUsernameValid === false && <p id="username-error" className="error-message" role="alert">{t('auth.username_error')}</p>}
             </div>
 
             <div className="form-group">
-                <label className="form-label">
+                <label className="form-label" htmlFor="email">
                     {t('auth.email')} <span className="student-email-hint">({accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'})</span>
                 </label>
                 <div className="input-wrapper">
-                    <Mail size={20} className="input-icon" />
+                    <Mail size={20} className="input-icon" aria-hidden="true" />
                     <input
+                        id="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -71,13 +78,15 @@ const RegisterStep2 = ({
                             paddingRight: '2.5rem',
                             borderColor: (showErrors && !email) || isEmailValid === false ? '#EF4444' : isEmailValid === true ? '#10B981' : undefined
                         }}
+                        aria-invalid={isEmailValid === false ? "true" : "false"}
+                        aria-describedby="email-error"
                     />
-                    {isEmailValid === true && <CheckCircle size={20} color="#10B981" className="input-status-icon" />}
-                    {isEmailValid === false && <AlertCircle size={20} color="#EF4444" className="input-status-icon" />}
+                    {isEmailValid === true && <CheckCircle size={20} color="#10B981" className="input-status-icon" aria-hidden="true" />}
+                    {isEmailValid === false && <AlertCircle size={20} color="#EF4444" className="input-status-icon" aria-hidden="true" />}
                 </div>
-                {showErrors && !email && <p className="error-message">{t('auth.field_required')}</p>}
+                {showErrors && !email && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {isEmailValid === false && (
-                    <p className="error-message">
+                    <p id="email-error" className="error-message" role="alert">
                         {t('auth.email_error')} <strong>{accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'}</strong>
                     </p>
                 )}

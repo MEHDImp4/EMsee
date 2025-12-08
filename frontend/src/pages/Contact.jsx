@@ -51,37 +51,44 @@ const Contact = () => {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="success-message"
+                                role="status"
+                                aria-live="polite"
                             >
-                                <CheckCircle size={64} style={{ color: 'var(--primary)', marginBottom: '1rem' }} />
+                                <CheckCircle size={64} style={{ color: 'var(--primary)', marginBottom: '1rem' }} aria-hidden="true" />
                                 <h3 className="success-title">{t('contact_page.success_message')}</h3>
                             </motion.div>
                         ) : (
                             <form onSubmit={handleSubmit} className="contact-form">
                                 <div>
-                                    <label className="contact-label">{t('contact_page.name')}</label>
+                                    <label className="contact-label" htmlFor="name">{t('contact_page.name')}</label>
                                     <input
+                                        id="name"
                                         type="text"
                                         name="name"
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
                                         className="contact-input"
+                                        autoComplete="name"
                                     />
                                 </div>
                                 <div>
-                                    <label className="contact-label">{t('contact_page.email')}</label>
+                                    <label className="contact-label" htmlFor="email">{t('contact_page.email')}</label>
                                     <input
+                                        id="email"
                                         type="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
                                         className="contact-input"
+                                        autoComplete="email"
                                     />
                                 </div>
                                 <div>
-                                    <label className="contact-label">{t('contact_page.message')}</label>
+                                    <label className="contact-label" htmlFor="message">{t('contact_page.message')}</label>
                                     <textarea
+                                        id="message"
                                         name="message"
                                         value={formData.message}
                                         onChange={handleChange}
@@ -91,7 +98,7 @@ const Contact = () => {
                                     ></textarea>
                                 </div>
                                 <button type="submit" className="btn btn-primary contact-btn">
-                                    <Send size={20} />
+                                    <Send size={20} aria-hidden="true" />
                                     {t('contact_page.send')}
                                 </button>
                             </form>

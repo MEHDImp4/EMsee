@@ -16,10 +16,11 @@ const RegisterStep4 = ({
     return (
         <>
             <div className="form-group">
-                <label className="form-label">{t('auth.password')}</label>
+                <label className="form-label" htmlFor="password">{t('auth.password')}</label>
                 <div className="input-wrapper">
-                    <Lock size={20} className="input-icon" />
+                    <Lock size={20} className="input-icon" aria-hidden="true" />
                     <input
+                        id="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         className="form-input"
@@ -30,31 +31,36 @@ const RegisterStep4 = ({
                         }}
                         onChange={(e) => setPassword(e.target.value)}
                         autoFocus
+                        aria-invalid={(showErrors && !password) || isPasswordValid === false ? "true" : "false"}
+                        aria-describedby="password-hint password-error"
+                        autoComplete="new-password"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="password-toggle-btn"
+                        aria-label={showPassword ? t('auth.hide_password', 'Masquer le mot de passe') : t('auth.show_password', 'Afficher le mot de passe')}
                     >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? <EyeOff size={20} aria-hidden="true" /> : <Eye size={20} aria-hidden="true" />}
                     </button>
                 </div>
-                <p className="password-hint">
+                <p id="password-hint" className="password-hint">
                     {t('auth.password_hint')}
                 </p>
-                {showErrors && !password && <p className="error-message">{t('auth.field_required')}</p>}
+                {showErrors && !password && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {isPasswordValid === false && (
-                    <p className="error-message">
+                    <p id="password-error" className="error-message" role="alert">
                         {t('auth.password_requirements')}
                     </p>
                 )}
             </div>
 
             <div className="form-group">
-                <label className="form-label">{t('auth.confirm_password')}</label>
+                <label className="form-label" htmlFor="confirmPassword">{t('auth.confirm_password')}</label>
                 <div className="input-wrapper">
-                    <Lock size={20} className="input-icon" />
+                    <Lock size={20} className="input-icon" aria-hidden="true" />
                     <input
+                        id="confirmPassword"
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         className="form-input"
@@ -63,13 +69,16 @@ const RegisterStep4 = ({
                             borderColor: (showErrors && !confirmPassword) || doPasswordsMatch === false ? 'var(--danger)' : doPasswordsMatch === true ? 'var(--primary)' : undefined
                         }}
                         onChange={(e) => setConfirmPassword(e.target.value)}
+                        aria-invalid={doPasswordsMatch === false ? "true" : "false"}
+                        aria-describedby="match-error"
+                        autoComplete="new-password"
                     />
-                    {doPasswordsMatch === true && <CheckCircle size={20} color="var(--primary)" className="input-status-icon" />}
-                    {doPasswordsMatch === false && <AlertCircle size={20} color="var(--danger)" className="input-status-icon" />}
+                    {doPasswordsMatch === true && <CheckCircle size={20} color="var(--primary)" className="input-status-icon" aria-hidden="true" />}
+                    {doPasswordsMatch === false && <AlertCircle size={20} color="var(--danger)" className="input-status-icon" aria-hidden="true" />}
                 </div>
-                {showErrors && !confirmPassword && <p className="error-message">{t('auth.field_required')}</p>}
+                {showErrors && !confirmPassword && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {doPasswordsMatch === false && (
-                    <p className="error-message">
+                    <p id="match-error" className="error-message" role="alert">
                         {t('auth.password_mismatch')}
                     </p>
                 )}
