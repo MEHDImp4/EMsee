@@ -46,3 +46,78 @@
   display: flex;
   gap: 1rem;
 }
+
+/* Language Settings List */
+.settings-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+    background-color: var(--bg-hover);
+}
+
+.language-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.language-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-primary);
+    text-align: left;
+}
+
+.language-item:last-child {
+    border-bottom: none;
+}
+
+.language-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.check-icon {
+    color: var(--primary);
+}
+
+.settings-nav-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.settings-nav-item:hover {
+    color: var(--primary);
+}

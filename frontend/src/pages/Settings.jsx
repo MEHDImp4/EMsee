@@ -1,16 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Sun, Monitor } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import './css/Settings.css';
 
 const Settings = () => {
     const { t, i18n } = useTranslation();
     const { themeMode, setThemeMode } = useTheme();
+    const navigate = useNavigate();
 
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
-    };
 
     return (
         <div className="settings-page">
@@ -45,22 +44,18 @@ const Settings = () => {
                 </div>
             </div>
 
-            <div className="settings-section settings-section-card-last">
-                <h3 className="settings-section-title">{t('settings.language', 'Langue')}</h3>
-                <div className="lang-options-flex">
-                    <button
-                        className={`btn ${i18n.language.startsWith('en') ? 'btn-primary' : 'btn-outline'}`}
-                        onClick={() => changeLanguage('en')}
-                    >
-                        English
-                    </button>
-                    <button
-                        className={`btn ${i18n.language.startsWith('fr') ? 'btn-primary' : 'btn-outline'}`}
-                        onClick={() => changeLanguage('fr')}
-                    >
-                        Français
-                    </button>
-                </div>
+            <div className="settings-section settings-section-card-last" style={{ padding: '0 1.5rem' }}>
+                <button
+                    className="settings-nav-item"
+                    onClick={() => navigate('/settings/language')}
+                >
+                    <span style={{ fontWeight: '500' }}>{t('settings.language', 'Langue')}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+                        <span>{i18n.language.startsWith('fr') ? 'Français' : 'English'}</span>
+                        {/* ChevronRight icon could be imported, but for now purely text/layout based or assume import */}
+                        <span style={{ fontSize: '1.2rem' }}>›</span>
+                    </div>
+                </button>
             </div>
         </div>
     );

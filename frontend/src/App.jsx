@@ -18,6 +18,7 @@ const Feed = lazy(() => import('./pages/Feed'));
 const Messages = lazy(() => import('./pages/Messages'));
 const Explore = lazy(() => import('./pages/Explore'));
 const Settings = lazy(() => import('./pages/Settings'));
+const LanguageSettings = lazy(() => import('./pages/LanguageSettings'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Notifications = lazy(() => import('./pages/Notifications'));
 
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/settings/language" element={<LanguageSettings />} />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/bookmarks" element={<div className="container" style={{ padding: '2rem' }}><h2>Signets</h2><p>Coming Soon</p></div>} />

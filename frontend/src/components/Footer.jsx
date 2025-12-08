@@ -10,9 +10,21 @@ const Footer = () => {
     const { i18n, t } = useTranslation();
     const { themeMode, setThemeMode } = useTheme();
 
-    const toggleLanguage = () => {
-        const newLang = i18n.language === 'fr' ? 'en' : 'fr';
-        i18n.changeLanguage(newLang);
+    const [langMode, setLangMode] = React.useState(localStorage.getItem('language_mode') || 'manual');
+
+    const toggleLanguage = (lang) => {
+        if (lang === 'auto') {
+            const systemLang = navigator.language.split('-')[0];
+            const supportedLang = ['fr', 'en'].includes(systemLang) ? systemLang : 'fr';
+            i18n.changeLanguage(supportedLang);
+            localStorage.setItem('language_mode', 'auto');
+            localStorage.removeItem('i18nextLng');
+            setLangMode('auto');
+        } else {
+            i18n.changeLanguage(lang);
+            localStorage.setItem('language_mode', 'manual');
+            setLangMode('manual');
+        }
     };
 
     return (
@@ -48,29 +60,40 @@ const Footer = () => {
                         <p style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
                             © {new Date().getFullYear()} EMsee Social. {t('footer.made_with_love')}
                         </p>
-
                         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                             {/* Language Toggle */}
-                            <button
-                                onClick={toggleLanguage}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: 'var(--text-muted)',
-                                    cursor: 'pointer',
-                                    fontSize: '0.8rem',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.25rem',
-                                    opacity: 0.7,
-                                    transition: 'opacity 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.target.style.opacity = '1'}
-                                onMouseLeave={(e) => e.target.style.opacity = '0.7'}
-                            >
-                                <Globe size={14} />
-                                <span>{i18n.language === 'fr' ? 'Français' : 'English'}</span>
-                            </button>
+                            <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '99px', border: '1px solid var(--border)' }}>
+                                {['en', 'fr', 'auto'].map((lang) => {
+                                    const mode = localStorage.getItem('language_mode') || 'manual';
+                                    const isSelected = mode === 'auto'
+                                        ? lang === 'auto'
+                                        : (lang !== 'auto' && i18n.language.startsWith(lang));
+
+                                    return (
+                                        <button
+                                            key={lang}
+                                            onClick={() => toggleLanguage(lang)}
+                                            style={{
+                                                padding: '0.25rem 0.5rem',
+                                                borderRadius: '99px',
+                                                fontSize: '0.75rem',
+                                                cursor: 'pointer',
+                                                border: 'none',
+                                                background: isSelected ? 'var(--primary)' : 'transparent',
+                                                color: isSelected ? 'white' : 'var(--text-muted)',
+                                                transition: 'all 0.2s',
+                                                textTransform: 'capitalize',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.25rem'
+                                            }}
+                                        >
+                                            {lang === 'auto' && <Globe size={12} />}
+                                            {lang === 'auto' ? 'Auto' : lang === 'fr' ? 'Français' : 'English'}
+                                        </button>
+                                    );
+                                })}
+                            </div>
 
                             {/* Theme Toggle */}
                             <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '99px', border: '1px solid var(--border)' }}>
