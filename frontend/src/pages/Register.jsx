@@ -227,7 +227,7 @@ const Register = () => {
                                                 <User size={20} className="input-icon" />
                                                 <input
                                                     type="text"
-                                                    placeholder="John Doe"
+                                                    placeholder={t('auth.fullname_placeholder', 'John Doe')}
                                                     className="form-input"
                                                     value={fullName}
                                                     onChange={(e) => setFullName(e.target.value)}
@@ -315,7 +315,7 @@ const Register = () => {
                                                         <School size={20} className="input-icon" />
                                                         <input
                                                             type="text"
-                                                            placeholder="Ex: G1, G2..."
+                                                            placeholder={t('auth.class_placeholder', 'Ex: G1, G2...')}
                                                             className="form-input"
                                                         />
                                                     </div>

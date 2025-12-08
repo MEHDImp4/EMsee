@@ -53,6 +53,7 @@
         "create_account": "Créer un compte",
         "username_error": "Minuscules et points uniquement.",
         "full_name": "Nom complet",
+        "fullname_placeholder": "Jean Dupont",
         "study_level": "Niveau d'étude",
         "select_level": "Sélectionner un niveau",
         "year_1_prepa": "1ère année prépa",
@@ -61,7 +62,9 @@
         "year_4_iir": "4ème année IIR",
         "year_5_iir": "5ème année IIR",
         "class": "Classe",
+        "class_placeholder": "Ex: G1, G2...",
         "field_required": "Ce champ est requis.",
+        "select_at_least_one": "Sélectionnez au moins une matière.",
         "email_error": "L'email doit se terminer par",
         "student_placeholder": "etudiant@emsi-edu.ma",
         "professor_placeholder": "prof@emsi.ma",
@@ -135,7 +138,20 @@
         "level": "Niveau",
         "class": "Classe",
         "joined": "Membre depuis",
-        "bio": "Biographie"
+        "bio": "Biographie",
+        "posts": "Posts",
+        "followers": "Abonnés",
+        "following": "Abonnements"
+    },
+    "settings": {
+        "appearance": "Apparence",
+        "theme_desc": "Choisissez votre thème préféré.",
+        "language": "Langue",
+        "themes": {
+            "light": "Clair",
+            "dark": "Sombre",
+            "auto": "Auto"
+        }
     },
     "sidebar": {
         "publish": "Publier",

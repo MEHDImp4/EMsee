@@ -74,15 +74,15 @@ const Profile = () => {
         <div className="profile-stats-row">
           <div className="stat-item">
             <span className="stat-value">{user.stats.posts}</span>
-            <span className="stat-label">Posts</span>
+            <span className="stat-label">{t('profile.posts', 'Posts')}</span>
           </div>
           <div className="stat-item">
             <span className="stat-value">{user.stats.followers}</span>
-            <span className="stat-label">Followers</span>
+            <span className="stat-label">{t('profile.followers', 'Abonnés')}</span>
           </div>
           <div className="stat-item">
             <span className="stat-value">{user.stats.following}</span>
-            <span className="stat-label">Following</span>
+            <span className="stat-label">{t('profile.following', 'Abonnements')}</span>
           </div>
         </div>
       </div>

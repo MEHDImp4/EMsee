@@ -55,8 +55,12 @@
         "username_placeholder": "john.doe",
         "username_error": "Lowercase and dots only.",
         "full_name": "Full Name",
+        "fullname_placeholder": "John Doe",
         "study_level": "Study Level",
-        "select_level": "Select a level"
+        "select_level": "Select a level",
+        "class_placeholder": "Ex: G1, G2...",
+        "field_required": "Field required",
+        "select_at_least_one": "Select at least one subject."
     },
     "contact_page": {
         "title": "Contact Us",
@@ -126,7 +130,20 @@
         "level": "Level",
         "class": "Class",
         "joined": "Member since",
-        "bio": "Biography"
+        "bio": "Biography",
+        "posts": "Posts",
+        "followers": "Followers",
+        "following": "Following"
+    },
+    "settings": {
+        "appearance": "Appearance",
+        "theme_desc": "Choose your preferred theme.",
+        "language": "Language",
+        "themes": {
+            "light": "Light",
+            "dark": "Dark",
+            "auto": "Auto"
+        }
     },
     "sidebar": {
         "publish": "Post",

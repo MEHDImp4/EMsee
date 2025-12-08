@@ -23,21 +23,21 @@ const Settings = ({ themeMode, setThemeMode }) => {
                         onClick={() => setThemeMode('light')}
                         style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderColor: themeMode === 'light' ? 'var(--primary)' : 'var(--border)' }}
                     >
-                        <Sun size={18} /> Light
+                        <Sun size={18} /> {t('settings.themes.light', 'Clair')}
                     </button>
                     <button
                         className={`btn btn-outline ${themeMode === 'dark' ? 'btn-primary' : ''}`}
                         onClick={() => setThemeMode('dark')}
                         style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderColor: themeMode === 'dark' ? 'var(--primary)' : 'var(--border)' }}
                     >
-                        <Moon size={18} /> Dark
+                        <Moon size={18} /> {t('settings.themes.dark', 'Sombre')}
                     </button>
                     <button
                         className={`btn btn-outline ${themeMode === 'auto' ? 'btn-primary' : ''}`}
                         onClick={() => setThemeMode('auto')}
                         style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderColor: themeMode === 'auto' ? 'var(--primary)' : 'var(--border)' }}
                     >
-                        <Monitor size={18} /> Auto
+                        <Monitor size={18} /> {t('settings.themes.auto', 'Auto')}
                     </button>
                 </div>
             </div>
