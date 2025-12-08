@@ -1,0 +1,167 @@
+{
+    "hero": {
+        "title": "La red social para <1>estudiantes</1> que te conecta.",
+        "subtitle": "Comparte tus ideas, colabora en proyectos y mantente informado sobre la vida en el campus. Una comunidad solidaria te espera.",
+        "join": "Únete a EMsee",
+        "learn_more": "Más información"
+    },
+    "header": {
+        "login": "Iniciar sesión",
+        "register": "Registrarse"
+    },
+    "footer": {
+        "about": "Acerca de",
+        "privacy": "Privacidad",
+        "terms": "Términos",
+        "contact": "Contacto",
+        "contributors": "Colaboradores:",
+        "made_with_love": "Hecho con ❤️ para estudiantes."
+    },
+    "features": {
+        "title": "Todo lo que necesitas",
+        "subtitle": "Una suite completa de herramientas para interactuar.",
+        "discussions_title": "Discusiones",
+        "discussions_desc": "Comparte texto e intercambia con la comunidad.",
+        "medias_title": "Media",
+        "medias_desc": "Publica tus mejores fotos y creaciones.",
+        "polls_title": "Encuestas",
+        "polls_desc": "Pide opinión a otros estudiantes fácilmente.",
+        "code_title": "Fragmentos de código",
+        "code_desc": "Comparte y depura código juntos.",
+        "likes_title": "Me gusta",
+        "likes_desc": "Muestra tu aprecio por las publicaciones.",
+        "retweets_title": "Retweets",
+        "retweets_desc": "Reenvía información importante.",
+        "mentions_title": "Menciones",
+        "mentions_desc": "Etiqueta a tus amigos para notificarlos."
+    },
+    "auth": {
+        "welcome_back": "¡Bienvenido de nuevo!",
+        "login_subtitle": "Inicia sesión para acceder a tu feed.",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "confirm_password": "Confirmar contraseña",
+        "password_requirements": "Mín 8 caracteres, 1 mayúscula.",
+        "password_hint": "Debe contener 8 caracteres y 1 mayúscula.",
+        "password_mismatch": "Las contraseñas no coinciden.",
+        "login_btn": "Iniciar sesión",
+        "no_account": "¿Aún no tienes cuenta?",
+        "create_account": "Crear una cuenta",
+        "join_us": "Únete a nosotros",
+        "register_subtitle": "Crea tu cuenta EMsee ahora.",
+        "student": "Estudiante",
+        "professor": "Profesor",
+        "username": "Nombre de usuario",
+        "username_placeholder": "juan.perez",
+        "username_error": "Solo minúsculas y puntos.",
+        "full_name": "Nombre completo",
+        "fullname_placeholder": "Juan Pérez",
+        "study_level": "Nivel de estudio",
+        "select_level": "Selecciona un nivel",
+        "class_placeholder": "Ej: G1, G2...",
+        "field_required": "Campo requerido",
+        "select_at_least_one": "Selecciona al menos una materia."
+    },
+    "contact_page": {
+        "title": "Contáctanos",
+        "subtitle": "¿Una pregunta? ¿Una sugerencia? No dudes en escribirnos.",
+        "name": "Nombre completo",
+        "email": "Correo electrónico",
+        "message": "Mensaje",
+        "send": "Enviar",
+        "success_message": "¡Tu mensaje ha sido enviado con éxito!"
+    },
+    "about_page": {
+        "title": "Acerca de EMsee",
+        "description": "EMsee es más que una red social. Es un espacio digital diseñado específicamente para estudiantes de EMSI, permitiéndoles conectar, compartir y crecer juntos.",
+        "mission_title": "Nuestra Misión",
+        "mission_desc": "Facilitar la vida estudiantil centralizando herramientas de comunicación y ayuda mutua. Creemos en la fuerza de la comunidad para tener éxito en los estudios.",
+        "team_title": "El Equipo",
+        "team_desc": "Un proyecto hecho con pasión por estudiantes, para estudiantes."
+    },
+    "explore": {
+        "search_placeholder": "Buscar en EMsee",
+        "trends_for_you": "Tendencias para ti",
+        "coming_soon": "Contenido próximamente...",
+        "tabs": {
+            "foryou": "Para ti",
+            "trending": "Tendencias",
+            "clubs": "Clubes",
+            "events": "Eventos"
+        }
+    },
+    "right_sidebar": {
+        "search": "Buscar",
+        "trends_for_you": "Tendencias para ti",
+        "show_more": "Mostrar más",
+        "suggestions": "Sugerencias",
+        "follow": "Seguir",
+        "posts": "posts",
+        "trending": "Tendencias",
+        "education": "Educación",
+        "technology": "Tecnología",
+        "morocco": "Marruecos"
+    },
+    "feed": {
+        "title": "Noticias",
+        "placeholder": "¿Qué está pasando en EMSI?",
+        "onboarding_title": "Bienvenido",
+        "onboarding_body": "Empieza siguiendo temas y personas para llenar tu feed.",
+        "onboarding_dismiss": "Más tarde",
+        "onboarding_get_started": "Vamos",
+        "everyone_can_reply": "Todos pueden responder",
+        "tabs": {
+            "foryou": "Para ti",
+            "class": "Mi Clase"
+        },
+        "role": {
+            "professor": "Profesor"
+        }
+    },
+    "notifications": {
+        "tabs": {
+            "all": "Todos",
+            "verified": "Verificados",
+            "mentions": "Menciones"
+        }
+    },
+    "profile": {
+        "edit": "Editar",
+        "level": "Nivel",
+        "class": "Clase",
+        "joined": "Miembro desde",
+        "bio": "Biografía",
+        "posts": "Publicaciones",
+        "followers": "Seguidores",
+        "following": "Siguiendo"
+    },
+    "settings": {
+        "appearance": "Apariencia",
+        "theme_desc": "Elige tu tema preferido.",
+        "language": "Idioma",
+        "themes": {
+            "light": "Claro",
+            "dark": "Oscuro",
+            "auto": "Auto"
+        }
+    },
+    "sidebar": {
+        "publish": "Publicar",
+        "home": "Inicio",
+        "explore": "Explorar",
+        "messages": "Mensajes",
+        "notifications": "Notificaciones",
+        "bookmarks": "Guardados",
+        "community": "Comunidad",
+        "settings": "Configuración",
+        "profile": "Perfil",
+        "logout": "Cerrar sesión",
+        "logout_confirm": "¿Cerrar sesión en EMsee?",
+        "logout_desc": "Siempre puedes volver a iniciar sesión en cualquier momento.",
+        "logout_btn": "Cerrar sesión",
+        "cancel": "Cancelar"
+    },
+    "common": {
+        "back": "Atrás"
+    }
+}

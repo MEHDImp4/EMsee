@@ -15,7 +15,7 @@ const Footer = () => {
     const toggleLanguage = (lang) => {
         if (lang === 'auto') {
             const systemLang = navigator.language.split('-')[0];
-            const supportedLang = ['fr', 'en'].includes(systemLang) ? systemLang : 'fr';
+            const supportedLang = ['fr', 'en', 'es', 'de'].includes(systemLang) ? systemLang : 'fr';
             i18n.changeLanguage(supportedLang);
             localStorage.setItem('language_mode', 'auto');
             localStorage.removeItem('i18nextLng');
@@ -63,7 +63,7 @@ const Footer = () => {
                         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                             {/* Language Toggle */}
                             <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '99px', border: '1px solid var(--border)' }}>
-                                {['en', 'fr', 'auto'].map((lang) => {
+                                {['en', 'fr', 'es', 'de', 'auto'].map((lang) => {
                                     const mode = localStorage.getItem('language_mode') || 'manual';
                                     const isSelected = mode === 'auto'
                                         ? lang === 'auto'
@@ -89,7 +89,7 @@ const Footer = () => {
                                             }}
                                         >
                                             {lang === 'auto' && <Globe size={12} />}
-                                            {lang === 'auto' ? 'Auto' : lang === 'fr' ? 'Français' : 'English'}
+                                            {lang === 'auto' ? 'Auto' : lang === 'fr' ? 'FR' : lang === 'en' ? 'EN' : lang === 'es' ? 'ES' : 'DE'}
                                         </button>
                                     );
                                 })}
