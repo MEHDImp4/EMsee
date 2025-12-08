@@ -4,10 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Home, Compass, Bell, Bookmark, Users, Settings, LogOut, PenTool, MessageSquare } from 'lucide-react';
 import logo from '../assets/logo.svg';
 import LogoutModal from './LogoutModal';
+import ComposeModal from './ComposeModal';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [showComposeModal, setShowComposeModal] = useState(false);
 
     const navItems = [
         { icon: Home, label: t('sidebar.home', 'Accueil'), path: '/feed', hideOnMobile: true },
@@ -71,7 +73,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                     </ul>
                 </nav>
 
-                <button className="post-btn-large desktop-only">
+                <button
+                    className="post-btn-large desktop-only"
+                    onClick={() => setShowComposeModal(true)}
+                >
                     <span className="post-btn-text">{t('sidebar.publish', 'Publier')}</span>
                     <span className="post-btn-icon"><PenTool size={24} /></span>
                 </button>
@@ -137,6 +142,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                 isOpen={showLogoutModal}
                 onClose={() => setShowLogoutModal(false)}
                 onConfirm={handleLogout}
+            />
+
+            <ComposeModal
+                isOpen={showComposeModal}
+                onClose={() => setShowComposeModal(false)}
             />
         </aside>
     );
