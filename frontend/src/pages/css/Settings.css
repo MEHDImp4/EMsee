@@ -1,5 +1,11 @@
 
 /* Extracted Inline Styles from Settings.jsx */
+.settings-page {
+  padding: 1.5rem;
+  max-width: 800px; /* Optional: limit width on large screens */
+  margin: 0 auto;   /* Center on large screens */
+}
+
 .settings-header-title {
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
@@ -120,4 +126,35 @@
 
 .settings-nav-item:hover {
     color: var(--primary);
+}
+
+@media (max-width: 480px) {
+  .settings-page {
+    padding: 1rem;
+  }
+
+  .settings-header-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .settings-section-card,
+  .settings-section-card-last {
+    padding: 1rem;
+  }
+
+  .theme-options-flex {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .theme-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+  }
+
+  .settings-nav-item {
+    font-size: 0.95rem;
+  }
 }
