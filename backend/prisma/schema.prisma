@@ -1,0 +1,195 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enums
+enum Role {
+  STUDENT
+  PROFESSOR
+  ADMIN
+}
+
+enum PostType {
+  TEXT
+  MEDIA
+  POLL
+  CODE
+}
+
+enum ConversationType {
+  DIRECT
+  GROUP
+}
+
+enum NotificationType {
+  FOLLOW
+  LIKE
+  REPLY
+  MENTION
+}
+
+// Models
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  username      String    @unique
+  fullName      String    @map("full_name")
+  role          Role      @default(STUDENT)
+  avatarUrl     String?   @map("avatar_url")
+  bio           String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  studentDetails   StudentDetails?
+  professorDetails ProfessorDetails?
+  
+  posts            Post[]
+  likes            Like[]
+  reposts          Repost[]
+  
+  followers        Follow[] @relation("following")
+  following        Follow[] @relation("follower")
+
+  sentMessages     Message[]
+  conversations    ConversationParticipant[]
+  
+  notificationsReceived Notification[] @relation("recipient")
+  notificationsSent     Notification[] @relation("actor")
+
+  @@map("users")
+}
+
+model StudentDetails {
+  userId     String @id @map("user_id")
+  studyLevel String @map("study_level")
+  className  String @map("class_name")
+  
+  user       User   @relation(fields: [userId], references: [id])
+
+  @@map("student_details")
+}
+
+model ProfessorDetails {
+  userId   String   @id @map("user_id")
+  subjects String[] // Stored as array of strings
+  
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@map("professor_details")
+}
+
+model Follow {
+  followerId  String   @map("follower_id")
+  followingId String   @map("following_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  following   User     @relation("following", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId])
+  @@map("follows")
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  authorId  String   @map("author_id")
+  content   String?
+  mediaUrls String[] @map("media_urls")
+  type      PostType @default(TEXT)
+  parentId  String?  @map("parent_id") // For replies
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  author    User     @relation(fields: [authorId], references: [id])
+  parent    Post?    @relation("PostThread", fields: [parentId], references: [id])
+  replies   Post[]   @relation("PostThread")
+  
+  likes     Like[]
+  reposts   Repost[]
+
+  @@map("posts")
+}
+
+model Like {
+  userId    String   @map("user_id")
+  postId    String   @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+
+  @@id([userId, postId])
+  @@map("likes")
+}
+
+model Repost {
+  userId    String   @map("user_id")
+  postId    String   @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+
+  @@id([userId, postId])
+  @@map("reposts")
+}
+
+model Conversation {
+  id        String           @id @default(uuid())
+  type      ConversationType @default(DIRECT)
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  conversationId String @map("conversation_id")
+  userId         String @map("user_id")
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@id([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String    @id @default(uuid())
+  conversationId String    @map("conversation_id")
+  senderId       String    @map("sender_id")
+  content        String
+  createdAt      DateTime  @default(now()) @map("created_at")
+  readAt         DateTime? @map("read_at")
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  sender         User         @relation(fields: [senderId], references: [id])
+
+  @@map("messages")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  recipientId String           @map("recipient_id")
+  actorId     String           @map("actor_id")
+  type        NotificationType
+  referenceId String?          @map("reference_id") // ID of post, message, etc.
+  isRead      Boolean          @default(false) @map("is_read")
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  recipient   User             @relation("recipient", fields: [recipientId], references: [id])
+  actor       User             @relation("actor", fields: [actorId], references: [id])
+
+  @@map("notifications")
+}
