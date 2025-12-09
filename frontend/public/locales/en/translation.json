@@ -1,4 +1,59 @@
 {
+    "privacy_page": {
+        "title": "Privacy Policy",
+        "last_updated": "Last Updated",
+        "sections": {
+            "collection": {
+                "title": "Data Collection",
+                "content": "We collect information such as your email address, name, and academic data (major, year) to provide and improve our services."
+            },
+            "usage": {
+                "title": "Data Usage",
+                "content": "Your data is used to personalize your experience, facilitate academic communication, and send you important updates."
+            },
+            "cookies": {
+                "title": "Cookies",
+                "content": "We use cookies to improve navigation, remember your preferences, and analyze site traffic."
+            },
+            "security": {
+                "title": "Security",
+                "content": "We implement state-of-the-art security measures to protect your personal information from unauthorized access."
+            },
+            "rights": {
+                "title": "Your Rights",
+                "content": "You have the right to access, correct, or delete your personal data at any time through your account settings."
+            }
+        }
+    },
+    "terms_page": {
+        "title": "Terms of Service",
+        "last_updated": "Last Updated",
+        "sections": {
+            "intro": {
+                "title": "Introduction",
+                "content": "Welcome to EMsee. By accessing our platform, you agree to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws."
+            },
+            "usage": {
+                "title": "Use License",
+                "content": "Permission is granted to temporarily download one copy of the materials (information or software) on EMsee's website for personal, non-commercial transitory viewing only."
+            },
+            "content": {
+                "title": "User Content",
+                "content": "You retain your rights to any content you submit, post or display on or through the Services. You are responsible for your use of the Services and for any Content you provide."
+            },
+            "termination": {
+                "title": "Termination",
+                "content": "We may terminate or suspend your access immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms."
+            },
+            "law": {
+                "title": "Governing Law",
+                "content": "These terms and conditions are governed by and construed in accordance with the laws of Morocco and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location."
+            }
+        }
+    },
+    "app_name": "ProjetJS",
+    "step": "Step",
+    "next": "Next",
     "hero": {
         "title": "The <1>student</1> social network that connects you.",
         "subtitle": "Share your ideas, collaborate on projects, and stay informed about campus life. A caring community awaits you.",
@@ -36,6 +91,7 @@
         "mentions_desc": "Tag your friends to notify them."
     },
     "auth": {
+        "select_account_type": "Select Account Type",
         "welcome_back": "Welcome back!",
         "login_subtitle": "Login to access your feed.",
         "email": "Email",
@@ -44,10 +100,14 @@
         "password_requirements": "Min 8 chars, 1 uppercase.",
         "password_hint": "Must contain 8 chars and 1 uppercase.",
         "password_mismatch": "Passwords do not match.",
+        "show_password": "Show password",
+        "hide_password": "Hide password",
         "login_btn": "Login",
         "no_account": "No account yet?",
+        "already_account": "Already have an account?",
         "create_account": "Create an account",
         "join_us": "Join us",
+        "register_btn": "Register",
         "register_subtitle": "Create your EMsee account now.",
         "student": "Student",
         "professor": "Professor",
@@ -60,7 +120,54 @@
         "select_level": "Select a level",
         "class_placeholder": "Ex: G1, G2...",
         "field_required": "Field required",
-        "select_at_least_one": "Select at least one subject."
+        "select_at_least_one": "Select at least one subject.",
+        "email_error": "Email must end with",
+        "student_placeholder": "student@emsi-edu.ma",
+        "professor_placeholder": "prof@emsi.ma",
+        "field_of_study": "Field of Study",
+        "year_study": "Year of Study",
+        "select_filiere": "Select your major",
+        "select_year": "Select your year",
+        "subjects_taught": "Subjects Taught"
+    },
+    "common": {
+        "back": "Back"
+    },
+    "lists": {
+        "subjects": {
+            "web_dev": "Web Development",
+            "java": "Java / J2EE",
+            "algo": "Algorithms",
+            "data_struct": "Data Structures",
+            "db": "Databases",
+            "networks": "Networks",
+            "os": "Operating Systems",
+            "project_mgmt": "Project Management",
+            "math": "Mathematics",
+            "probs": "Probabilities",
+            "english": "English",
+            "comm": "Communication"
+        },
+        "filieres": {
+            "iir": "Computer Science and Networks Engineering",
+            "gesi": "Electrical Engineering & Intelligent Systems",
+            "iaii": "Automation & Industrial IT Engineering",
+            "gcb": "Civil Engineering",
+            "gi": "Industrial Engineering",
+            "gf": "Financial Engineering"
+        },
+        "years": {
+            "prepa_1": "1st Year Preparatory",
+            "prepa_2": "2nd Year Preparatory",
+            "cycle_1": "1st Year Engineering Cycle",
+            "cycle_2": "2nd Year Engineering Cycle",
+            "cycle_3": "3rd Year Engineering Cycle",
+            "year_1": "1st Year",
+            "year_2": "2nd Year",
+            "year_3": "3rd Year",
+            "year_4": "4th Year",
+            "year_5": "5th Year"
+        }
     },
     "contact_page": {
         "title": "Contact Us",

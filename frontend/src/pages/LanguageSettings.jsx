@@ -14,11 +14,11 @@ const LanguageSettings = () => {
     const changeLanguage = (lng) => {
         if (lng === 'auto') {
             const systemLang = navigator.language.split('-')[0];
-            const supportedLang = ['fr', 'en', 'es', 'de'].includes(systemLang) ? systemLang : 'fr'; // fallback to fr
+            const supportedLang = ['fr', 'en', 'es'].includes(systemLang) ? systemLang : 'fr'; // fallback to fr
             i18n.changeLanguage(supportedLang);
             localStorage.setItem('language_mode', 'auto');
             setMode('auto');
-            localStorage.removeItem('i18nextLng'); 
+            localStorage.removeItem('i18nextLng');
         } else {
             i18n.changeLanguage(lng);
             localStorage.setItem('language_mode', 'manual');
@@ -26,12 +26,18 @@ const LanguageSettings = () => {
         }
     };
 
+    React.useEffect(() => {
+        const systemLang = navigator.language.split('-')[0];
+        const supportedLang = ['fr', 'en', 'es'].includes(systemLang) ? systemLang : 'fr'; // fallback to fr
+
+        // Only set default if user hasn't selected a preference (handled by i18next-browser-languagedetector)
+        // strict logic could be added here if needed
+    }, []);
+
     const languages = [
-        { code: 'auto', label: t('settings.themes.auto', 'Automatique') + ` (${navigator.language.split('-')[0]})`, icon: <Monitor size={20} /> },
-        { code: 'fr', label: 'Français', icon: <span style={{fontSize: '1.2rem'}}>🇫🇷</span> },
-        { code: 'en', label: 'English', icon: <span style={{fontSize: '1.2rem'}}>🇬🇧</span> },
-        { code: 'es', label: 'Español', icon: <span style={{fontSize: '1.2rem'}}>🇪🇸</span> },
-        { code: 'de', label: 'Deutsch', icon: <span style={{fontSize: '1.2rem'}}>🇩🇪</span> }
+        { code: 'fr', label: 'Français', icon: <span style={{ fontSize: '1.2rem' }}>🇫🇷</span> },
+        { code: 'en', label: 'English', icon: <span style={{ fontSize: '1.2rem' }}>🇺🇸</span> },
+        { code: 'es', label: 'Español', icon: <span style={{ fontSize: '1.2rem' }}>🇪🇸</span> }
     ];
 
     return (
@@ -43,31 +49,31 @@ const LanguageSettings = () => {
                 <h2 className="settings-header-title">{t('settings.language', 'Langue')}</h2>
             </div>
 
-    <div className="settings-section settings-section-card">
-        <div className="language-list">
-            {languages.map((lang) => {
-                const isSelected = mode === 'auto'
-                    ? lang.code === 'auto'
-                    : (lang.code !== 'auto' && i18n.language.startsWith(lang.code));
+            <div className="settings-section settings-section-card">
+                <div className="language-list">
+                    {languages.map((lang) => {
+                        const isSelected = mode === 'auto'
+                            ? lang.code === 'auto'
+                            : (lang.code !== 'auto' && i18n.language.startsWith(lang.code));
 
-                return (
-                    <button
-                        key={lang.code}
-                        className="language-item"
-                        onClick={() => changeLanguage(lang.code)}
-                        role="radio"
-                        aria-checked={isSelected}
-                    >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            {lang.icon}
-                            <span>{lang.label}</span>
-                        </div>
-                        {isSelected && <Check size={20} className="check-icon" />}
-                    </button>
-                );
-            })}
-        </div>
-    </div>
+                        return (
+                            <button
+                                key={lang.code}
+                                className="language-item"
+                                onClick={() => changeLanguage(lang.code)}
+                                role="radio"
+                                aria-checked={isSelected}
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    {lang.icon}
+                                    <span>{lang.label}</span>
+                                </div>
+                                {isSelected && <Check size={20} className="check-icon" />}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
         </div >
     );
 };

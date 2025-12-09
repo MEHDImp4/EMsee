@@ -1,4 +1,57 @@
 {
+    "privacy_page": {
+        "title": "Política de Privacidad",
+        "last_updated": "Última actualización",
+        "sections": {
+            "collection": {
+                "title": "Recopilación de Datos",
+                "content": "Recopilamos información como su dirección de correo electrónico, nombre y datos académicos (carrera, año) para proporcionar y mejorar nuestros servicios."
+            },
+            "usage": {
+                "title": "Uso de Datos",
+                "content": "Sus datos se utilizan para personalizar su experiencia, facilitar la comunicación académica y enviarle actualizaciones importantes."
+            },
+            "cookies": {
+                "title": "Cookies",
+                "content": "Utilizamos cookies para mejorar la navegación, recordar sus preferencias y analizar el tráfico del sitio."
+            },
+            "security": {
+                "title": "Seguridad",
+                "content": "Implementamos medidas de seguridad de última generación para proteger su información personal contra el acceso no autorizado."
+            },
+            "rights": {
+                "title": "Sus Derechos",
+                "content": "Tiene derecho a acceder, corregir o eliminar sus datos personales en cualquier momento a través de la configuración de su cuenta."
+            }
+        }
+    },
+    "terms_page": {
+        "title": "Términos de Servicio",
+        "last_updated": "Última actualización",
+        "sections": {
+            "intro": {
+                "title": "Introducción",
+                "content": "Bienvenido a EMsee. Al acceder a nuestra plataforma, usted acepta estar sujeto a estos términos de servicio, todas las leyes y regulaciones aplicables, y acepta que es responsable de cumplir con las leyes locales aplicables."
+            },
+            "usage": {
+                "title": "Licencia de Uso",
+                "content": "Se concede permiso para descargar temporalmente una copia de los materiales (información o software) en el sitio web de EMsee para visualización transitoria personal y no comercial únicamente."
+            },
+            "content": {
+                "title": "Contenido del Usuario",
+                "content": "Usted conserva sus derechos sobre cualquier contenido que envíe, publique o muestre en o a través de nuestros servicios. Usted es responsable del uso de los servicios y de cualquier contenido que proporcione."
+            },
+            "termination": {
+                "title": "Terminación",
+                "content": "Podemos terminar o suspender su acceso inmediatamente, sin previo aviso ni responsabilidad, por cualquier motivo, incluyendo, sin limitación, si incumple los Términos."
+            },
+            "law": {
+                "title": "Ley Aplicable",
+                "content": "Estos términos y condiciones se rigen e interpretan de acuerdo con las leyes de Marruecos y usted se somete irrevocablemente a la jurisdicción exclusiva de los tribunales en ese Estado o ubicación."
+            }
+        }
+    },
+    "app_name": "ProjetJS",
     "hero": {
         "title": "La red social para <1>estudiantes</1> que te conecta.",
         "subtitle": "Comparte tus ideas, colabora en proyectos y mantente informado sobre la vida en el campus. Una comunidad solidaria te espera.",
@@ -46,8 +99,10 @@
         "password_mismatch": "Las contraseñas no coinciden.",
         "login_btn": "Iniciar sesión",
         "no_account": "¿Aún no tienes cuenta?",
+        "already_account": "¿Ya tienes una cuenta?",
         "create_account": "Crear una cuenta",
         "join_us": "Únete a nosotros",
+        "register_btn": "Registrarse",
         "register_subtitle": "Crea tu cuenta EMsee ahora.",
         "student": "Estudiante",
         "professor": "Profesor",
@@ -60,7 +115,51 @@
         "select_level": "Selecciona un nivel",
         "class_placeholder": "Ej: G1, G2...",
         "field_required": "Campo requerido",
-        "select_at_least_one": "Selecciona al menos una materia."
+        "select_at_least_one": "Selecciona al menos una materia.",
+        "email_error": "El correo debe terminar con",
+        "student_placeholder": "estudiante@emsi-edu.ma",
+        "professor_placeholder": "prof@emsi.ma",
+        "field_of_study": "Campo de estudio",
+        "year_study": "Año de estudio",
+        "select_filiere": "Selecciona tu carrera",
+        "select_year": "Selecciona tu año",
+        "subjects_taught": "Asignaturas impartidas"
+    },
+    "lists": {
+        "subjects": {
+            "web_dev": "Desarrollo Web",
+            "java": "Java / J2EE",
+            "algo": "Algorítmica",
+            "data_struct": "Estructura de Datos",
+            "db": "Bases de Datos",
+            "networks": "Redes",
+            "os": "Sistemas Operativos",
+            "project_mgmt": "Gestión de Proyectos",
+            "math": "Matemáticas",
+            "probs": "Probabilidades",
+            "english": "Inglés",
+            "comm": "Comunicación"
+        },
+        "filieres": {
+            "iir": "Ingeniería Informática y Redes",
+            "gesi": "Ingeniería Eléctrica y Sistemas Inteligentes",
+            "iaii": "Ingeniería de Automatización e Informática Industrial",
+            "gcb": "Ingeniería Civil",
+            "gi": "Ingeniería Industrial",
+            "gf": "Ingeniería Financiera"
+        },
+        "years": {
+            "prepa_1": "1er Año Preparatorio",
+            "prepa_2": "2do Año Preparatorio",
+            "cycle_1": "1er Año Ciclo Ingeniero",
+            "cycle_2": "2do Año Ciclo Ingeniero",
+            "cycle_3": "3er Año Ciclo Ingeniero",
+            "year_1": "1er Año",
+            "year_2": "2do Año",
+            "year_3": "3er Año",
+            "year_4": "4to Año",
+            "year_5": "5to Año"
+        }
     },
     "contact_page": {
         "title": "Contáctanos",

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Mail, Send, CheckCircle } from 'lucide-react';
+import { Mail, Send, CheckCircle, User, MessageSquare } from 'lucide-react';
 
 import './css/Contact.css';
 
@@ -59,43 +59,55 @@ const Contact = () => {
                             </motion.div>
                         ) : (
                             <form onSubmit={handleSubmit} className="contact-form">
-                                <div>
+                                <div className="form-group">
                                     <label className="contact-label" htmlFor="name">{t('contact_page.name')}</label>
-                                    <input
-                                        id="name"
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        required
-                                        className="contact-input"
-                                        autoComplete="name"
-                                    />
+                                    <div className="input-wrapper">
+                                        <User size={20} className="input-icon" aria-hidden="true" />
+                                        <input
+                                            id="name"
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                            className="contact-input with-icon"
+                                            autoComplete="name"
+                                            placeholder={t('contact_page.name')}
+                                        />
+                                    </div>
                                 </div>
-                                <div>
+                                <div className="form-group">
                                     <label className="contact-label" htmlFor="email">{t('contact_page.email')}</label>
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                        className="contact-input"
-                                        autoComplete="email"
-                                    />
+                                    <div className="input-wrapper">
+                                        <Mail size={20} className="input-icon" aria-hidden="true" />
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                            className="contact-input with-icon"
+                                            autoComplete="email"
+                                            placeholder={t('contact_page.email')}
+                                        />
+                                    </div>
                                 </div>
-                                <div>
+                                <div className="form-group">
                                     <label className="contact-label" htmlFor="message">{t('contact_page.message')}</label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={handleChange}
-                                        required
-                                        rows="5"
-                                        className="contact-input contact-textarea"
-                                    ></textarea>
+                                    <div className="input-wrapper textarea-wrapper">
+                                        <MessageSquare size={20} className="input-icon textarea-icon" aria-hidden="true" />
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            value={formData.message}
+                                            onChange={handleChange}
+                                            required
+                                            rows="5"
+                                            className="contact-input contact-textarea with-icon"
+                                            placeholder={t('contact_page.message')}
+                                        ></textarea>
+                                    </div>
                                 </div>
                                 <button type="submit" className="btn btn-primary contact-btn">
                                     <Send size={20} aria-hidden="true" />

@@ -1,4 +1,56 @@
 {
+    "privacy_page": {
+        "title": "Politique de Confidentialité",
+        "last_updated": "Dernière mise à jour",
+        "sections": {
+            "collection": {
+                "title": "Collecte de Données",
+                "content": "Nous collectons des informations telles que votre adresse e-mail, votre nom et vos données universitaires (filière, année) pour fournir et améliorer nos services."
+            },
+            "usage": {
+                "title": "Utilisation des Données",
+                "content": "Vos données sont utilisées pour personnaliser votre expérience, faciliter la communication académique et vous envoyer des mises à jour importantes."
+            },
+            "cookies": {
+                "title": "Cookies",
+                "content": "Nous utilisons des cookies pour améliorer la navigation, mémoriser vos préférences et analyser le trafic du site."
+            },
+            "security": {
+                "title": "Sécurité",
+                "content": "Nous mettons en œuvre des mesures de sécurité de pointe pour protéger vos informations personnelles contre tout accès non autorisé."
+            },
+            "rights": {
+                "title": "Vos Droits",
+                "content": "Vous avez le droit d'accéder, de corriger ou de supprimer vos données personnelles à tout moment via les paramètres de votre compte."
+            }
+        }
+    },
+    "terms_page": {
+        "title": "Conditions d'Utilisation",
+        "last_updated": "Dernière mise à jour",
+        "sections": {
+            "intro": {
+                "title": "Introduction",
+                "content": "Bienvenue sur EMsee. En accédant à notre plateforme, vous acceptez d'être lié par ces conditions d'utilisation, toutes les lois et réglementations applicables, et acceptez que vous êtes responsable du respect des lois locales applicables."
+            },
+            "usage": {
+                "title": "Licence d'utilisation",
+                "content": "Il est permis de télécharger temporairement une copie des documents (informations ou logiciels) sur le site web de EMsee pour une visualisation transitoire personnelle et non commerciale uniquement."
+            },
+            "content": {
+                "title": "Contenu Utilisateur",
+                "content": "Vous conservez vos droits sur tout contenu que vous soumettez, publiez ou affichez sur ou via nos services. Vous êtes responsable de votre utilisation des services et de tout contenu que vous fournissez."
+            },
+            "termination": {
+                "title": "Résiliation",
+                "content": "Nous pouvons résilier ou suspendre votre accès immédiatement, sans préavis ni responsabilité, pour quelque raison que ce soit, y compris, sans limitation, si vous violez les Conditions."
+            },
+            "law": {
+                "title": "Loi Applicable",
+                "content": "Ces conditions sont régies et interprétées conformément aux lois du Maroc et vous vous soumettez irrévocablement à la compétence exclusive des tribunaux de cet État ou de cet endroit."
+            }
+        }
+    },
     "app_name": "ProjetJS",
     "step": "Étape",
     "next": "Suivant",
@@ -39,6 +91,7 @@
         "mentions_desc": "Taguez vos amis pour les notifier."
     },
     "auth": {
+        "select_account_type": "Sélectionnez le type de compte",
         "welcome_back": "Bon retour !",
         "join_us": "Rejoignez-nous !",
         "login_subtitle": "Connectez-vous pour accéder à votre fil d'actualité.",
@@ -46,6 +99,10 @@
         "professor": "Professeur",
         "email": "Email",
         "password": "Mot de passe",
+        "step": "Étape",
+        "next": "Suivant",
+        "show_password": "Afficher le mot de passe",
+        "hide_password": "Masquer le mot de passe",
         "login_btn": "Se connecter",
         "no_account": "Pas encore de compte ?",
         "already_account": "Déjà un compte ?",
@@ -54,6 +111,7 @@
         "username_error": "Minuscules et points uniquement.",
         "full_name": "Nom complet",
         "fullname_placeholder": "Jean Dupont",
+        "username_placeholder": "jean.dupont",
         "study_level": "Niveau d'étude",
         "select_level": "Sélectionner un niveau",
         "year_1_prepa": "1ère année prépa",
@@ -68,7 +126,51 @@
         "email_error": "L'email doit se terminer par",
         "student_placeholder": "etudiant@emsi-edu.ma",
         "professor_placeholder": "prof@emsi.ma",
-        "email_placeholder": "votre@email.com"
+        "email_placeholder": "votre@email.com",
+        "field_of_study": "Filière",
+        "year_study": "Année d'étude",
+        "select_filiere": "Sélectionnez votre filière",
+        "select_year": "Sélectionnez votre année",
+        "subjects_taught": "Matières enseignées"
+    },
+    "common": {
+        "back": "Retour"
+    },
+    "lists": {
+        "subjects": {
+            "web_dev": "Développement Web",
+            "java": "Java / J2EE",
+            "algo": "Algorithmique",
+            "data_struct": "Structure de données",
+            "db": "Bases de données",
+            "networks": "Réseaux",
+            "os": "Systèmes d'exploitation",
+            "project_mgmt": "Gestion de projet",
+            "math": "Mathématiques",
+            "probs": "Probabilités",
+            "english": "Anglais",
+            "comm": "Communication"
+        },
+        "filieres": {
+            "iir": "Ingénierie Informatique et Réseaux",
+            "gesi": "Génie Electrique et Systèmes Intelligents",
+            "iaii": "Ingénierie Automatisme et Informatique Industrielle",
+            "gcb": "Génie Civil, Bâtiments et Travaux Publics (BTP)",
+            "gi": "Génie Industriel",
+            "gf": "Génie Financier"
+        },
+        "years": {
+            "prepa_1": "1ère année préparatoire",
+            "prepa_2": "2ème année préparatoire",
+            "cycle_1": "1ère année cycle ingénieur",
+            "cycle_2": "2ème année cycle ingénieur",
+            "cycle_3": "3ème année cycle ingénieur",
+            "year_1": "1ère année",
+            "year_2": "2ème année",
+            "year_3": "3ème année",
+            "year_4": "4ème année",
+            "year_5": "5ème année"
+        }
     },
     "contact_page": {
         "title": "Contactez-nous",

@@ -38,8 +38,8 @@ const Footer = () => {
 
                     <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                         <Link to="/about" style={{ color: 'var(--text-muted)' }}>{t('footer.about')}</Link>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.privacy')}</a>
-                        <a href="#" style={{ color: 'var(--text-muted)' }}>{t('footer.terms')}</a>
+                        <Link to="/privacy" style={{ color: 'var(--text-muted)' }}>{t('footer.privacy')}</Link>
+                        <Link to="/terms" style={{ color: 'var(--text-muted)' }}>{t('footer.terms')}</Link>
                         <Link to="/contact" style={{ color: 'var(--text-muted)' }}>{t('footer.contact')}</Link>
                     </div>
 
@@ -63,7 +63,7 @@ const Footer = () => {
                         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                             {/* Language Toggle */}
                             <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '99px', border: '1px solid var(--border)' }}>
-                                {['en', 'fr', 'es', 'de', 'auto'].map((lang) => {
+                                {['en', 'fr', 'es', 'auto'].map((lang) => {
                                     const mode = localStorage.getItem('language_mode') || 'manual';
                                     const isSelected = mode === 'auto'
                                         ? lang === 'auto'
@@ -89,7 +89,7 @@ const Footer = () => {
                                             }}
                                         >
                                             {lang === 'auto' && <Globe size={12} />}
-                                            {lang === 'auto' ? 'Auto' : lang === 'fr' ? 'FR' : lang === 'en' ? 'EN' : lang === 'es' ? 'ES' : 'DE'}
+                                            {lang === 'auto' ? 'Auto' : lang === 'fr' ? 'FR' : lang === 'en' ? 'EN' : 'ES'}
                                         </button>
                                     );
                                 })}

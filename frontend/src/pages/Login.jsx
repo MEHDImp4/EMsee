@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import './css/Login.css';
 
@@ -11,14 +11,47 @@ const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [errors, setErrors] = useState({});
 
-    const handleSubmit = (e) => {
+    const validateForm = () => {
+        const newErrors = {};
+        if (!email) newErrors.email = true;
+        if (!password) newErrors.password = true;
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // mock auth: store a fake token and redirect to /feed
-        localStorage.setItem('token', 'mock-token');
-        localStorage.setItem('userEmail', email || 'user@example.com');
-        localStorage.setItem('firstVisit', 'true');
-        navigate('/feed');
+        if (validateForm()) {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userEmail', data.user.email);
+                    localStorage.setItem('userName', data.user.full_name);
+                    localStorage.setItem('userHandle', data.user.username);
+                    localStorage.setItem('userId', data.user.id);
+                    localStorage.setItem('userRole', data.user.role);
+                    navigate('/feed');
+                } else {
+                    setErrors({ form: data.error || 'Login failed' });
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                setErrors({ form: 'An error occurred. Please try again.' });
+            }
+        }
     };
 
     return (
@@ -43,13 +76,20 @@ const Login = () => {
                                 <input
                                     id="email"
                                     type="email"
-                                    placeholder={t('auth.email_placeholder')}
+                                    placeholder={t('auth.student_placeholder')}
                                     className="form-input"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+                                        if (errors.email) setErrors({ ...errors, email: false });
+                                    }}
                                     autoComplete="email"
+                                    style={{ borderColor: errors.email ? 'var(--danger)' : undefined }}
+                                    aria-invalid={errors.email ? "true" : "false"}
+                                    aria-describedby={errors.email ? "email-error" : undefined}
                                 />
                             </div>
+                            {errors.email && <p id="email-error" className="error-message" role="alert">{t('auth.field_required')}</p>}
                         </div>
 
                         <div className="form-group">
@@ -58,14 +98,46 @@ const Login = () => {
                                 <Lock size={20} className="input-icon" aria-hidden="true" />
                                 <input
                                     id="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="••••••••"
                                     className="form-input"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        if (errors.password) setErrors({ ...errors, password: false });
+                                    }}
                                     autoComplete="current-password"
+                                    style={{
+                                        paddingRight: '2.5rem',
+                                        borderColor: errors.password ? 'var(--danger)' : undefined
+                                    }}
+                                    aria-invalid={errors.password ? "true" : "false"}
+                                    aria-describedby={errors.password ? "password-error" : undefined}
                                 />
+                                <button
+                                    type="button"
+                                    className="password-toggle-btn"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '0.75rem',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        color: 'var(--text-muted)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: '0'
+                                    }}
+                                >
+                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
                             </div>
+                            {errors.password && <p id="password-error" className="error-message" role="alert">{t('auth.field_required')}</p>}
                         </div>
 
                         <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{t('auth.login_btn')}</button>

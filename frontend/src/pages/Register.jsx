@@ -36,13 +36,24 @@ const Register = () => {
     // Professor Data
     const [selectedSubjects, setSelectedSubjects] = useState([]);
 
+    // Student Data
+    const [filiere, setFiliere] = useState('');
+    const [year, setYear] = useState('');
+
     // Derived State
     const isProfessor = accountType === 'professor';
 
     const AVAILABLE_SUBJECTS = [
-        'Développement Web', 'Java / J2EE', 'Algorithmique', 'Structure de données',
-        'Bases de données', 'Réseaux', 'Systèmes d\'exploitation', 'Gestion de projet',
-        'Mathématiques', 'Probabilités', 'Anglais', 'Communication'
+        'web_dev', 'java', 'algo', 'data_struct',
+        'db', 'networks', 'os', 'project_mgmt',
+        'math', 'probs', 'english', 'comm'
+    ];
+
+    const FILIERES_WITH_PREPA = [
+        'iir',
+        'gesi',
+        'iaii',
+        'gi'
     ];
 
     useEffect(() => {
@@ -96,7 +107,12 @@ const Register = () => {
             case 2:
                 return fullName.trim() !== '' && isUsernameValid && isEmailValid;
             case 3:
-                return isProfessor ? selectedSubjects.length > 0 : true; // Require at least one subject for profs
+                if (isProfessor) {
+                    return selectedSubjects.length > 0;
+                } else {
+                    if (!filiere) return false;
+                    return year !== '';
+                }
             case 4:
                 return isPasswordValid && doPasswordsMatch;
             default:
@@ -130,18 +146,55 @@ const Register = () => {
         );
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async (e) => {
+        if (e) e.preventDefault(); // Handle explicit event if passed
         if (validateCurrentStep()) {
-            localStorage.setItem('token', 'mock-token');
-            localStorage.setItem('userEmail', email || 'user@example.com');
-            localStorage.setItem('userName', fullName || 'New User');
-            localStorage.setItem('userHandle', username || 'user');
-            localStorage.setItem('firstVisit', 'true');
-            if (isProfessor) {
-                localStorage.setItem('professorSubjects', JSON.stringify(selectedSubjects));
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email,
+                        username,
+                        password,
+                        full_name: fullName,
+                        role: accountType,
+                        filiere: accountType === 'student' ? filiere : undefined,
+                        year: accountType === 'student' ? year : undefined,
+                        subjects: accountType === 'professor' ? selectedSubjects : undefined
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Save token and user info
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userEmail', data.user.email);
+                    localStorage.setItem('userName', data.user.full_name);
+                    localStorage.setItem('userHandle', data.user.username);
+                    localStorage.setItem('userId', data.user.id);
+                    localStorage.setItem('userRole', data.user.role);
+
+                    if (isProfessor) {
+                        localStorage.setItem('professorSubjects', JSON.stringify(selectedSubjects));
+                    } else {
+                        localStorage.setItem('studentFiliere', filiere);
+                        localStorage.setItem('studentYear', year);
+                    }
+
+                    navigate('/feed');
+                } else {
+                    console.error('Registration failed:', data.error);
+                    // You might want to show this error to the user
+                    alert(data.error || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert('An error occurred. Please try again.');
             }
-            navigate('/feed');
         } else {
             setShowErrors(true);
         }
@@ -163,6 +216,7 @@ const Register = () => {
                             <button
                                 onClick={handleBack}
                                 className="wizard-back-btn"
+                                type="button"
                             >
                                 <ChevronLeft size={24} />
                             </button>
@@ -184,7 +238,17 @@ const Register = () => {
                         />
                     </div>
 
-                    <form className="auth-form auth-form-flex">
+                    <form
+                        className="auth-form auth-form-flex"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            if (currentStep === totalSteps) {
+                                handleSubmit(e);
+                            } else {
+                                handleNext();
+                            }
+                        }}
+                    >
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={currentStep}
@@ -219,6 +283,11 @@ const Register = () => {
                                         availableSubjects={AVAILABLE_SUBJECTS}
                                         selectedSubjects={selectedSubjects}
                                         toggleSubject={toggleSubject}
+                                        filiere={filiere}
+                                        setFiliere={setFiliere}
+                                        year={year}
+                                        setYear={setYear}
+                                        FILIERES_WITH_PREPA={FILIERES_WITH_PREPA}
                                         showErrors={showErrors}
                                     />
                                 )}

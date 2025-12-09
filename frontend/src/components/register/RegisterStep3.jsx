@@ -8,40 +8,80 @@ const RegisterStep3 = ({
     availableSubjects,
     selectedSubjects,
     toggleSubject,
+    filiere,
+    setFiliere,
+    year,
+    setYear,
+    FILIERES_WITH_PREPA,
     showErrors
 }) => {
     const { t } = useTranslation();
+
+    const FILIERE_KEYS = ['iir', 'gesi', 'iaii', 'gcb', 'gi', 'gf'];
 
     if (!isProfessor) {
         return (
             <div className="student-fields">
                 <div className="form-group">
-                    <label className="form-label" htmlFor="studyLevel">{t('auth.study_level')}</label>
+                    <label className="form-label" htmlFor="filiereSelect">{t('auth.field_of_study')}</label>
                     <div className="input-wrapper">
                         <GraduationCap size={20} className="input-icon" aria-hidden="true" />
-                        <select id="studyLevel" className="form-input select-none-appearance">
-                            <option value="">{t('auth.select_level')}</option>
-                            <option value="1ap">{t('auth.year_1_prepa')}</option>
-                            <option value="2ap">{t('auth.year_2_prepa')}</option>
-                            <option value="3iir">{t('auth.year_3_iir')}</option>
-                            <option value="4iir">{t('auth.year_4_iir')}</option>
-                            <option value="5iir">{t('auth.year_5_iir')}</option>
+                        <select
+                            id="filiereSelect"
+                            className="form-input select-none-appearance"
+                            value={filiere}
+                            onChange={(e) => {
+                                setFiliere(e.target.value);
+                                setYear(''); // Reset year when filiere changes
+                            }}
+                            aria-invalid={showErrors && !filiere ? "true" : "false"}
+                            style={{ borderColor: showErrors && !filiere ? 'var(--danger)' : undefined }}
+                        >
+                            <option value="">{t('auth.select_filiere')}</option>
+                            {FILIERE_KEYS.map((key) => (
+                                <option key={key} value={key}>{t(`lists.filieres.${key}`)}</option>
+                            ))}
                         </select>
                     </div>
+                    {showErrors && !filiere && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 </div>
 
-                <div className="form-group">
-                    <label className="form-label" htmlFor="classInput">{t('auth.class')}</label>
-                    <div className="input-wrapper">
-                        <School size={20} className="input-icon" aria-hidden="true" />
-                        <input
-                            id="classInput"
-                            type="text"
-                            placeholder={t('auth.class_placeholder', 'Ex: G1, G2...')}
-                            className="form-input"
-                        />
+                {filiere && (
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="yearSelect">{t('auth.year_study')}</label>
+                        <div className="input-wrapper">
+                            <School size={20} className="input-icon" aria-hidden="true" />
+                            <select
+                                id="yearSelect"
+                                className="form-input select-none-appearance"
+                                value={year}
+                                onChange={(e) => setYear(e.target.value)}
+                                aria-invalid={showErrors && !year ? "true" : "false"}
+                                style={{ borderColor: showErrors && !year ? 'var(--danger)' : undefined }}
+                            >
+                                <option value="">{t('auth.select_year')}</option>
+                                {FILIERES_WITH_PREPA.includes(filiere) ? (
+                                    <>
+                                        <option value="prepa_1">{t('lists.years.prepa_1')}</option>
+                                        <option value="prepa_2">{t('lists.years.prepa_2')}</option>
+                                        <option value="cycle_1">{t('lists.years.cycle_1')}</option>
+                                        <option value="cycle_2">{t('lists.years.cycle_2')}</option>
+                                        <option value="cycle_3">{t('lists.years.cycle_3')}</option>
+                                    </>
+                                ) : (
+                                    <>
+                                        <option value="year_1">{t('lists.years.year_1')}</option>
+                                        <option value="year_2">{t('lists.years.year_2')}</option>
+                                        <option value="year_3">{t('lists.years.year_3')}</option>
+                                        <option value="year_4">{t('lists.years.year_4')}</option>
+                                        <option value="year_5">{t('lists.years.year_5')}</option>
+                                    </>
+                                )}
+                            </select>
+                        </div>
+                        {showErrors && !year && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                     </div>
-                </div>
+                )}
             </div>
         );
     }
@@ -50,15 +90,15 @@ const RegisterStep3 = ({
         <div className="professor-fields">
             <label className="form-label" id="subjects-label">{t('auth.subjects_taught')}</label>
             <div className="subject-grid" role="group" aria-labelledby="subjects-label">
-                {availableSubjects.map(subject => (
+                {availableSubjects.map((subjectKey) => (
                     <button
-                        key={subject}
+                        key={subjectKey}
                         type="button"
-                        onClick={() => toggleSubject(subject)}
-                        className={`subject-badge ${selectedSubjects.includes(subject) ? 'active' : ''}`}
-                        aria-pressed={selectedSubjects.includes(subject)}
+                        onClick={() => toggleSubject(subjectKey)}
+                        className={`subject-badge ${selectedSubjects.includes(subjectKey) ? 'active' : ''}`}
+                        aria-pressed={selectedSubjects.includes(subjectKey)}
                     >
-                        {subject}
+                        {t(`lists.subjects.${subjectKey}`)}
                     </button>
                 ))}
             </div>
