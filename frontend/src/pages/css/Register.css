@@ -232,7 +232,53 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Removed duplicate auth-form/student-fields block */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: block;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.input-status-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.error-message {
+  color: #EF4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.student-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+}
 
 .auth-footer {
   margin-top: 1.5rem;
@@ -244,132 +290,4 @@
 .auth-link {
   color: var(--primary);
   font-weight: 600;
-}
-
-/* --- Extracted & New Styles --- */
-
-.auth-card-full {
-  min-height: 520px;
-  display: flex;
-  flex-direction: column;
-}
-
-.auth-header-relative {
-  position: relative;
-  margin-bottom: 1.5rem;
-}
-
-.wizard-back-btn {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--text-muted);
-}
-
-.auth-title-large {
-  font-size: 1.5rem;
-  margin: 0;
-}
-
-.auth-subtitle-small {
-  font-size: 0.9rem;
-}
-
-.auth-form-flex {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.account-type-selector-col {
-  flex-direction: column;
-  gap: 1rem;
-  background: transparent;
-  padding: 0;
-}
-
-.input-prefix {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-}
-
-.student-email-hint {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-weight: normal;
-}
-
-.subject-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-}
-
-.subject-badge {
-  padding: 0.6rem 0.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s;
-  text-align: center;
-}
-
-.subject-badge.active {
-  border-color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.select-none-appearance {
-  appearance: none;
-}
-
-.password-toggle-btn {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.password-hint {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-top: 0.5rem;
-}
-
-.wizard-footer-gap {
-  margin-top: 2rem;
-}
-
-.btn-full-width {
-  width: 100%;
-}
-
-.btn-center-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.error-mt {
-  margin-top: 1rem;
 }
