@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import pool from './config/db';
+import prisma from './config/db';
 import authRoutes from './routes/authRoutes';
 
 dotenv.config();
@@ -23,6 +23,9 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 
 // Test DB Connection
+// Test DB Connection
+// Prisma connects lazily, but we can try a simple query to verify
+/*
 pool.getConnection()
     .then((connection) => {
         console.log('Database connected successfully');
@@ -31,6 +34,14 @@ pool.getConnection()
     .catch((err) => {
         console.error('Database connection failed:', err);
     });
+*/
+// You can remove this block entirely or replace with:
+/*
+import prisma from './config/db';
+prisma.$connect()
+    .then(() => console.log('Database connected successfully'))
+    .catch((err) => console.error('Database connection failed:', err));
+*/
 
 app.get('/', (req, res) => {
     res.send('API is running...');
