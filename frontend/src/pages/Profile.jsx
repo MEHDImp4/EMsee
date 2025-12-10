@@ -1,36 +1,82 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mail, GraduationCap, Users, Calendar, MapPin, Edit2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useParams } from 'react-router-dom';
 import './css/Profile.css';
 import EditProfileModal from '../components/profile/EditProfileModal';
+import PostCard from '../components/PostCard';
+import PostService from '../services/post.service';
+import UserService from '../services/user.service';
 
 const Profile = () => {
   const { t } = useTranslation();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  // Mock data
+  const { username } = useParams();
   const { user: authUser } = useAuth();
 
-  // Guard clause if no user (should rely on ProtectedRoute but good practice)
-  if (!authUser) return null;
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  // Determine which username to target
+  // If no params, default to auth user (e.g. /profile route)
+  const targetUsername = username || authUser?.username;
+  const isOwner = authUser?.username === targetUsername;
+
+  useEffect(() => {
+    if (targetUsername) {
+      fetchProfileData();
+      fetchUserPosts();
+    }
+  }, [targetUsername]);
+
+  const fetchProfileData = async () => {
+    setLoadingProfile(true);
+    try {
+      const data = await UserService.getUserByHandle(targetUsername);
+      setProfileData(data);
+    } catch (error) {
+      console.error("Failed to fetch profile data", error);
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  const fetchUserPosts = async () => {
+    setLoadingPosts(true);
+    try {
+      const posts = await PostService.getUserPosts(targetUsername);
+      setUserPosts(posts || []);
+    } catch (error) {
+      console.error("Failed to fetch user posts", error);
+    } finally {
+      setLoadingPosts(false);
+    }
+  };
+
+  const handleDeletePost = (postId) => {
+    setUserPosts(prevPosts => prevPosts.filter(p => p.id !== postId));
+  };
+
+  if (!authUser && !targetUsername) return null;
+  if (loadingProfile && !profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>Loading Profile...</div>;
+  if (!profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>User not found</div>;
 
   const user = {
-    name: authUser.full_name || authUser.name || "User",
-    handle: `@${authUser.username || 'user'}`,
-    role: authUser.role || "student",
-    // Map backend fields to display fields
-    level: authUser.year ? t(`lists.years.${authUser.year}`) : "N/A",
-    class: authUser.filiere ? t(`lists.filieres.${authUser.filiere}`) : "N/A",
-    email: authUser.email,
-    // Use empty string defaults if bio/location are missing, as requested
-    location: authUser.location || "",
-    bio: authUser.bio || "",
-    joinDate: new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' }),
-    avatar: authUser.avatar ? `http://localhost:5000${authUser.avatar}` : null,
+    name: profileData.full_name || profileData.username || "User",
+    handle: `@${profileData.username || 'user'}`,
+    role: profileData.role || "student",
+    level: profileData.year ? t(`lists.years.${profileData.year}`) : "N/A",
+    class: profileData.filiere ? t(`lists.filieres.${profileData.filiere}`) : "N/A",
+    email: profileData.email,
+    location: profileData.location || "",
+    bio: profileData.bio || "",
+    joinDate: new Date(profileData.created_at || profileData.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }),
+    avatar: profileData.avatar ? `http://localhost:5000${profileData.avatar}` : null,
     stats: {
-      posts: 0,
+      posts: userPosts?.length || 0,
       followers: 0,
       following: 0
     }
@@ -46,20 +92,22 @@ const Profile = () => {
       {/* Header Section with Avatar */}
       <div className="profile-header-content">
         <div className="profile-avatar-wrapper">
-          <div className="profile-avatar" style={user.avatar ? { padding: 0 } : {}}>
+          <div className="profile-avatar" style={user.avatar ? { padding: 0, overflow: 'hidden' } : {}}>
             {user.avatar ? (
               <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
-              user.name.charAt(0)
+              (user.name || 'U').charAt(0)
             )}
           </div>
         </div>
 
         <div className="profile-actions">
-          <button className="btn-edit-profile" onClick={() => setIsEditModalOpen(true)}>
-            <Edit2 size={16} />
-            <span>{t('profile.edit', 'Modifier')}</span>
-          </button>
+          {isOwner && (
+            <button className="btn-edit-profile" onClick={() => setIsEditModalOpen(true)}>
+              <Edit2 size={16} />
+              <span>{t('profile.edit', 'Modifier')}</span>
+            </button>
+          )}
         </div>
 
         <div className="profile-identity">
@@ -125,6 +173,26 @@ const Profile = () => {
             <span className="card-label">{t('profile.class')}</span>
             <span className="card-value">{user.class}</span>
           </div>
+        </div>
+      </div>
+
+      {/* User Posts Section */}
+      <div className="profile-posts-section">
+        <div className="section-title" style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', fontWeight: 'bold' }}>
+          {t('profile.posts', 'Posts')}
+        </div>
+        <div className="posts-list">
+          {loadingPosts ? (
+            <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>
+          ) : userPosts?.length > 0 ? (
+            userPosts.map((post, index) => (
+              <PostCard key={`${post.id}-${index}`} post={post} onDelete={handleDeletePost} />
+            ))
+          ) : (
+            <div style={{ padding: '20px', textAlign: 'center', color: '#8899a6' }}>
+              No posts yet.
+            </div>
+          )}
         </div>
       </div>
 

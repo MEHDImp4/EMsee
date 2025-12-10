@@ -23,6 +23,14 @@ const UserService = {
      */
     getUserByHandle: async (handle) => {
         return await api.get(`/users/${handle}`);
+    },
+
+    searchUsers: async (query) => {
+        return await api.get(`/users/search?q=${encodeURIComponent(query)}`);
+    },
+
+    getSuggestions: async () => {
+        return await api.get('/users/suggestions');
     }
 };
 

@@ -131,7 +131,8 @@
         "year_study": "Année d'étude",
         "select_filiere": "Sélectionnez votre filière",
         "select_year": "Sélectionnez votre année",
-        "subjects_taught": "Matières enseignées"
+        "subjects_taught": "Matières enseignées",
+        "check_failed": "Impossible de vérifier la disponibilité. Veuillez vérifier votre connexion."
     },
     "common": {
         "back": "Retour",
@@ -274,5 +275,15 @@
         "logout_desc": "Vous pourrez toujours vous reconnecter à tout moment. Si vous voulez juste changer de compte, vous pouvez ajouter un compte existant.",
         "logout_btn": "Se déconnecter",
         "cancel": "Annuler"
+    },
+    "messages": {
+        "welcome_title": "Bienvenue dans vos messages",
+        "welcome_desc": "Connectez-vous avec d'autres étudiants et professeurs en privé. Sélectionnez une conversation pour commencer.",
+        "start_conv": "Nouvelle conversation"
+    },
+    "post": {
+        "delete": "Supprimer",
+        "report": "Signaler",
+        "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce post ?"
     }
 }

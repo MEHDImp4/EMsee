@@ -128,7 +128,8 @@
         "year_study": "Year of Study",
         "select_filiere": "Select your major",
         "select_year": "Select your year",
-        "subjects_taught": "Subjects Taught"
+        "subjects_taught": "Subjects Taught",
+        "check_failed": "Unable to verify availability. Please check your connection."
     },
     "common": {
         "back": "Back",
@@ -271,5 +272,15 @@
         "logout_desc": "You can always log back in at any time. If you just want to switch accounts, you can add an existing account.",
         "logout_btn": "Log out",
         "cancel": "Cancel"
+    },
+    "messages": {
+        "welcome_title": "Welcome to your messages",
+        "welcome_desc": "Connect with other students and professors privately. Select a conversation to start.",
+        "start_conv": "New conversation"
+    },
+    "post": {
+        "delete": "Delete",
+        "report": "Report",
+        "confirm_delete": "Are you sure you want to delete this post?"
     }
 }

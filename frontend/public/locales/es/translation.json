@@ -123,7 +123,8 @@
         "year_study": "Año de estudio",
         "select_filiere": "Selecciona tu carrera",
         "select_year": "Selecciona tu año",
-        "subjects_taught": "Asignaturas impartidas"
+        "subjects_taught": "Asignaturas impartidas",
+        "check_failed": "No se pudo verificar la disponibilidad. Compruebe su conexión."
     },
     "lists": {
         "subjects": {
@@ -266,5 +267,15 @@
     "common": {
         "back": "Atrás",
         "save": "Guardar cambios"
+    },
+    "messages": {
+        "welcome_title": "Bienvenido a tus mensajes",
+        "welcome_desc": "Conéctate con otros estudiantes y profesores en privado. Selecciona una conversación para comenzar.",
+        "start_conv": "Nueva conversación"
+    },
+    "post": {
+        "delete": "Eliminar",
+        "report": "Reportar",
+        "confirm_delete": "¿Estás seguro de que quieres eliminar esta publicación?"
     }
 }

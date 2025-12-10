@@ -51,6 +51,7 @@ function App() {
                 <Route path="/feed" element={<Feed />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/:username" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/settings/language" element={<LanguageSettings />} />
                 <Route path="/explore" element={<Explore />} />

@@ -1,40 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, BarChart2, Code, Smile, Send, MessageCircle, Repeat, Heart, Share, Globe, CalendarClock, MapPin } from 'lucide-react';
+import { Image, BarChart2, Code, Smile, Globe } from 'lucide-react';
+import PostCard from '../components/PostCard';
+import PostService from '../services/post.service';
+import { useAuth } from '../context/AuthContext';
+import './css/Feed.css';
 
 const Feed = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('foryou');
+  const [posts, setPosts] = useState([]);
+  const [newPostContent, setNewPostContent] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  // Mock data
-  const posts = [
-    {
-      id: 1,
-      user: 'Prof. Amrani',
-      handle: '@amrani.prof',
-      time: '2h',
-      content: 'Rappel : le projet #ProjetWeb est à rendre avant vendredi ! N\'oubliez pas la documentation technique. Bon courage à tous 💪',
-      likes: 45,
-      comments: 8,
-      isProf: true
-    },
-    {
-      id: 2,
-      user: 'Sara Bennani',
-      handle: '@s.bennani',
-      time: '4h',
-      content: "Quelqu'un peut m'expliquer les closures en JavaScript ? Je bloque sur le TD... @m.alami.emsi t'as compris toi ?",
-      code: `function createCounter() {
-  let count = 0;
-  return function() {
-    return ++count;
-  };
-}`,
-      likes: 12,
-      comments: 4,
-      isProf: false
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const data = await PostService.getAllPosts();
+      setPosts(data || []);
+    } catch (error) {
+      console.error("Failed to load posts", error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const handlePostSubmit = async () => {
+    if (!newPostContent.trim()) return;
+
+    try {
+      const newPost = await PostService.createPost(newPostContent);
+      // newPost from create API might not have all the _count and user fields populated as deeply as getAllPosts
+      // But our controller returns include user.
+      // We might need to manually add structured fields for optimistic update or just simple structure
+      const optimizedPost = {
+        ...newPost,
+        _count: { likes: 0, comments: 0, reposts: 0 },
+        isLiked: false,
+        isReposted: false
+      };
+      setPosts([optimizedPost, ...posts]);
+      setNewPostContent('');
+    } catch (error) {
+      console.error("Failed to create post", error);
+    }
+  };
+
+  const handleDeletePost = (postId) => {
+    setPosts(prevPosts => prevPosts.filter(p => p.id !== postId));
+  };
 
   return (
     <div className="feed-container">
@@ -62,13 +80,19 @@ const Feed = () => {
       {/* Compose Area */}
       <div className="compose-area">
         <div className="compose-avatar">
-          <div className="avatar-circle">MA</div>
+          <div className="avatar-circle">
+            {user?.avatar ?
+              <img src={`http://localhost:5000${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+              : (user?.full_name?.charAt(0) || user?.username?.charAt(0) || 'U')}
+          </div>
         </div>
         <div className="compose-content">
           <textarea
             placeholder={t('feed.placeholder', "Quoi de neuf à l'EMSI ?")}
             className="compose-input"
             rows="3"
+            value={newPostContent}
+            onChange={(e) => setNewPostContent(e.target.value)}
           />
 
           <div className="compose-reply-permission">
@@ -83,7 +107,7 @@ const Feed = () => {
               <button className="icon-btn" title="Code"><Code size={20} /></button>
               <button className="icon-btn" title="Emoji"><Smile size={20} /></button>
             </div>
-            <button className="post-btn-small">
+            <button className="post-btn-small" onClick={handlePostSubmit} disabled={!newPostContent.trim()}>
               {t('sidebar.publish', 'Publier')}
             </button>
           </div>
@@ -92,56 +116,13 @@ const Feed = () => {
 
       {/* Posts List */}
       <div className="posts-list">
-        {posts.map(post => (
-          <div key={post.id} className="post-card">
-            <div className="post-avatar-col">
-              <div className="avatar-circle">
-                {post.user.charAt(0)}
-              </div>
-            </div>
-
-            <div className="post-content-col" style={{ flex: 1 }}>
-              <div className="post-header">
-                <div className="post-info-row">
-                  <span className="post-name">{post.user}</span>
-                  <span className="post-handle">{post.handle}</span>
-                  <span className="post-dot">·</span>
-                  <span className="post-time">{post.time}</span>
-                  {post.isProf && <span className="prof-badge">{t('feed.role.professor', 'Professeur')}</span>}
-                </div>
-                <button className="more-options-btn">•••</button>
-              </div>
-
-              <div className="post-text">
-                {post.content}
-              </div>
-
-              {post.code && (
-                <div className="code-block">
-                  <pre>{post.code}</pre>
-                </div>
-              )}
-
-              <div className="post-actions">
-                <button className="action-btn comment">
-                  <div className="icon-wrapper"><MessageCircle size={18} /></div>
-                  <span>{post.comments}</span>
-                </button>
-                <button className="action-btn retweet">
-                  <div className="icon-wrapper"><Repeat size={18} /></div>
-                  <span>0</span>
-                </button>
-                <button className="action-btn like">
-                  <div className="icon-wrapper"><Heart size={18} /></div>
-                  <span>{post.likes}</span>
-                </button>
-                <button className="action-btn share">
-                  <div className="icon-wrapper"><Share size={18} /></div>
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+        {loading ? (
+          <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>
+        ) : (
+          posts?.map((post, index) => (
+            <PostCard key={`${post.id}-${index}`} post={post} onDelete={handleDeletePost} />
+          ))
+        )}
       </div>
     </div>
   );
