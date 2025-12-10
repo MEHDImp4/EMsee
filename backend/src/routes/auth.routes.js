@@ -1,19 +1,19 @@
-
-import express from 'express';
-import { register, login, checkAvailability } from '../controllers/authController';
-
+const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+
+const { register } = require('../controllers/auth/register.controller');
+const { login } = require('../controllers/auth/login.controller');
+const { checkAvailability } = require('../controllers/auth/availability.controller');
+const { updateProfile } = require('../controllers/auth/profile.controller');
+const { verifyToken } = require('../middlewares/authMiddleware');
 
 router.post('/register', register);
 router.post('/login', login);
 router.post('/check-availability', checkAvailability);
 
 // Multer Config
-import multer from 'multer';
-import path from 'path';
-import { verifyToken } from '../middlewares/authMiddleware';
-import { updateProfile } from '../controllers/authController';
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -39,4 +39,4 @@ const upload = multer({
 
 router.put('/profile', verifyToken, upload.single('avatar'), updateProfile);
 
-export default router;
+module.exports = router;

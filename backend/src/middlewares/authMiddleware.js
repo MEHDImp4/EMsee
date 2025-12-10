@@ -1,12 +1,6 @@
+const jwt = require('jsonwebtoken');
 
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-
-interface AuthRequest extends Request {
-    user?: any;
-}
-
-export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+const verifyToken = (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
@@ -22,3 +16,5 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
         res.status(400).json({ error: 'Invalid token.' });
     }
 };
+
+module.exports = { verifyToken };

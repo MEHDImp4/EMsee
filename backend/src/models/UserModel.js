@@ -1,8 +1,7 @@
-import prisma from '../config/db';
-import { User } from '@prisma/client';
+const prisma = require('../config/db');
 
-export class UserModel {
-    static async create(userData: any): Promise<number> {
+class UserModel {
+    static async create(userData) {
         const user = await prisma.user.create({
             data: {
                 username: userData.username,
@@ -21,31 +20,31 @@ export class UserModel {
         return user.id;
     }
 
-    static async update(id: number, userData: Partial<User>): Promise<void> {
+    static async update(id, userData) {
         const { id: _, ...dataToUpdate } = userData;
         await prisma.user.update({
             where: { id },
-            data: dataToUpdate as any,
+            data: dataToUpdate,
         });
     }
 
-    static async findByEmail(email: string): Promise<User | null> {
+    static async findByEmail(email) {
         return await prisma.user.findUnique({
             where: { email },
         });
     }
 
-    static async findByUsername(username: string): Promise<User | null> {
+    static async findByUsername(username) {
         return await prisma.user.findUnique({
             where: { username },
         });
     }
 
-    static async findById(id: number): Promise<User | null> {
+    static async findById(id) {
         return await prisma.user.findUnique({
             where: { id },
         });
     }
 }
 
-export { User };
+module.exports = { UserModel };
