@@ -226,6 +226,8 @@
     },
     "profile": {
         "edit": "Editar",
+        "change_photo": "Cambiar foto",
+        "location": "Ubicación",
         "level": "Nivel",
         "class": "Clase",
         "joined": "Miembro desde",
@@ -262,6 +264,7 @@
         "cancel": "Cancelar"
     },
     "common": {
-        "back": "Atrás"
+        "back": "Atrás",
+        "save": "Guardar cambios"
     }
 }

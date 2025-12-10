@@ -131,7 +131,8 @@
         "subjects_taught": "Subjects Taught"
     },
     "common": {
-        "back": "Back"
+        "back": "Back",
+        "save": "Save Changes"
     },
     "lists": {
         "subjects": {
@@ -234,6 +235,8 @@
     },
     "profile": {
         "edit": "Edit",
+        "change_photo": "Change Photo",
+        "location": "Location",
         "level": "Level",
         "class": "Class",
         "joined": "Member since",

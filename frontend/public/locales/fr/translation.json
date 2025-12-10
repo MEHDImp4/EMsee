@@ -134,7 +134,8 @@
         "subjects_taught": "Matières enseignées"
     },
     "common": {
-        "back": "Retour"
+        "back": "Retour",
+        "save": "Enregistrer"
     },
     "lists": {
         "subjects": {
@@ -237,6 +238,8 @@
     },
     "profile": {
         "edit": "Modifier",
+        "change_photo": "Changer la photo",
+        "location": "Localisation",
         "level": "Niveau",
         "class": "Classe",
         "joined": "Membre depuis",

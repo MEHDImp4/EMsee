@@ -5,11 +5,26 @@ import { Home, Compass, Bell, Bookmark, Users, Settings, LogOut, PenTool, Messag
 import logo from '../assets/logo.svg';
 import LogoutModal from './LogoutModal';
 import ComposeModal from './ComposeModal';
+import { useAuth } from '../context/AuthContext';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
+    const { user } = useAuth();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showComposeModal, setShowComposeModal] = useState(false);
+
+    // Helper to get initials
+    const getInitials = (name) => {
+        if (!name) return '??';
+        const parts = name.split(' ');
+        if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    };
+
+    const userName = user?.full_name || user?.name || 'User';
+    const userHandle = user?.username ? `@${user.username}` : '@user';
+    const userInitials = getInitials(userName);
+    const avatarUrl = user?.avatar ? `http://localhost:5000${user.avatar}` : null;
 
     const navItems = [
         { icon: Home, label: t('sidebar.home', 'Accueil'), path: '/feed', hideOnMobile: true },
@@ -31,10 +46,16 @@ const Sidebar = ({ isOpen, onClose }) => {
             {/* Drawer Header for mobile */}
             <div className="drawer-header mobile-only">
                 <div className="drawer-profile-info">
-                    <div className="avatar-circle-large">MA</div>
+                    <div className="avatar-circle-large" style={avatarUrl ? { padding: 0, overflow: 'hidden' } : {}}>
+                        {avatarUrl ? (
+                            <img src={avatarUrl} alt={userName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                            userInitials
+                        )}
+                    </div>
                     <div className="drawer-user-details">
-                        <span className="drawer-name">Mohammed Alami</span>
-                        <span className="drawer-handle">@m.alami.emsi</span>
+                        <span className="drawer-name">{userName}</span>
+                        <span className="drawer-handle">{userHandle}</span>
                     </div>
                     <div className="drawer-stats">
                         <div className="stat-item">
@@ -95,12 +116,16 @@ const Sidebar = ({ isOpen, onClose }) => {
                                 overflow: 'hidden'
                             }}
                         >
-                            <div className="avatar-circle">
-                                MA
+                            <div className="avatar-circle" style={avatarUrl ? { padding: 0, overflow: 'hidden' } : {}}>
+                                {avatarUrl ? (
+                                    <img src={avatarUrl} alt={userName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                    userInitials
+                                )}
                             </div>
                             <div className="user-info">
-                                <div className="user-name">Mohammed Alami</div>
-                                <div className="user-handle">@m.alami.emsi</div>
+                                <div className="user-name">{userName}</div>
+                                <div className="user-handle">{userHandle}</div>
                             </div>
                         </NavLink>
 
