@@ -238,6 +238,7 @@
         "class": "Class",
         "joined": "Member since",
         "bio": "Biography",
+        "no_bio": "No bio yet.",
         "posts": "Posts",
         "followers": "Followers",
         "following": "Following"

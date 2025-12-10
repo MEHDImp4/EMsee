@@ -241,6 +241,7 @@
         "class": "Classe",
         "joined": "Membre depuis",
         "bio": "Biographie",
+        "no_bio": "Pas encore de biographie.",
         "posts": "Posts",
         "followers": "Abonnés",
         "following": "Abonnements"

@@ -230,6 +230,7 @@
         "class": "Clase",
         "joined": "Miembro desde",
         "bio": "Biografía",
+        "no_bio": "Aún no hay biografía.",
         "posts": "Publicaciones",
         "followers": "Seguidores",
         "following": "Siguiendo"
