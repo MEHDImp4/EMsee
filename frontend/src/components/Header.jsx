@@ -10,7 +10,7 @@ const Header = () => {
   const { t } = useTranslation();
 
   return (
-    <header style={{ padding: '1.5rem 0', position: 'sticky', top: 0, background: 'var(--header-bg)', backdropFilter: 'blur(10px)', zIndex: 50, transition: 'background-color 0.3s ease' }}>
+    <header style={{ padding: '1.5rem 0', position: 'sticky', top: 0, background: 'var(--bg-main)', backdropFilter: 'blur(10px)', zIndex: 50, transition: 'background-color 0.3s ease' }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
           <img src={logo} alt="EMsee Logo" style={{ width: '40px', height: '40px', borderRadius: '12px', objectFit: 'contain' }} />
@@ -44,12 +44,13 @@ const Header = () => {
           top: '100%',
           left: 0,
           right: 0,
-          background: 'var(--card-bg)',
+          background: 'var(--bg-card)',
           padding: '2rem',
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem'
+          gap: '1rem',
+          zIndex: 51
         }}>
           <Link to="/login" className="btn btn-secondary" style={{ width: '100%', textAlign: 'center' }} onClick={() => setIsMenuOpen(false)}>{t('header.login')}</Link>
           <Link to="/register" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }} onClick={() => setIsMenuOpen(false)}>{t('header.register')}</Link>

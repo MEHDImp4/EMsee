@@ -10,7 +10,10 @@ const RegisterStep2 = ({
     accountType,
     showErrors,
     isUsernameValid,
-    isEmailValid
+    isEmailValid,
+    usernameApiError,
+    emailApiError,
+    onBlur
 }) => {
     const { t } = useTranslation();
 
@@ -51,6 +54,7 @@ const RegisterStep2 = ({
                         }}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        onBlur={() => onBlur('username', username)}
                         aria-invalid={isUsernameValid === false ? "true" : "false"}
                         aria-describedby="username-error"
                     />
@@ -58,7 +62,7 @@ const RegisterStep2 = ({
                     {isUsernameValid === false && <AlertCircle size={20} color="var(--danger)" className="input-status-icon" aria-hidden="true" />}
                 </div>
                 {showErrors && !username && <p id="username-required" className="error-message" role="alert">{t('auth.field_required')}</p>}
-                {isUsernameValid === false && <p id="username-error" className="error-message" role="alert">{t('auth.username_error')}</p>}
+                {isUsernameValid === false && <p id="username-error" className="error-message" role="alert">{usernameApiError || t('auth.username_error')}</p>}
             </div>
 
             <div className="form-group">
@@ -72,6 +76,7 @@ const RegisterStep2 = ({
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        onBlur={() => onBlur('email', email)}
                         placeholder={accountType === 'student' ? t('auth.student_placeholder') : t('auth.professor_placeholder')}
                         className="form-input"
                         style={{
@@ -87,7 +92,11 @@ const RegisterStep2 = ({
                 {showErrors && !email && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {isEmailValid === false && (
                     <p id="email-error" className="error-message" role="alert">
-                        {t('auth.email_error')} <strong>{accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'}</strong>
+                        {emailApiError ? emailApiError : (
+                            <>
+                                {t('auth.email_error')} <strong>{accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'}</strong>
+                            </>
+                        )}
                     </p>
                 )}
             </div>

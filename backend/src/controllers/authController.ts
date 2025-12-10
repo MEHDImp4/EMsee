@@ -14,10 +14,17 @@ export const register = async (req: Request, res: Response) => {
             return;
         }
 
-        // Check if user exists
-        const existingUser = await UserModel.findByEmail(email);
-        if (existingUser) {
+        // Check if user exists (email)
+        const existingEmail = await UserModel.findByEmail(email);
+        if (existingEmail) {
             res.status(400).json({ error: 'Email already in use' });
+            return;
+        }
+
+        // Check if user exists (username)
+        const existingUsername = await UserModel.findByUsername(username);
+        if (existingUsername) {
+            res.status(400).json({ error: 'Username already in use' });
             return;
         }
 
@@ -86,6 +93,66 @@ export const login = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error('Login error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+export const checkAvailability = async (req: Request, res: Response) => {
+    try {
+        const { email, username } = req.body;
+
+        if (email) {
+            const user = await UserModel.findByEmail(email);
+            if (user) {
+                res.status(400).json({ error: 'Email already in use', field: 'email' });
+                return;
+            }
+        }
+
+        if (username) {
+            const user = await UserModel.findByUsername(username);
+            if (user) {
+                res.status(400).json({ error: 'Username already in use', field: 'username' });
+                return;
+            }
+        }
+
+        res.json({ available: true });
+    } catch (error) {
+        console.error('Check availability error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+export const updateProfile = async (req: any, res: Response) => {
+    try {
+        const userId = req.user.id;
+        const { full_name, bio, location, filiere, year } = req.body;
+        const updates: Partial<User> = {};
+
+        if (full_name) updates.full_name = full_name;
+        if (bio) updates.bio = bio;
+        if (location) updates.location = location;
+        if (filiere) updates.filiere = filiere;
+        if (year) updates.year = year;
+
+        if (req.file) {
+            // Normalize path to use forward slashes for URLs
+            updates.avatar = `/uploads/${req.file.filename}`;
+        }
+
+        await UserModel.update(userId, updates);
+
+        const updatedUser = await UserModel.findById(userId);
+        if (updatedUser) {
+            const { password, ...userWithoutPassword } = updatedUser;
+            res.json(userWithoutPassword);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+
+    } catch (error) {
+        console.error('Update profile error:', error);
         res.status(500).json({ error: 'Server error' });
     }
 };

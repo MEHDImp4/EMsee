@@ -91,3 +91,24 @@
     border-color: var(--primary);
     background-color: #2D3748; /* Slightly lighter on hover for effect */
 }
+
+@media (max-width: 768px) {
+    .features-section {
+        padding: 3rem 0;
+    }
+
+    .features-header {
+        margin-bottom: 3rem;
+        padding: 0 1rem;
+    }
+
+    .grid-features {
+        grid-template-columns: 1fr; /* Force 1 column on mobile */
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+}

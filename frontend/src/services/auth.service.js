@@ -24,22 +24,16 @@ const AuthService = {
      */
     logout: () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userHandle');
-        localStorage.removeItem('firstVisit');
-        localStorage.removeItem('professorSubjects');
+        localStorage.removeItem('user'); // Remove full user object
     },
 
     /**
-     * Get current user info (from token or local storage for now)
+     * Get current user info (from local storage)
      */
     getCurrentUser: () => {
-        return {
-            email: localStorage.getItem('userEmail'),
-            name: localStorage.getItem('userName'),
-            handle: localStorage.getItem('userHandle'),
-        };
+        const userStr = localStorage.getItem('user');
+        if (userStr) return JSON.parse(userStr);
+        return null;
     },
 
     isAuthenticated: () => {

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
 import './css/Register.css';
 
 // Import Wizard Steps
@@ -13,20 +14,24 @@ import RegisterStep4 from '../components/register/RegisterStep4';
 
 const Register = () => {
     const { t } = useTranslation();
+    const { loginAction } = useAuth();
     const navigate = useNavigate();
 
     // Wizard State
     const [currentStep, setCurrentStep] = useState(1);
     const totalSteps = 4;
     const [showErrors, setShowErrors] = useState(false);
+    const [generalError, setGeneralError] = useState(''); // New state for non-field specific errors
 
     // Form Data
     const [accountType, setAccountType] = useState('student');
     const [email, setEmail] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(null);
+    const [emailApiError, setEmailApiError] = useState(''); // New state for API errors
     const [fullName, setFullName] = useState('');
     const [username, setUsername] = useState('');
     const [isUsernameValid, setIsUsernameValid] = useState(null);
+    const [usernameApiError, setUsernameApiError] = useState(''); // New state for API errors
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState(null);
@@ -72,6 +77,7 @@ const Register = () => {
     }, [password, confirmPassword]);
 
     const validateUsername = (value) => {
+        setUsernameApiError(''); // Clear API error on change
         if (!value) {
             setIsUsernameValid(null);
             return;
@@ -91,6 +97,7 @@ const Register = () => {
     };
 
     const validateEmail = (value, type) => {
+        setEmailApiError(''); // Clear API error on change
         if (!value) {
             setIsEmailValid(null);
             return;
@@ -100,6 +107,55 @@ const Register = () => {
     };
 
     // Step Validation Logic
+    const checkFieldAvailability = async (field, value) => {
+        if (!value) return;
+
+        try {
+            const payload = {};
+            payload[field] = value;
+
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/check-availability`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                if (data.field === 'email' && field === 'email') {
+                    setIsEmailValid(false);
+                    setEmailApiError(data.error);
+                } else if (data.field === 'username' && field === 'username') {
+                    setIsUsernameValid(false);
+                    setUsernameApiError(data.error);
+                }
+            } else {
+                // If available, ensure we keep the valid state (regex check passed previously)
+                if (field === 'username') {
+                    // Re-run regex check to be safe, or assume regex passed if we got here
+                    // Actually, valid regex is pre-requisite? 
+                    // Let's just clear API error. The local validation (regex) runs on change.
+                    setUsernameApiError('');
+                }
+                if (field === 'email') {
+                    setEmailApiError('');
+                }
+            }
+        } catch (error) {
+            console.error("Field availability check failed", error);
+            // Don't block flow on blur error, just log
+        }
+    };
+
+    const handleBlur = (field, value) => {
+        if (field === 'username' && isUsernameValid !== false) { // Only check if format is valid or neutral
+            checkFieldAvailability('username', value);
+        }
+        if (field === 'email' && isEmailValid !== false) {
+            checkFieldAvailability('email', value);
+        }
+    };
+
     const validateCurrentStep = () => {
         switch (currentStep) {
             case 1:
@@ -120,9 +176,48 @@ const Register = () => {
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (validateCurrentStep()) {
+            // Check availability for Step 2
+            // Check availability for Step 2
+            if (currentStep === 2) {
+                // If we already have API errors, don't proceed
+                if (usernameApiError || emailApiError) {
+                    return;
+                }
+
+                // Double check if we haven't checked yet (e.g. user typed fast and clicked next)
+                try {
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/check-availability`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, username })
+                    });
+
+                    if (!response.ok) {
+                        const data = await response.json();
+                        if (data.field === 'email') {
+                            setIsEmailValid(false);
+                            setEmailApiError(data.error);
+                        } else if (data.field === 'username') {
+                            setIsUsernameValid(false);
+                            setUsernameApiError(data.error);
+                        } else {
+                            setGeneralError(data.error);
+                        }
+                        return; // Stop here
+                    }
+                } catch (error) {
+                    console.error("Availability check failed", error);
+                    setGeneralError(t('auth.check_failed', 'Unable to verify availability. Please check your connection or try again later.'));
+                    return;
+                }
+            }
+
+            setGeneralError(''); // Clear error if successful
+
             setShowErrors(false);
+            setGeneralError('');
             if (currentStep < totalSteps) {
                 setCurrentStep(prev => prev + 1);
             }
@@ -170,13 +265,8 @@ const Register = () => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Save token and user info
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('userEmail', data.user.email);
-                    localStorage.setItem('userName', data.user.full_name);
-                    localStorage.setItem('userHandle', data.user.username);
-                    localStorage.setItem('userId', data.user.id);
-                    localStorage.setItem('userRole', data.user.role);
+                    // Auto login using context action
+                    loginAction(data.user, data.token);
 
                     if (isProfessor) {
                         localStorage.setItem('professorSubjects', JSON.stringify(selectedSubjects));
@@ -274,6 +364,9 @@ const Register = () => {
                                         showErrors={showErrors}
                                         isUsernameValid={isUsernameValid}
                                         isEmailValid={isEmailValid}
+                                        usernameApiError={usernameApiError} // Pass error
+                                        emailApiError={emailApiError}       // Pass error
+                                        onBlur={handleBlur}
                                     />
                                 )}
 
@@ -304,6 +397,14 @@ const Register = () => {
                                 )}
                             </motion.div>
                         </AnimatePresence>
+
+                        {generalError && (
+                            <div className="error-message-container" style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                                <p className="error-message" role="alert" style={{ fontSize: '0.9rem' }}>
+                                    {generalError}
+                                </p>
+                            </div>
+                        )}
 
                         <div className="wizard-footer wizard-footer-gap">
                             {currentStep < 4 ? (

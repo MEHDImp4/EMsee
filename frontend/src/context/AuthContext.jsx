@@ -21,21 +21,21 @@ export const AuthProvider = ({ children }) => {
         checkAuth();
     }, []);
 
+    const loginAction = (user, token) => {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+
+        setUser(user);
+        setIsAuthenticated(true);
+    };
+
     const login = async (email, password) => {
         try {
             const response = await AuthService.login(email, password);
-            // Assuming api returns token and maybe user info. 
-            // Since it's a mock, we might need to rely on the service to set localStorage
-            // In a real app, we'd set state here from response.
-
-            // For now, let's assume successful login via service updates localStorage
-            // and we update state manually or reload
             if (response.token) {
-                localStorage.setItem('token', response.token);
-                // In real app, extracting user from token or response
-                const userData = { email, name: response.name || 'User' };
-                setUser(userData);
-                setIsAuthenticated(true);
+                // Use the new action to update state
+                const userData = { ...response.user, email }; // Ensure user object is complete
+                loginAction(userData, response.token);
                 return true;
             }
             return false;
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, loading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, loading, login, loginAction, register, logout }}>
             {children}
         </AuthContext.Provider>
     );

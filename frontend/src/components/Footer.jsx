@@ -30,7 +30,7 @@ const Footer = () => {
     return (
         <footer style={{ background: 'var(--footer-bg)', padding: '4rem 0 2rem' }}>
             <div className="container">
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', textAlign: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', textAlign: 'center', padding: '0 1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <img src={logo} alt="EMsee Logo" style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'contain' }} />
                         <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>EMsee</span>
@@ -60,7 +60,7 @@ const Footer = () => {
                         <p style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
                             © {new Date().getFullYear()} EMsee Social. {t('footer.made_with_love')}
                         </p>
-                        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                             {/* Language Toggle */}
                             <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '99px', border: '1px solid var(--border)' }}>
                                 {['en', 'fr', 'es', 'auto'].map((lang) => {

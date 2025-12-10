@@ -1,26 +1,38 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mail, GraduationCap, Users, Calendar, MapPin, Edit2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import './css/Profile.css';
+import EditProfileModal from '../components/profile/EditProfileModal';
 
 const Profile = () => {
   const { t } = useTranslation();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Mock data
+  const { user: authUser } = useAuth();
+
+  // Guard clause if no user (should rely on ProtectedRoute but good practice)
+  if (!authUser) return null;
+
   const user = {
-    name: "Mehdi",
-    handle: "@mehdi.dev",
-    role: "student",
-    level: "Master 1",
-    class: "Groupe B",
-    email: "mehdi@example.com",
-    location: "Casablanca, Maroc",
-    bio: "Passionné de développement web et d'intelligence artificielle. Toujours prêt à apprendre de nouvelles technologies et à collaborer sur des projets innovants.",
-    joinDate: "Septembre 2023",
+    name: authUser.full_name || authUser.name || "User",
+    handle: `@${authUser.username || 'user'}`,
+    role: authUser.role || "student",
+    // Map backend fields to display fields
+    level: authUser.year ? t(`lists.years.${authUser.year}`) : "N/A",
+    class: authUser.filiere ? t(`lists.filieres.${authUser.filiere}`) : "N/A",
+    email: authUser.email,
+    // Use empty string defaults if bio/location are missing, as requested
+    location: authUser.location || "",
+    bio: authUser.bio || "",
+    joinDate: new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' }),
+    avatar: authUser.avatar ? `http://localhost:5000${authUser.avatar}` : null,
     stats: {
-      posts: 42,
-      followers: 128,
-      following: 85
+      posts: 0,
+      followers: 0,
+      following: 0
     }
   };
 
@@ -34,13 +46,17 @@ const Profile = () => {
       {/* Header Section with Avatar */}
       <div className="profile-header-content">
         <div className="profile-avatar-wrapper">
-          <div className="profile-avatar">
-            {user.name.charAt(0)}
+          <div className="profile-avatar" style={user.avatar ? { padding: 0 } : {}}>
+            {user.avatar ? (
+              <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              user.name.charAt(0)
+            )}
           </div>
         </div>
 
         <div className="profile-actions">
-          <button className="btn-edit-profile">
+          <button className="btn-edit-profile" onClick={() => setIsEditModalOpen(true)}>
             <Edit2 size={16} />
             <span>{t('profile.edit', 'Modifier')}</span>
           </button>
@@ -54,13 +70,15 @@ const Profile = () => {
           <p className="profile-handle">{user.handle}</p>
         </div>
 
-        <p className="profile-bio-text">{user.bio}</p>
+        <p className="profile-bio-text">{user.bio || t('profile.no_bio', 'No bio yet.')}</p>
 
         <div className="profile-meta-row">
-          <div className="meta-item">
-            <MapPin size={16} />
-            <span>{user.location}</span>
-          </div>
+          {user.location && (
+            <div className="meta-item">
+              <MapPin size={16} />
+              <span>{user.location}</span>
+            </div>
+          )}
           <div className="meta-item">
             <Mail size={16} />
             <span>{user.email}</span>
@@ -109,6 +127,11 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+      />
     </div>
   );
 };
