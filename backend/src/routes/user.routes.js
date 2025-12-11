@@ -8,5 +8,6 @@ const { verifyToken: authenticateToken } = require('../middlewares/authMiddlewar
 router.get('/search', authenticateToken, userController.searchUsers);
 router.get('/suggestions', authenticateToken, userController.getSuggestions);
 router.get('/:username', authenticateToken, userController.getProfile);
+router.post('/:id/follow', authenticateToken, userController.followUser);
 
 module.exports = router;

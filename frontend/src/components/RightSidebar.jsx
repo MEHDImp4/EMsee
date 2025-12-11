@@ -23,6 +23,19 @@ const RightSidebar = () => {
         fetchSuggestions();
     }, []);
 
+    const handleFollow = async (userId) => {
+        try {
+            await UserService.followUser(userId);
+            setSuggestions(prev => prev.map(user =>
+                user.id === userId
+                    ? { ...user, isFollowing: !user.isFollowing }
+                    : user
+            ));
+        } catch (error) {
+            console.error("Failed to follow user", error);
+        }
+    };
+
     return (
         <aside className="right-sidebar">
             <div className="search-container-sticky">
@@ -86,7 +99,13 @@ const RightSidebar = () => {
                                 </Link>
                                 <div className="suggestion-handle">@{user.username}</div>
                             </div>
-                            <button className="btn-follow">{t('right_sidebar.follow', 'Suivre')}</button>
+                            <button
+                                className={`btn-follow ${user.isFollowing ? 'following' : ''}`}
+                                onClick={() => handleFollow(user.id)}
+                                style={user.isFollowing ? { background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-main)' } : {}}
+                            >
+                                {user.isFollowing ? t('profile.following', 'Abonné') : t('right_sidebar.follow', 'Suivre')}
+                            </button>
                         </div>
                     ))
                 ) : (

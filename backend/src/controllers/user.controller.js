@@ -23,8 +23,8 @@ const getProfile = async (req, res) => {
                 _count: {
                     select: {
                         posts: true,
-                        // followers: true, // future
-                        // following: true  // future
+                        followedBy: true, // followers
+                        following: true   // following
                     }
                 }
             }
@@ -34,15 +34,79 @@ const getProfile = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Add calculated stats or flags here if needed
+        let isFollowing = false;
+        if (currentUserId && currentUserId !== user.id) {
+            const follow = await prisma.follow.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: currentUserId,
+                        followingId: user.id
+                    }
+                }
+            });
+            isFollowing = !!follow;
+        }
+
         const profile = {
             ...user,
-            isOwner: user.id === currentUserId
+            isOwner: user.id === currentUserId,
+            isFollowing,
+            followersCount: user._count.followedBy,
+            followingCount: user._count.following,
+            _count: undefined // Clean up
         };
 
         res.json(profile);
     } catch (error) {
         console.error('Error fetching profile:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const followUser = async (req, res) => {
+    try {
+        const targetUserId = parseInt(req.params.id);
+        const currentUserId = req.user.id;
+
+        if (targetUserId === currentUserId) {
+            return res.status(400).json({ error: 'Cannot follow yourself' });
+        }
+
+        const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
+        if (!targetUser) return res.status(404).json({ error: 'User not found' });
+
+        const existingFollow = await prisma.follow.findUnique({
+            where: {
+                followerId_followingId: {
+                    followerId: currentUserId,
+                    followingId: targetUserId
+                }
+            }
+        });
+
+        if (existingFollow) {
+            // Unfollow
+            await prisma.follow.delete({
+                where: {
+                    followerId_followingId: {
+                        followerId: currentUserId,
+                        followingId: targetUserId
+                    }
+                }
+            });
+            return res.json({ following: false });
+        } else {
+            // Follow
+            await prisma.follow.create({
+                data: {
+                    followerId: currentUserId,
+                    followingId: targetUserId
+                }
+            });
+            return res.json({ following: true });
+        }
+    } catch (error) {
+        console.error('Error toggling follow:', error);
         res.status(500).json({ error: 'Server error' });
     }
 };
@@ -80,13 +144,16 @@ const searchUsers = async (req, res) => {
 
 const getSuggestions = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        // Simple suggestion logic: Get 3 users that are NOT the current user
-        // In a real app, we would exclude users already followed.
-        // Since we don't have a Follow model yet, we just grab random users or recent ones.
+        const currentUserId = req.user.id;
+
         const suggestions = await prisma.user.findMany({
             where: {
-                id: { not: userId }
+                id: { not: currentUserId },
+                followedBy: {
+                    none: {
+                        followerId: currentUserId
+                    }
+                }
             },
             take: 3,
             orderBy: {
@@ -109,5 +176,6 @@ const getSuggestions = async (req, res) => {
 module.exports = {
     getProfile,
     searchUsers,
-    getSuggestions
+    getSuggestions,
+    followUser
 };

@@ -31,6 +31,10 @@ const UserService = {
 
     getSuggestions: async () => {
         return await api.get('/users/suggestions');
+    },
+
+    followUser: async (userId) => {
+        return await api.post(`/users/${userId}/follow`);
     }
 };
 

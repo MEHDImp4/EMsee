@@ -76,9 +76,9 @@ const Profile = () => {
     joinDate: new Date(profileData.created_at || profileData.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }),
     avatar: profileData.avatar ? `http://localhost:5000${profileData.avatar}` : null,
     stats: {
-      posts: userPosts?.length || 0,
-      followers: 0,
-      following: 0
+      posts: userPosts?.length || 0, // Ideally this comes from user._count.posts too, but for list view this is fine. Actually controller returns posts count too.
+      followers: profileData.followersCount || 0,
+      following: profileData.followingCount || 0
     }
   };
 
@@ -102,10 +102,38 @@ const Profile = () => {
         </div>
 
         <div className="profile-actions">
-          {isOwner && (
+          {isOwner ? (
             <button className="btn-edit-profile" onClick={() => setIsEditModalOpen(true)}>
               <Edit2 size={16} />
               <span>{t('profile.edit', 'Modifier')}</span>
+            </button>
+          ) : (
+            <button
+              className={`btn-follow ${profileData.isFollowing ? 'following' : ''}`}
+              onClick={async () => {
+                try {
+                  const res = await UserService.followUser(profileData.id);
+                  setProfileData(prev => ({
+                    ...prev,
+                    isFollowing: res.following,
+                    followersCount: res.following ? prev.followersCount + 1 : prev.followersCount - 1
+                  }));
+                } catch (error) {
+                  console.error('Failed to toggle follow', error);
+                }
+              }}
+              style={{
+                padding: '8px 24px',
+                borderRadius: '20px',
+                border: profileData.isFollowing ? '1px solid var(--border)' : 'none',
+                background: profileData.isFollowing ? 'transparent' : 'var(--primary)',
+                color: profileData.isFollowing ? 'var(--text-main)' : 'white',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              {profileData.isFollowing ? t('profile.following', 'Abonné') : t('profile.follow', 'Suivre')}
             </button>
           )}
         </div>
