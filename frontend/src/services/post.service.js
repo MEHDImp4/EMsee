@@ -11,6 +11,16 @@ const PostService = {
         }
     },
 
+    getPostById: async (postId) => {
+        try {
+            const response = await api.get(`/posts/${postId}`);
+            return response;
+        } catch (error) {
+            console.error('Error fetching post:', error);
+            throw error;
+        }
+    },
+
     createPost: async (content, replyPermission = 'EVERYONE') => {
         try {
             const response = await api.post('/posts', { content, replyPermission });

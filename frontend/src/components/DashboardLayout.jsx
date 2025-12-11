@@ -6,16 +6,16 @@ import MobileHeader from './MobileHeader';
 import FloatingPostButton from './FloatingPostButton';
 import ComposeModal from './ComposeModal';
 import { Outlet, useLocation } from 'react-router-dom';
+import { useModal } from '../context/ModalContext';
 
 const DashboardLayout = ({ children }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [isComposeOpen, setIsComposeOpen] = useState(false);
+    const { isComposeOpen, openCompose, closeCompose, replyTo } = useModal();
     const location = useLocation();
 
-    // Close drawer and modal on route change
+    // Close drawer on route change
     useEffect(() => {
         setIsDrawerOpen(false);
-        setIsComposeOpen(false);
     }, [location]);
 
     const [touchStart, setTouchStart] = useState(null);
@@ -81,13 +81,15 @@ const DashboardLayout = ({ children }) => {
             <RightSidebar />
 
             {/* FAB opens the compose modal */}
-            <FloatingPostButton onClick={() => setIsComposeOpen(true)} />
+            <FloatingPostButton onClick={() => openCompose()} />
 
             <MobileBottomNav />
 
+            {/* Global Compose Modal managed by Context */}
             <ComposeModal
                 isOpen={isComposeOpen}
-                onClose={() => setIsComposeOpen(false)}
+                onClose={closeCompose}
+                replyTo={replyTo}
             />
         </div>
     );

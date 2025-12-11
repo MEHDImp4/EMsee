@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { getIo } = require('../services/socketService');
 const prisma = new PrismaClient();
 
 const createPost = async (req, res) => {
@@ -211,6 +212,13 @@ const commentPost = async (req, res) => {
             }
         });
 
+        // Emit socket event
+        try {
+            getIo().emit('new_comment', comment);
+        } catch (socketError) {
+            console.error('Socket emission failed:', socketError);
+        }
+
         res.status(201).json(comment);
     } catch (error) {
         console.error('Error commenting:', error);
@@ -240,6 +248,59 @@ const getPostComments = async (req, res) => {
         res.json(comments);
     } catch (error) {
         console.error('Error fetching comments:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const getPostById = async (req, res) => {
+    try {
+        const postId = parseInt(req.params.id);
+        const currentUserId = req.user?.id;
+
+        const post = await prisma.post.findUnique({
+            where: { id: postId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        full_name: true,
+                        avatar: true
+                    }
+                },
+                _count: {
+                    select: {
+                        likes: true,
+                        comments: true,
+                        reposts: true
+                    }
+                },
+                likes: {
+                    where: { userId: currentUserId },
+                    select: { userId: true }
+                },
+                reposts: {
+                    where: { userId: currentUserId },
+                    select: { userId: true }
+                }
+            }
+        });
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        const formattedPost = {
+            ...post,
+            isLiked: post.likes.length > 0,
+            isReposted: post.reposts.length > 0,
+            likes: undefined,
+            reposts: undefined
+        };
+
+        res.json(formattedPost);
+    } catch (error) {
+        console.error('Error fetching post:', error);
         res.status(500).json({ error: 'Server error' });
     }
 };
@@ -367,5 +428,6 @@ module.exports = {
     commentPost,
     getPostComments,
     getUserPosts,
-    deletePost
+    deletePost,
+    getPostById
 };

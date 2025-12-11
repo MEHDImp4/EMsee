@@ -148,25 +148,34 @@ const getSuggestions = async (req, res) => {
 
         const suggestions = await prisma.user.findMany({
             where: {
-                id: { not: currentUserId },
-                followedBy: {
-                    none: {
-                        followerId: currentUserId
-                    }
-                }
+                id: { not: currentUserId }
             },
-            take: 3,
+            take: 3, // In future, maybe take more and shuffle
             orderBy: {
-                created_at: 'desc' // Newest users first
+                created_at: 'desc'
             },
             select: {
                 id: true,
                 username: true,
                 full_name: true,
-                avatar: true
+                avatar: true,
+                followedBy: {
+                    where: { followerId: currentUserId },
+                    select: { followerId: true }
+                }
             }
         });
-        res.json(suggestions);
+
+        // Format to include isFollowing boolean
+        const formattedSuggestions = suggestions.map(user => ({
+            id: user.id,
+            username: user.username,
+            full_name: user.full_name,
+            avatar: user.avatar,
+            isFollowing: user.followedBy.length > 0
+        }));
+
+        res.json(formattedSuggestions);
     } catch (error) {
         console.error('Error fetching suggestions:', error);
         res.status(500).json({ error: 'Server error' });

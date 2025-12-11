@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, BarChart2, Code, Smile, Globe } from 'lucide-react';
+import { Image, BarChart2, Code, Smile, Globe, Users, Lock } from 'lucide-react';
 import PostCard from '../components/PostCard';
 import PostService from '../services/post.service';
 import { useAuth } from '../context/AuthContext';
@@ -13,10 +13,28 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [newPostContent, setNewPostContent] = useState('');
   const [loading, setLoading] = useState(true);
+  const [replyPermission, setReplyPermission] = useState('EVERYONE');
+  const [showPermissionMenu, setShowPermissionMenu] = useState(false);
+  const permissionMenuRef = React.useRef(null);
 
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (permissionMenuRef.current && !permissionMenuRef.current.contains(event.target)) {
+        setShowPermissionMenu(false);
+      }
+    };
+
+    if (showPermissionMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPermissionMenu]);
 
   const fetchPosts = async () => {
     try {
@@ -33,7 +51,7 @@ const Feed = () => {
     if (!newPostContent.trim()) return;
 
     try {
-      const newPost = await PostService.createPost(newPostContent);
+      const newPost = await PostService.createPost(newPostContent, replyPermission);
       // newPost from create API might not have all the _count and user fields populated as deeply as getAllPosts
       // But our controller returns include user.
       // We might need to manually add structured fields for optimistic update or just simple structure
@@ -45,6 +63,7 @@ const Feed = () => {
       };
       setPosts([optimizedPost, ...posts]);
       setNewPostContent('');
+      setReplyPermission('EVERYONE');
     } catch (error) {
       console.error("Failed to create post", error);
     }
@@ -101,9 +120,42 @@ const Feed = () => {
             }}
           />
 
-          <div className="compose-reply-permission">
-            <span className="permission-icon"><Globe size={16} /></span>
-            <span className="permission-text">{t('feed.everyone_can_reply', 'Tout le monde peut répondre')}</span>
+          <div className="compose-reply-permission" ref={permissionMenuRef} onClick={() => setShowPermissionMenu(!showPermissionMenu)}>
+            {replyPermission === 'EVERYONE' && <Globe size={18} />}
+            {replyPermission === 'FOLLOWERS' && <Users size={18} />}
+            {replyPermission === 'NO_ONE' && <Lock size={18} />}
+
+            <span className="permission-text">
+              {replyPermission === 'EVERYONE' && t('feed.everyone_can_reply', 'Tout le monde peut répondre')}
+              {replyPermission === 'FOLLOWERS' && t('feed.followers_can_reply', 'Abonnés uniquement')}
+              {replyPermission === 'NO_ONE' && t('feed.no_one_can_reply', 'Personne ne peut répondre')}
+            </span>
+
+            {showPermissionMenu && (
+              <div className="permission-menu">
+                <div
+                  className="permission-item"
+                  onClick={(e) => { e.stopPropagation(); setReplyPermission('EVERYONE'); setShowPermissionMenu(false); }}
+                >
+                  <Globe size={18} />
+                  <span>{t('feed.everyone', 'Tout le monde')}</span>
+                </div>
+                <div
+                  className="permission-item"
+                  onClick={(e) => { e.stopPropagation(); setReplyPermission('FOLLOWERS'); setShowPermissionMenu(false); }}
+                >
+                  <Users size={18} />
+                  <span>{t('feed.followers', 'Abonnés uniquement')}</span>
+                </div>
+                <div
+                  className="permission-item"
+                  onClick={(e) => { e.stopPropagation(); setReplyPermission('NO_ONE'); setShowPermissionMenu(false); }}
+                >
+                  <Lock size={18} />
+                  <span>{t('feed.no_one', 'Personne')}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="compose-actions">

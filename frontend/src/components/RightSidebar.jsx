@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, MoreHorizontal } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import UserService from '../services/user.service';
 
 const RightSidebar = () => {
     const { t } = useTranslation();
+    const location = useLocation();
     const [suggestions, setSuggestions] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const isExplorePage = location.pathname === '/explore';
 
     useEffect(() => {
         const fetchSuggestions = async () => {
@@ -38,43 +41,47 @@ const RightSidebar = () => {
 
     return (
         <aside className="right-sidebar">
-            <div className="search-container-sticky">
-                <div className="search-bar">
-                    <Search size={20} className="search-icon" />
-                    <input
-                        type="text"
-                        placeholder={t('right_sidebar.search', 'Rechercher')}
-                        className="search-input"
-                    />
-                </div>
-            </div>
+            {!isExplorePage && (
+                <>
+                    <div className="search-container-sticky">
+                        <div className="search-bar">
+                            <Search size={20} className="search-icon" />
+                            <input
+                                type="text"
+                                placeholder={t('right_sidebar.search', 'Rechercher')}
+                                className="search-input"
+                            />
+                        </div>
+                    </div>
 
-            <div className="sidebar-card trends-card">
-                <h3>{t('right_sidebar.trends_for_you', 'Tendances pour vous')}</h3>
+                    <div className="sidebar-card trends-card">
+                        <h3>{t('right_sidebar.trends_for_you', 'Tendances pour vous')}</h3>
 
-                <div className="trend-item">
-                    <div className="trend-meta">{t('right_sidebar.trending', 'Tendances')} • {t('right_sidebar.morocco', 'Maroc')}</div>
-                    <div className="trend-name">#SaharaMarocain</div>
-                    <div className="trend-count">12.5k {t('right_sidebar.posts', 'posts')}</div>
-                    <button className="more-btn"><MoreHorizontal size={16} /></button>
-                </div>
+                        <div className="trend-item">
+                            <div className="trend-meta">{t('right_sidebar.trending', 'Tendances')} • {t('right_sidebar.morocco', 'Maroc')}</div>
+                            <div className="trend-name">#SaharaMarocain</div>
+                            <div className="trend-count">12.5k {t('right_sidebar.posts', 'posts')}</div>
+                            <button className="more-btn"><MoreHorizontal size={16} /></button>
+                        </div>
 
-                <div className="trend-item">
-                    <div className="trend-meta">{t('right_sidebar.education', 'Éducation')} • {t('right_sidebar.trending', 'Tendances')}</div>
-                    <div className="trend-name">PFE 2025</div>
-                    <div className="trend-count">4,203 {t('right_sidebar.posts', 'posts')}</div>
-                    <button className="more-btn"><MoreHorizontal size={16} /></button>
-                </div>
+                        <div className="trend-item">
+                            <div className="trend-meta">{t('right_sidebar.education', 'Éducation')} • {t('right_sidebar.trending', 'Tendances')}</div>
+                            <div className="trend-name">PFE 2025</div>
+                            <div className="trend-count">4,203 {t('right_sidebar.posts', 'posts')}</div>
+                            <button className="more-btn"><MoreHorizontal size={16} /></button>
+                        </div>
 
-                <div className="trend-item">
-                    <div className="trend-meta">{t('right_sidebar.technology', 'Technologie')} • {t('right_sidebar.trending', 'Tendances')}</div>
-                    <div className="trend-name">React & Tailwind</div>
-                    <div className="trend-count">1,502 {t('right_sidebar.posts', 'posts')}</div>
-                    <button className="more-btn"><MoreHorizontal size={16} /></button>
-                </div>
+                        <div className="trend-item">
+                            <div className="trend-meta">{t('right_sidebar.technology', 'Technologie')} • {t('right_sidebar.trending', 'Tendances')}</div>
+                            <div className="trend-name">React & Tailwind</div>
+                            <div className="trend-count">1,502 {t('right_sidebar.posts', 'posts')}</div>
+                            <button className="more-btn"><MoreHorizontal size={16} /></button>
+                        </div>
 
-                <div className="show-more">{t('right_sidebar.show_more', 'Voir plus')}</div>
-            </div>
+                        <div className="show-more">{t('right_sidebar.show_more', 'Voir plus')}</div>
+                    </div>
+                </>
+            )}
 
             <div className="sidebar-card suggestions-card">
                 <h3>{t('right_sidebar.suggestions', 'Suggestions')}</h3>

@@ -225,7 +225,12 @@
         },
         "role": {
             "professor": "Professor"
-        }
+        },
+        "everyone": "Everyone",
+        "followers": "Followers only",
+        "no_one": "No one",
+        "followers_can_reply": "Followers only",
+        "no_one_can_reply": "No one can reply"
     },
     "notifications": {
         "tabs": {

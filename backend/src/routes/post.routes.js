@@ -14,5 +14,6 @@ router.post('/:id/comment', postController.commentPost);
 router.delete('/:id', postController.deletePost);
 router.get('/:id/comments', postController.getPostComments);
 router.get('/user/:username', postController.getUserPosts);
+router.get('/:id', postController.getPostById);
 
 module.exports = router;

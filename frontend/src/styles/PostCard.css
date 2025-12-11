@@ -1,0 +1,176 @@
+/* Post Card Container */
+.post-card {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.post-card:hover {
+    background-color: var(--hover); /* Ensure this var exists, else use rgba */
+    background-color: rgba(255, 255, 255, 0.03); 
+}
+
+/* Main Flex Row: Avatar + Content */
+.post-row {
+    display: flex;
+    gap: 12px;
+}
+
+/* Avatar Column */
+.post-avatar-col {
+    flex-shrink: 0;
+    width: 40px; /* Fixed width to prevent shift */
+}
+
+.avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+/* Content Column */
+.post-content-col {
+    flex: 1; /* Take remaining space */
+    min-width: 0; /* Crucial for text truncation */
+}
+
+/* Header: Name, Handle, Time, More options */
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.post-name {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.post-handle, .post-time, .post-dot {
+    color: var(--text-muted);
+}
+
+.post-name, .post-handle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Post Body Text */
+.post-text {
+    color: var(--text-main);
+    font-size: 15px;
+    line-height: 20px;
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Repost Context Indicator */
+.post-repost-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 4px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* ACTION BAR - GRID LAYOUT */
+.post-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 Equal Columns */
+    width: 100%;
+    margin-top: 12px;
+    color: var(--text-muted);
+}
+
+/* Individual Action Button */
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+    
+    /* Align strictly to start of the grid cell */
+    justify-content: flex-start; 
+}
+
+/* Icon Wrapper for hover effect circle */
+.icon-wrapper {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    margin-left: -8px; /* Offset to align icon visually with grid line */
+}
+
+/* Hover States */
+.action-btn:hover { color: var(--primary); }
+.action-btn:hover .icon-wrapper { background-color: rgba(29, 155, 240, 0.1); }
+
+.action-btn.comment:hover { color: var(--primary); }
+.action-btn.comment:hover .icon-wrapper { background-color: rgba(29, 155, 240, 0.1); }
+
+.action-btn.retweet:hover { color: #00ba7c; }
+.action-btn.retweet:hover .icon-wrapper { background-color: rgba(0, 186, 124, 0.1); }
+
+.action-btn.like:hover { color: #f91880; }
+.action-btn.like:hover .icon-wrapper { background-color: rgba(249, 24, 128, 0.1); }
+
+.action-btn.like.active { color: #f91880; }
+.action-btn.retweet.active { color: #00ba7c; }
+
+/* Share button specific (optional, keeping aligned start for consistency or flex-end) */
+/* User asked for consistent spread. Grid 1fr gives consistent spread. 
+   Keeping justify-content: flex-start ensures strict column alignment.
+*/
+
+/* Options Dropdown Button */
+.more-options-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.more-options-btn:hover {
+    color: var(--primary);
+    background-color: var(--hover);
+}

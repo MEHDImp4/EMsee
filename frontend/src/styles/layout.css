@@ -438,52 +438,9 @@
   color: #c9d1d9;
 }
 
-/* Post Actions */
-.post-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.5rem;
-  max-width: 450px;
-}
-
-.action-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s;
-}
-
-.icon-wrapper {
-  padding: 0.5rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
-}
-
-.action-btn:hover {
-  text-decoration: none;
-}
-
-/* Action Specific Colors on Hover */
-.action-btn.comment:hover { color: #1d9bf0; }
-.action-btn.comment:hover .icon-wrapper { background-color: rgba(29, 155, 240, 0.1); }
-
-.action-btn.retweet:hover { color: #00ba7c; }
-.action-btn.retweet:hover .icon-wrapper { background-color: rgba(0, 186, 124, 0.1); }
-
-.action-btn.like:hover { color: #f91880; }
-.action-btn.like:hover .icon-wrapper { background-color: rgba(249, 24, 128, 0.1); }
-
-.action-btn.share:hover { color: #1d9bf0; }
-.action-btn.share:hover .icon-wrapper { background-color: rgba(29, 155, 240, 0.1); }
+/* Post Actions - MOVED TO PostCard.css */
+/* These styles are now managed by src/styles/PostCard.css */
+/* Removed to prevent conflicts with the new Grid layout */
 
 
 /* 3. Right Sidebar (Widgets) */
@@ -946,24 +903,7 @@
         margin-bottom: 0.5rem;
     }
 
-    .post-actions {
-        margin-top: 0.25rem;
-        justify-content: space-between;
-        max-width: 100%;
-    }
-    
-    .action-btn {
-        font-size: 0.8rem;
-    }
-    
-    .action-btn .icon-wrapper {
-        padding: 0.4rem;
-    }
-    
-    .action-btn svg {
-        width: 16px;
-        height: 16px;
-    }
+    /* Post actions responsive handled by PostCard.css now */
 
     /* 5. Generic Responsive Helpers */
     .container {

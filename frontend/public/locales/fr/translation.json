@@ -228,7 +228,12 @@
         },
         "role": {
             "professor": "Professeur"
-        }
+        },
+        "everyone": "Tout le monde",
+        "followers": "Abonnés uniquement",
+        "no_one": "Personne",
+        "followers_can_reply": "Abonnés uniquement",
+        "no_one_can_reply": "Personne ne peut répondre"
     },
     "notifications": {
         "tabs": {

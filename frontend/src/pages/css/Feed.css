@@ -116,17 +116,57 @@
     color: var(--primary);
     font-size: 0.9rem;
     font-weight: 600;
-    padding-bottom: 12px;
+    padding: 6px 12px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 12px;
     cursor: pointer;
     width: fit-content;
-    padding-right: 12px;
-    border-radius: 16px;
+    border-radius: 999px; /* Capsule shape */
+    transition: background-color 0.2s;
+    position: relative;
 }
 
 .compose-reply-permission:hover {
+    background-color: rgba(var(--primary-rgb, 29, 155, 240), 0.1);
+}
+
+.permission-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    z-index: 100;
+    width: max-content;
+    min-width: 200px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin-top: 4px;
+}
+
+.permission-item {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+    color: var(--text-main);
+    transition: background 0.2s;
+    font-weight: 500;
+}
+
+.permission-item:hover {
     background-color: var(--hover);
+}
+
+.permission-item svg {
+    color: var(--text-muted);
+}
+
+.permission-item:hover svg {
+    color: var(--primary);
 }
 
 .compose-actions {
@@ -180,3 +220,139 @@
         display: block;
     }
 }
+
+/* Post Card Styles */
+.post-card {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.2s;
+}
+
+.post-card:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.post-avatar-col {
+    flex-shrink: 0;
+}
+
+.post-content-col {
+    min-width: 0; /* Enable text truncation in flex child */
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.post-info-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap; /* Allow wrapping if really narrow, but usually nowrap on desktop */
+    font-size: 15px;
+    line-height: 20px;
+    min-width: 0; /* Vital for truncation */
+}
+
+.post-name {
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.post-handle, .post-time, .post-dot {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.post-text {
+    color: var(--text-main);
+    font-size: 15px;
+    line-height: 20px;
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.feed-container .post-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    max-width: none; /* Force remove any constraint */
+    margin-top: 12px;
+    color: var(--text-muted);
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px; 
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+    justify-content: flex-start; /* Align content to the left of the grid cell */
+}
+
+/* Specific alignment tweaks */
+.action-btn:last-child {
+    justify-content: flex-end; /* Keep share button to the right end? Or left? Twitter uses group formatting. Let's keep consistent left for now or end if desired. */
+    /* Actually Twitter aligns them all left usually in their group, except maybe share. 
+       Let's stick to flex-start for all for perfect grid alignment. 
+       If user wants share at far right, we can adjust.
+       Screenshot shows share at far right. 
+    */
+    justify-content: flex-end; 
+}
+
+.action-btn:hover {
+    color: var(--primary);
+}
+
+.action-btn.comment:hover { color: var(--primary); }
+.action-btn.retweet:hover { color: #00ba7c; } 
+.action-btn.like:hover { color: #f91880; } 
+
+.action-btn.like.active { color: #f91880; }
+.action-btn.retweet.active { color: #00ba7c; }
+
+.icon-wrapper {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    margin-left: -8px; 
+}
+
+.action-btn:hover .icon-wrapper {
+    background-color: rgba(29, 155, 240, 0.1);
+}
+.action-btn.retweet:hover .icon-wrapper { background-color: rgba(0, 186, 124, 0.1); }
+.action-btn.like:hover .icon-wrapper { background-color: rgba(249, 24, 128, 0.1); }
+
+.more-options-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.more-options-btn:hover {
+    color: var(--primary);
+    background-color: rgba(29, 155, 240, 0.1);
+}
+
