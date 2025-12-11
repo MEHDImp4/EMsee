@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
 import './css/Login.css';
 
 const Login = () => {
     const { t } = useTranslation();
+    const { login } = useAuth();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,30 +28,17 @@ const Login = () => {
         e.preventDefault();
         if (validateForm()) {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('userEmail', data.user.email);
-                    localStorage.setItem('userName', data.user.full_name);
-                    localStorage.setItem('userHandle', data.user.username);
-                    localStorage.setItem('userId', data.user.id);
-                    localStorage.setItem('userRole', data.user.role);
+                const success = await login(email, password);
+                if (success) {
                     navigate('/feed');
                 } else {
-                    setErrors({ form: data.error || 'Login failed' });
+                    setErrors({ form: 'Identifiants incorrects' });
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                setErrors({ form: 'An error occurred. Please try again.' });
+                // Extract error message from API response if possible
+                const msg = error.message || 'Une erreur est survenue. Veuillez réessayer.';
+                setErrors({ form: msg });
             }
         }
     };

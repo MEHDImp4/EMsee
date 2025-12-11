@@ -20,7 +20,7 @@
 /* Avatar Column */
 .post-avatar-col {
     flex-shrink: 0;
-    width: 40px; /* Fixed width to prevent shift */
+    width: 48px; /* Standard Twitter size is often slightly larger, but 48px is good or keep 40px but ensure padding */
 }
 
 .avatar-img {
@@ -53,31 +53,43 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .post-meta {
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    gap: 4px;
+    flex-wrap: nowrap; /* Force single line */
     font-size: 15px;
     line-height: 20px;
+    overflow: hidden; /* Ensure container truncates if needed */
+    white-space: nowrap;
 }
 
 .post-name {
     font-weight: 700;
     color: var(--text-main);
-}
-
-.post-handle, .post-time, .post-dot {
-    color: var(--text-muted);
-}
-
-.post-name, .post-handle {
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1; /* Allow name to shrink */
+    min-width: 0; /* Allow Flexbox to shrink below content size */
+}
+
+.post-handle {
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 99; /* Handle shrinks readily */
+    min-width: 0; /* Allow shrinking */
+}
+
+.post-dot, .post-time {
+    color: var(--text-muted);
+    flex-shrink: 0; /* Do not shrink time or dot */
+    white-space: nowrap;
 }
 
 /* Post Body Text */
@@ -100,13 +112,15 @@
     color: var(--text-muted);
 }
 
-/* ACTION BAR - GRID LAYOUT */
+/* ACTION BAR - FLEX LAYOUT */
 .post-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 Equal Columns */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     margin-top: 12px;
     color: var(--text-muted);
+    padding-right: 12px; /* Slight padding to avoid hitting the very edge */
 }
 
 /* Individual Action Button */
@@ -122,8 +136,10 @@
     transition: color 0.2s;
     padding: 0;
     
-    /* Align strictly to start of the grid cell */
-    justify-content: flex-start; 
+    /* Align buttons to center of their flex area for even distribution */
+    justify-content: center;
+    width: auto;
+    flex: 0 0 auto;
 }
 
 /* Icon Wrapper for hover effect circle */

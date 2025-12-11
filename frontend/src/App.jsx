@@ -28,6 +28,7 @@ const Notifications = lazy(() => import('./pages/Notifications'));
 const PostPage = lazy(() => import('./pages/PostPage'));
 
 function App() {
+  console.log('App Rendering');
   return (
     <ThemeProvider>
       <AuthProvider>
@@ -36,9 +37,14 @@ function App() {
             <Router>
               <Suspense fallback={<PageLoader />}>
                 <Routes>
-                  {/* ... Public Routes ... */}
                   <Route element={<PublicLayout />}>
-                    {/* ... */}
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/about" element={<About />} />
                   </Route>
 
                   {/* Protected Routes (Dashboard) */}
