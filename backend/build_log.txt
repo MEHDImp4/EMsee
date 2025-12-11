@@ -1,8 +1,0 @@
-src/models/UserModel.ts(27,13): error TS2322: Type 'Partial<{ id: number; username: string; email: string; password: string; full_name: string; role: string; filiere: string | null; year: string | null; subjects: JsonValue; avatar: string | null; bio: string | null; location: string | null; created_at: Date; }>' is not assignable to type '(Without<UserUpdateInput, UserUncheckedUpdateInput> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput)'.
-  Type 'Partial<{ id: number; username: string; email: string; password: string; full_name: string; role: string; filiere: string | null; year: string | null; subjects: JsonValue; avatar: string | null; bio: string | null; location: string | null; created_at: Date; }>' is not assignable to type 'Without<UserUncheckedUpdateInput, UserUpdateInput> & UserUpdateInput'.
-    Type 'Partial<{ id: number; username: string; email: string; password: string; full_name: string; role: string; filiere: string | null; year: string | null; subjects: JsonValue; avatar: string | null; bio: string | null; location: string | null; created_at: Date; }>' is not assignable to type 'Without<UserUncheckedUpdateInput, UserUpdateInput>'.
-      Types of property 'id' are incompatible.
-        Type 'number | undefined' is not assignable to type 'undefined'.
-          Type 'number' is not assignable to type 'undefined'.
-src/scripts/addLocationColumn.ts(11,39): error TS2339: Property 'getConnection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
-src/scripts/initDb.ts(24,39): error TS2339: Property 'getConnection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.

@@ -194,22 +194,33 @@ const PostCard = ({ post, onLike, onRepost, onDelete }) => {
                 {showComments && (
                     <div className="comments-section" style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--border)' }}>
                         {/* Comment Input */}
-                        <div className="comment-input-area" style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-                            <input
-                                type="text"
-                                placeholder="Post your reply"
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                style={{ flex: 1, padding: '8px', borderRadius: '20px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-main)' }}
-                            />
-                            <button
-                                onClick={handleSubmitComment}
-                                disabled={!newComment.trim()}
-                                style={{ padding: '8px 16px', borderRadius: '20px', background: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer', opacity: newComment.trim() ? 1 : 0.5 }}
-                            >
-                                Reply
-                            </button>
-                        </div>
+                        {post.replyPermission === 'NO_ONE' && post.user?.id !== user?.id ? (
+                            <div style={{ padding: '10px', color: 'var(--text-muted)', fontSize: '14px', textAlign: 'center', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                                {t('post.reply_disabled', 'Replies are disabled for this post')}
+                            </div>
+                        ) : (
+                            <div className="comment-input-area" style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                                <input
+                                    type="text"
+                                    placeholder="Post your reply"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSubmitComment();
+                                        }
+                                    }}
+                                    style={{ flex: 1, padding: '8px', borderRadius: '20px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-main)' }}
+                                />
+                                <button
+                                    onClick={handleSubmitComment}
+                                    disabled={!newComment.trim()}
+                                    style={{ padding: '8px 16px', borderRadius: '20px', background: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer', opacity: newComment.trim() ? 1 : 0.5 }}
+                                >
+                                    Reply
+                                </button>
+                            </div>
+                        )}
 
                         {/* Comments List */}
                         {loadingComments ? (

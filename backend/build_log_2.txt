@@ -1,6 +1,0 @@
-src/models/UserModel.ts(28,13): error TS2322: Type '{ username?: string | undefined; email?: string | undefined; password?: string | undefined; full_name?: string | undefined; role?: string | undefined; filiere?: string | null | undefined; ... 5 more ...; created_at?: Date | undefined; }' is not assignable to type '(Without<UserUpdateInput, UserUncheckedUpdateInput> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput)'.
-  Type '{ username?: string | undefined; email?: string | undefined; password?: string | undefined; full_name?: string | undefined; role?: string | undefined; filiere?: string | null | undefined; ... 5 more ...; created_at?: Date | undefined; }' is not assignable to type 'Without<UserUncheckedUpdateInput, UserUpdateInput> & UserUpdateInput'.
-    Type '{ username?: string | undefined; email?: string | undefined; password?: string | undefined; full_name?: string | undefined; role?: string | undefined; filiere?: string | null | undefined; ... 5 more ...; created_at?: Date | undefined; }' is not assignable to type 'UserUpdateInput'.
-      Types of property 'subjects' are incompatible.
-        Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
-          Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.

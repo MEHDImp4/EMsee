@@ -5,10 +5,16 @@ const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const userRoutes = require('./routes/user.routes');
 
+const http = require('http'); // Import http
+const { initializeSocket } = require('./services/socketService'); // Import socket service
+
 // Load environment variables
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app); // Create HTTP server
+const io = initializeSocket(server); // Initialize Socket.io
+
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
@@ -32,7 +38,8 @@ app.get('/', (req, res) => {
 // Serve static uploads
 app.use('/uploads', express.static('uploads'));
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log("SERVER RELOADED WITH JS REFACTOR");
+    console.log("Socket.io initialized");
 });

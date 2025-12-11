@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const createPost = async (req, res) => {
     try {
-        const { content } = req.body;
+        const { content, replyPermission } = req.body;
         const userId = req.user.id;
 
         if (!content) {
@@ -13,7 +13,8 @@ const createPost = async (req, res) => {
         const post = await prisma.post.create({
             data: {
                 content,
-                userId
+                userId,
+                replyPermission: replyPermission || 'EVERYONE'
             },
             include: {
                 user: {
@@ -168,6 +169,30 @@ const commentPost = async (req, res) => {
 
         if (!content) return res.status(400).json({ error: 'Content required' });
 
+        // Check Reply Permission
+        const post = await prisma.post.findUnique({ where: { id: postId } });
+        if (!post) return res.status(404).json({ error: 'Post not found' });
+
+        if (post.replyPermission === 'NO_ONE' && post.userId !== userId) {
+            return res.status(403).json({ error: 'Replies are disabled for this post' });
+        }
+
+        if (post.replyPermission === 'FOLLOWERS' && post.userId !== userId) {
+            // Check if current user follows the post author
+            const isFollowing = await prisma.follow.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: userId,
+                        followingId: post.userId
+                    }
+                }
+            });
+
+            if (!isFollowing) {
+                return res.status(403).json({ error: 'Only followers can reply to this post' });
+            }
+        }
+
         const comment = await prisma.comment.create({
             data: {
                 content,
@@ -294,44 +319,44 @@ const getUserPosts = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-        try {
-            const postId = parseInt(req.params.id);
-            const userId = req.user.id; // From auth middleware
+    try {
+        const postId = parseInt(req.params.id);
+        const userId = req.user.id; // From auth middleware
 
-            const post = await prisma.post.findUnique({
-                where: { id: postId }
-            });
+        const post = await prisma.post.findUnique({
+            where: { id: postId }
+        });
 
-            if (!post) {
-                return res.status(404).json({ error: 'Post not found' });
-            }
-
-            if (post.userId !== userId) {
-                return res.status(403).json({ error: 'Unauthorized' });
-            }
-
-            // Delete related data first (cascade should handle this but explicit is safer without cascade)
-            // Prisma schema usually handles cascade delete if configured, assuming it is.
-            // If not, we might need to delete likes/comments/reposts first.
-            // Let's rely on Prisma relations or simple delete for now.
-            // Assuming relations allow cascade or we need to delete manually.
-            // Given previous simple setup, let's delete depedencies manually to be safe or wrap in transaction.
-            // Actually, simple delete might trip foreign keys if not CASCADE.
-            // Let's try simple delete, if it fails we add transaction.
-
-            await prisma.comment.deleteMany({ where: { postId } });
-            await prisma.like.deleteMany({ where: { postId } });
-            await prisma.repost.deleteMany({ where: { postId } });
-
-            await prisma.post.delete({
-                where: { id: postId }
-            });
-
-            res.json({ message: 'Post deleted successfully' });
-        } catch (error) {
-            console.error('Error deleting post:', error);
-            res.status(500).json({ error: 'Server error' });
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
         }
+
+        if (post.userId !== userId) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        // Delete related data first (cascade should handle this but explicit is safer without cascade)
+        // Prisma schema usually handles cascade delete if configured, assuming it is.
+        // If not, we might need to delete likes/comments/reposts first.
+        // Let's rely on Prisma relations or simple delete for now.
+        // Assuming relations allow cascade or we need to delete manually.
+        // Given previous simple setup, let's delete depedencies manually to be safe or wrap in transaction.
+        // Actually, simple delete might trip foreign keys if not CASCADE.
+        // Let's try simple delete, if it fails we add transaction.
+
+        await prisma.comment.deleteMany({ where: { postId } });
+        await prisma.like.deleteMany({ where: { postId } });
+        await prisma.repost.deleteMany({ where: { postId } });
+
+        await prisma.post.delete({
+            where: { id: postId }
+        });
+
+        res.json({ message: 'Post deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
 };
 
 module.exports = {

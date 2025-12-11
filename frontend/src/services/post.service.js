@@ -11,9 +11,9 @@ const PostService = {
         }
     },
 
-    createPost: async (content) => {
+    createPost: async (content, replyPermission = 'EVERYONE') => {
         try {
-            const response = await api.post('/posts', { content });
+            const response = await api.post('/posts', { content, replyPermission });
             return response;
         } catch (error) {
             console.error('Error creating post:', error);

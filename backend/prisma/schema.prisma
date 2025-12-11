@@ -29,6 +29,8 @@ model User {
   comments  Comment[]
   reposts   Repost[]
   likes     Like[]
+  followedBy Follow[] @relation("following")
+  following  Follow[] @relation("follower")
 
   @@map("users")
 }
@@ -43,8 +45,15 @@ model Post {
   likes     Like[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  replyPermission ReplyPermission @default(EVERYONE)
 
   @@map("posts")
+}
+
+enum ReplyPermission {
+  EVERYONE
+  FOLLOWERS
+  NO_ONE
 }
 
 model Comment {
@@ -81,4 +90,16 @@ model Like {
 
   @@unique([postId, userId])
   @@map("likes")
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  following   User     @relation("following", fields: [followingId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@map("follows")
 }

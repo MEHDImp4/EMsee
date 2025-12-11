@@ -93,6 +93,12 @@ const Feed = () => {
             rows="3"
             value={newPostContent}
             onChange={(e) => setNewPostContent(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handlePostSubmit();
+              }
+            }}
           />
 
           <div className="compose-reply-permission">
