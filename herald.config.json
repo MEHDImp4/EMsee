@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "disable": [
+      "eval-usage",
+      "floating-promise"
+    ]
+  }
+}
