@@ -12,7 +12,7 @@ const formatCount = (value = 0) => {
   return `${value}`;
 };
 
-const CommentCard = ({ comment, onReply }) => {
+const CommentCard = ({ comment, onReply, disableReply = false }) => {
   const navigate = useNavigate();
   const { openCompose } = useModal();
   const [isLiked, setIsLiked] = useState(Boolean(comment?.isLiked));
@@ -29,12 +29,12 @@ const CommentCard = ({ comment, onReply }) => {
   const displayName = comment?.user?.full_name || comment?.user?.username || 'User';
   const handle = comment?.user?.username ? `@${comment.user.username}` : '';
   const userRole = comment?.user?.role?.toLowerCase() || 'student';
-  
+
   // Debug log
   if (comment?.user?.role) {
     console.log('Comment user role:', comment.user.role, 'userRole:', userRole);
   }
-  
+
   const createdAt = useMemo(() => (comment?.createdAt ? new Date(comment.createdAt) : null), [comment]);
   const timeLabel = useMemo(() => {
     if (!createdAt) return '';
@@ -116,7 +116,11 @@ const CommentCard = ({ comment, onReply }) => {
         </div>
         <div className="comment-text">{comment.content}</div>
         <div className="comment-actions">
-          <button className="comment-action-btn" onClick={handleReply}>
+          <button
+            className="comment-action-btn"
+            onClick={handleReply}
+            style={{ visibility: disableReply ? 'hidden' : 'visible' }}
+          >
             <MessageCircle size={16} />
             <span>{formatCount(counts.replies)}</span>
           </button>

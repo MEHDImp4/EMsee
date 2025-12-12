@@ -246,7 +246,11 @@
         "replying_to": "En réponse à",
         "comment": "Commentaire",
         "replies": "Réponses",
-        "no_replies": "Aucune réponse pour le moment. Soyez le premier !"
+        "no_replies": "Aucune réponse pour le moment. Soyez le premier !",
+        "show_replies": "Afficher",
+        "hide_replies": "Masquer",
+        "thread_reply": "Répondre",
+        "report": "Signaler"
     },
     "notifications": {
         "tabs": {
@@ -298,10 +302,5 @@
         "welcome_title": "Bienvenue dans vos messages",
         "welcome_desc": "Connectez-vous avec d'autres étudiants et professeurs en privé. Sélectionnez une conversation pour commencer.",
         "start_conv": "Nouvelle conversation"
-    },
-    "post": {
-        "delete": "Supprimer",
-        "report": "Signaler",
-        "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce post ?"
     }
 }

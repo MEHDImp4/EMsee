@@ -75,6 +75,25 @@ const RegisterStep3 = (props) => {
                         {showErrors && !year && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                     </div>
                 )}
+                {year && (
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="classInput">{t('auth.class_name', 'Classe (ex: IIR10, GI2)')}</label>
+                        <div className="input-wrapper">
+                            <School size={20} className="input-icon" aria-hidden="true" />
+                            <input
+                                id="classInput"
+                                type="text"
+                                className="form-input"
+                                value={form.studentClass || ''}
+                                onChange={(e) => setField('studentClass', e.target.value.toUpperCase())}
+                                placeholder={t('auth.class_placeholder', 'Entrez votre classe (ex: GI1, IER10...)')}
+                                aria-invalid={showErrors && !form.studentClass ? "true" : "false"}
+                                style={{ borderColor: showErrors && !form.studentClass ? 'var(--danger)' : undefined }}
+                            />
+                        </div>
+                        {showErrors && !form.studentClass && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
+                    </div>
+                )}
             </div>
         );
     }

@@ -52,6 +52,34 @@ const getAllPosts = async (req, res) => {
     }
 };
 
+const getClassPosts = async (req, res) => {
+    try {
+        const currentUserId = req.user.id;
+        const user = await prisma.user.findUnique({ where: { id: currentUserId } });
+
+        if (!user || !user.filiere || !user.year || !user.studentClass) {
+            return res.json([]);
+        }
+
+        const posts = await prisma.post.findMany({
+            where: {
+                user: {
+                    filiere: user.filiere,
+                    year: user.year,
+                    studentClass: user.studentClass
+                }
+            },
+            orderBy: { createdAt: 'desc' },
+            include: buildPostInclude(currentUserId)
+        });
+
+        res.json(posts.map(formatPost));
+    } catch (error) {
+        console.error('Error fetching class posts:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 const likePost = async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
@@ -101,6 +129,13 @@ const commentPost = async (req, res) => {
         const { content } = req.body;
 
         if (!content) return res.status(400).json({ error: 'Content required' });
+
+        const post = await prisma.post.findUnique({ where: { id: postId } });
+        if (!post) return res.status(404).json({ error: 'Post not found' });
+
+        if (post.userId === userId) {
+            return res.status(403).json({ error: 'You cannot comment on your own post' });
+        }
 
         const permissionCheck = await checkReplyPermission(postId, userId);
         if (!permissionCheck.allowed) {
@@ -307,5 +342,6 @@ module.exports = {
     deletePost,
     getPostById,
     getCommentById,
-    getCommentPath
+    getCommentPath,
+    getClassPosts
 };

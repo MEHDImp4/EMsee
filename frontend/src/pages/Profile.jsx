@@ -35,7 +35,8 @@ const Profile = () => {
   const user = userView ? {
     ...userView,
     level: userView.level ? t(`lists.years.${userView.level}`) : 'N/A',
-    class: userView.class ? t(`lists.filieres.${userView.class}`) : 'N/A',
+    filiere: userView.filiere ? t(`lists.filieres.${userView.filiere}`) : 'N/A',
+    class: userView.class || 'N/A',
     joinDate: userView.joinDate ? new Date(userView.joinDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) : ''
   } : null;
 
@@ -43,7 +44,11 @@ const Profile = () => {
     <div className="profile-container">
       {/* Banner Section */}
       <div className="profile-banner">
-        <div className="banner-gradient"></div>
+        {user.banner ? (
+          <div className="banner-image" style={{ backgroundImage: `url(${user.banner})` }}></div>
+        ) : (
+          <div className="banner-gradient"></div>
+        )}
       </div>
 
       {/* Header Section with Avatar */}
@@ -95,12 +100,10 @@ const Profile = () => {
         <p className="profile-bio-text">{user.bio || t('profile.no_bio', 'No bio yet.')}</p>
 
         <div className="profile-meta-row">
-          {user.location && (
-            <div className="meta-item">
-              <MapPin size={16} />
-              <span>{user.location}</span>
-            </div>
-          )}
+          <div className="meta-item">
+            <MapPin size={16} />
+            <span>{user.location || 'Rabat, Maroc'}</span>
+          </div>
           <div className="meta-item">
             <Mail size={16} />
             <span>{user.email}</span>
@@ -129,6 +132,16 @@ const Profile = () => {
 
       {/* Academic Info Cards */}
       <div className="profile-grid">
+        <div className="info-card">
+          <div className="card-icon-wrapper blue">
+            <GraduationCap size={24} />
+          </div>
+          <div className="card-content">
+            <span className="card-label">{t('auth.field_of_study')}</span>
+            <span className="card-value">{user.filiere}</span>
+          </div>
+        </div>
+
         <div className="info-card">
           <div className="card-icon-wrapper blue">
             <GraduationCap size={24} />

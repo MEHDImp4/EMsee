@@ -101,8 +101,16 @@ const replyToComment = async (req, res) => {
 
         if (!content) return res.status(400).json({ error: 'Content required' });
 
-        const parent = await prisma.comment.findUnique({ where: { id: parentCommentId } });
+        const parent = await prisma.comment.findUnique({
+            where: { id: parentCommentId },
+            select: { id: true, parentCommentId: true, postId: true }
+        });
         if (!parent) return res.status(404).json({ error: 'Comment not found' });
+
+        // Block replies to replies (max 2 levels of comments: post -> comment -> reply)
+        if (parent.parentCommentId !== null) {
+            return res.status(400).json({ error: 'Cannot reply to a reply' });
+        }
 
         const reply = await prisma.comment.create({
             data: { content, postId: parent.postId, userId, parentCommentId },
@@ -131,32 +139,40 @@ const replyToComment = async (req, res) => {
     }
 };
 
-// Helper to build include object for replies to reduce nesting
-const buildRepliesInclude = (currentUserId) => ({
-    user: { select: userSelectFields },
-    _count: { select: commentCountFields },
-    likes: { where: { userId: currentUserId }, select: { userId: true } },
-    reposts: { where: { userId: currentUserId }, select: { userId: true } },
-    saves: { where: { userId: currentUserId }, select: { userId: true } },
-    replies: {
-        include: {
+// Helper to build include object for replies with nested depth control
+const buildRepliesInclude = (currentUserId, depth = 2) => {
+    if (depth <= 0) {
+        return {
             user: { select: userSelectFields },
             _count: { select: commentCountFields },
             likes: { where: { userId: currentUserId }, select: { userId: true } },
             reposts: { where: { userId: currentUserId }, select: { userId: true } },
             saves: { where: { userId: currentUserId }, select: { userId: true } }
-        }
+        };
     }
-});
+
+    return {
+        user: { select: userSelectFields },
+        _count: { select: commentCountFields },
+        likes: { where: { userId: currentUserId }, select: { userId: true } },
+        reposts: { where: { userId: currentUserId }, select: { userId: true } },
+        saves: { where: { userId: currentUserId }, select: { userId: true } },
+        replies: {
+            include: buildRepliesInclude(currentUserId, depth - 1),
+            orderBy: { createdAt: 'asc' }
+        }
+    };
+};
 
 const getCommentReplies = async (req, res) => {
     try {
         const commentId = parseInt(req.params.id, 10);
         const currentUserId = req.user?.id;
+        const depth = req.query.depth ? Math.min(parseInt(req.query.depth, 10), 3) : 2;
 
         const replies = await prisma.comment.findMany({
             where: { parentCommentId: commentId },
-            include: buildRepliesInclude(currentUserId),
+            include: buildRepliesInclude(currentUserId, depth),
             orderBy: { createdAt: 'asc' }
         });
 

@@ -10,9 +10,7 @@ const useFeed = () => {
     const [showPermissionMenu, setShowPermissionMenu] = useState(false);
     const permissionMenuRef = useRef(null);
 
-    useEffect(() => {
-        fetchPosts();
-    }, []);
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -30,8 +28,11 @@ const useFeed = () => {
     }, [showPermissionMenu]);
 
     const fetchPosts = async () => {
+        setLoading(true);
         try {
-            const data = await PostService.getAllPosts();
+            const data = activeTab === 'class'
+                ? await PostService.getClassPosts()
+                : await PostService.getAllPosts();
             setPosts(data || []);
         } catch (error) {
             console.error('Failed to load posts', error);
@@ -39,6 +40,10 @@ const useFeed = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchPosts();
+    }, [activeTab]);
 
     const handlePostSubmit = async () => {
         if (!newPostContent.trim()) return;

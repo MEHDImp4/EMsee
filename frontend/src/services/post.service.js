@@ -11,6 +11,16 @@ const PostService = {
         }
     },
 
+    getClassPosts: async () => {
+        try {
+            const response = await api.get('/posts/class');
+            return response;
+        } catch (error) {
+            console.error('Error fetching class posts:', error);
+            throw error;
+        }
+    },
+
     getPostById: async (postId) => {
         try {
             const response = await api.get(`/posts/${postId}`);

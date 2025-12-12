@@ -12,9 +12,13 @@ const updateProfile = async (req, res) => {
         if (filiere) updates.filiere = filiere;
         if (year) updates.year = year;
 
-        if (req.file) {
-            // Normalize path to use forward slashes for URLs
-            updates.avatar = `/uploads/${req.file.filename}`;
+        if (req.files) {
+            if (req.files.avatar) {
+                updates.avatar = `/uploads/${req.files.avatar[0].filename}`;
+            }
+            if (req.files.banner) {
+                updates.banner = `/uploads/${req.files.banner[0].filename}`;
+            }
         }
 
         await UserModel.update(userId, updates);

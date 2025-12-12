@@ -23,12 +23,6 @@ EMsee combine un front‑end React (Vite) et un back‑end Node/Express avec Pri
 - **Realtime:** Socket.IO (ou service socket intégré)
 - **Langage:** JavaScript
 
-**Public cible & contexte**
-
-Ce README vise deux lecteurs :
-- vos camarades de projet — instructions claires pour démarrer et contribuer
-- la prof — rapport synthétique expliquant le but, l'architecture, les choix techniques et les pistes d'amélioration
-
 **Fonctionnalités clés**
 
 - Création, lecture, mise à jour et suppression des posts
@@ -120,7 +114,7 @@ Si vous devez ajouter un nouvel endpoint frontal, ajoutez le helper dans `fronte
 - Tests & lint: respecter les conventions du dépôt
 - Ouvrir une Pull Request avec description et captures d'écran
 
-**Rapport synthétique (pour la prof)**
+**Rapport synthétique**
 
 Objectif: concevoir et implémenter une application web collaborative permettant le partage de contenu et la communication en temps réel. Le projet illustre l'application d'un stack moderne JS (React + Node + Prisma) et couvre les notions suivantes:
 

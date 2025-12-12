@@ -37,6 +37,9 @@ const upload = multer({
     }
 });
 
-router.put('/profile', verifyToken, upload.single('avatar'), updateProfile);
+router.put('/profile', verifyToken, upload.fields([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'banner', maxCount: 1 }
+]), updateProfile);
 
 module.exports = router;

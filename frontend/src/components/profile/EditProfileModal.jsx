@@ -13,13 +13,15 @@ const EditProfileModal = ({ isOpen, onClose }) => {
     const [formData, setFormData] = useState({
         full_name: user?.full_name || user?.name || '',
         bio: user?.bio || '',
-        location: user?.location || '',
+        location: user?.location || 'Rabat, Maroc',
         filiere: user?.filiere || '',
         year: user?.year || ''
     });
 
     const [avatarFile, setAvatarFile] = useState(null);
+    const [bannerFile, setBannerFile] = useState(null);
     const [preview, setPreview] = useState(user?.avatar ? `http://localhost:5000${user.avatar}` : null);
+    const [bannerPreview, setBannerPreview] = useState(user?.banner ? `http://localhost:5000${user.banner}` : null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -40,6 +42,14 @@ const EditProfileModal = ({ isOpen, onClose }) => {
         }
     };
 
+    const handleBannerChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setBannerFile(file);
+            setBannerPreview(URL.createObjectURL(file));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -54,6 +64,9 @@ const EditProfileModal = ({ isOpen, onClose }) => {
 
         if (avatarFile) {
             data.append('avatar', avatarFile);
+        }
+        if (bannerFile) {
+            data.append('banner', bannerFile);
         }
 
         try {
@@ -88,6 +101,16 @@ const EditProfileModal = ({ isOpen, onClose }) => {
                     <form onSubmit={handleSubmit} className="modal-form">
                         {/* Avatar Upload */}
                         <div className="avatar-upload-area">
+                            {/* Banner Upload */}
+                            <div className="banner-preview-edit" style={{ width: '100%', height: '100px', 'borderRadius': '8px', overflow: 'hidden', marginBottom: '1rem', background: '#333', position: 'relative' }}>
+                                {bannerPreview ? <img src={bannerPreview} alt="Banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>No Banner</div>}
+                                <label className="upload-btn" style={{ position: 'absolute', bottom: '5px', right: '5px', background: 'rgba(0,0,0,0.5)', padding: '5px', borderRadius: '4px', color: 'white' }}>
+                                    <Upload size={14} />
+                                    <input type="file" className="hidden" accept="image/*" onChange={handleBannerChange} style={{ display: 'none' }} />
+                                </label>
+                            </div>
+
+                            {/* Avatar Upload */}
                             <div className="avatar-preview">
                                 {preview ? (
                                     <img src={preview} alt="Avatar" />

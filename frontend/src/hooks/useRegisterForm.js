@@ -17,6 +17,7 @@ const initialForm = {
     confirmPassword: '',
     selectedSubjects: [],
     filiere: '',
+    studentClass: '',
     year: '',
     showPassword: false
 };
@@ -109,7 +110,8 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
                 return form.selectedSubjects.length > 0;
             }
             if (!form.filiere) return false;
-            return form.year !== '';
+            if (!form.year) return false;
+            return !!form.studentClass;
         }
         if (currentStep === 4) {
             return validation.isPasswordValid && validation.doPasswordsMatch;
@@ -159,7 +161,7 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
                         clearAvailabilityError('username');
                     }
                 })
-                .catch(() => {/* ignore blur errors */});
+                .catch(() => {/* ignore blur errors */ });
         }
         if (field === 'email' && validation.isEmailValid !== false) {
             checkAvailability({ email: value })
@@ -171,7 +173,7 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
                         clearAvailabilityError('email');
                     }
                 })
-                .catch(() => {/* ignore blur errors */});
+                .catch(() => {/* ignore blur errors */ });
         }
     };
 
@@ -238,6 +240,7 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
                     role: form.accountType,
                     filiere: form.accountType === 'student' ? form.filiere : undefined,
                     year: form.accountType === 'student' ? form.year : undefined,
+                    studentClass: form.accountType === 'student' ? form.studentClass : undefined,
                     subjects: form.accountType === 'professor' ? form.selectedSubjects : undefined
                 })
             });
@@ -252,6 +255,7 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
                 } else {
                     localStorage.setItem('studentFiliere', form.filiere);
                     localStorage.setItem('studentYear', form.year);
+                    localStorage.setItem('studentClass', form.studentClass);
                 }
 
                 navigate('/feed');

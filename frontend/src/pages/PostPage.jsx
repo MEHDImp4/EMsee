@@ -28,6 +28,8 @@ const PostPage = () => {
         focusReplyBox
     } = usePostPage({ id, socket });
 
+    const isOwnPost = post?.user?.id === user?.id;
+
     if (loading) return <div className="loading-spinner">Loading...</div>;
     if (!post) return <div className="not-found">Post not found</div>;
 
@@ -49,35 +51,37 @@ const PostPage = () => {
                 <PostCard post={post} isDetailView={true} onCommentIntent={focusReplyBox} />
             </div>
 
-            <div className="reply-composer">
-                <div className="reply-avatar">
-                    {user?.avatar ? (
-                        <img src={`http://localhost:5000${user.avatar}`} alt={user.username} />
-                    ) : (
-                        <span>{(user?.full_name || user?.username || 'U').charAt(0)}</span>
-                    )}
-                </div>
-                <div className="reply-input-col">
-                    <textarea
-                        className="reply-textarea"
-                        rows="3"
-                        placeholder={t('post.reply_placeholder', 'Ajouter une réponse')}
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        ref={replyRef}
-                    />
-                    <div className="reply-actions">
-                        <div className="reply-hint">{t('post.replying_to', 'En réponse à')} @{post?.user?.username}</div>
-                        <button
-                            className="reply-btn"
-                            onClick={handleSubmitReply}
-                            disabled={!replyText.trim() || submitting}
-                        >
-                            {submitting ? t('common.save', 'Enregistrer') : t('post.reply', 'Répondre')}
-                        </button>
+            {!isOwnPost && (
+                <div className="reply-composer">
+                    <div className="reply-avatar">
+                        {user?.avatar ? (
+                            <img src={`http://localhost:5000${user.avatar}`} alt={user.username} />
+                        ) : (
+                            <span>{(user?.full_name || user?.username || 'U').charAt(0)}</span>
+                        )}
+                    </div>
+                    <div className="reply-input-col">
+                        <textarea
+                            className="reply-textarea"
+                            rows="3"
+                            placeholder={t('post.reply_placeholder', 'Ajouter une réponse')}
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            ref={replyRef}
+                        />
+                        <div className="reply-actions">
+                            <div className="reply-hint">{t('post.replying_to', 'En réponse à')} @{post?.user?.username}</div>
+                            <button
+                                className="reply-btn"
+                                onClick={handleSubmitReply}
+                                disabled={!replyText.trim() || submitting}
+                            >
+                                {submitting ? t('common.save', 'Enregistrer') : t('post.reply', 'Répondre')}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             <div className="comments-section-page">
                 {comments.map((comment) => (

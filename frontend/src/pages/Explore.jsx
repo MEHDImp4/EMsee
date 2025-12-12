@@ -41,7 +41,7 @@ const Explore = () => {
                         className={`tab-item ${activeTab === tab.id ? 'active' : ''}`}
                         onClick={() => setActiveTab(tab.id)}
                     >
-                        {tab.label}
+                        {t(tab.labelKey, tab.fallback)}
                         {activeTab === tab.id && <div className="tab-indicator" />}
                     </button>
                 ))}

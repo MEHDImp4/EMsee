@@ -19,8 +19,10 @@ model User {
   role       String   @default("student") // 'student', 'professor', 'admin'
   filiere    String?
   year       String?
+  studentClass String?
   subjects   Json?
   avatar     String?
+  banner     String?
   bio        String?
   location   String?
   created_at DateTime @default(now())

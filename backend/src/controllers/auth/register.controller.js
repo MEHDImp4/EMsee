@@ -4,7 +4,7 @@ const { UserModel } = require('../../models/UserModel');
 
 const register = async (req, res) => {
     try {
-        const { username, email, password, full_name, role, filiere, year, subjects } = req.body;
+        const { username, email, password, full_name, role, filiere, year, studentClass, subjects } = req.body;
 
         // Basic validation
         if (!username || !email || !password || !full_name) {
@@ -39,7 +39,9 @@ const register = async (req, res) => {
             role,
             filiere,
             year,
-            subjects
+            studentClass,
+            subjects,
+            location: 'Rabat, Maroc'
         });
 
         // Generate token
@@ -49,7 +51,7 @@ const register = async (req, res) => {
 
         res.status(201).json({
             token,
-            user: { id: userId, username, email, full_name, role, filiere, year, subjects }
+            user: { id: userId, username, email, full_name, role, filiere, year, studentClass, subjects }
         });
     } catch (error) {
         console.error('Register error:', error);

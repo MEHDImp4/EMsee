@@ -8,10 +8,12 @@ const profileSelectFields = {
     full_name: true,
     role: true,
     avatar: true,
+    banner: true,
     bio: true,
     location: true,
     year: true,
     filiere: true,
+    studentClass: true,
     created_at: true,
     _count: {
         select: {

@@ -11,6 +11,7 @@ class UserModel {
                 role: userData.role || 'student',
                 filiere: userData.filiere,
                 year: userData.year,
+                studentClass: userData.studentClass,
                 subjects: userData.subjects, // Prisma handles JSON automatically
                 avatar: userData.avatar,
                 bio: userData.bio,

@@ -1,0 +1,365 @@
+.comment-thread-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg-card);
+}
+
+.comment-thread-item {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-left: 2px solid var(--border);
+  margin-left: 8px;
+  padding-left: 12px;
+  padding-bottom: 8px;
+}
+
+.comment-thread-item.depth-0 {
+  border-left: none;
+  margin-left: 0;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.comment-thread-item.depth-0 .comment-thread-connector {
+  display: none;
+}
+
+.comment-thread-item.depth-1,
+.comment-thread-item.depth-2,
+.comment-thread-item.depth-3 {
+  margin-top: 4px;
+}
+
+.comment-thread-connector {
+  position: absolute;
+  left: -2px;
+  top: 32px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.comment-thread-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  transition: background-color 0.2s ease;
+  background: var(--bg-card);
+}
+
+.comment-thread-card:hover {
+  background-color: var(--hover);
+  border-radius: 4px;
+}
+
+.comment-thread-avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-sidebar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-thread-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comment-thread-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.comment-thread-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-thread-parent-context {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  background: var(--bg-sidebar);
+  border-radius: 6px;
+  width: fit-content;
+  margin-bottom: 4px;
+}
+
+.comment-thread-parent-context strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.comment-thread-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.comment-thread-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.comment-thread-name {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.comment-thread-handle {
+  color: var(--text-muted);
+}
+
+.comment-thread-dot {
+  color: var(--text-muted);
+}
+
+.comment-thread-time {
+  color: var(--text-muted);
+}
+
+.comment-thread-role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.comment-role-professor {
+  background-color: #ffd700;
+  color: #333;
+}
+
+.comment-role-student {
+  background-color: var(--primary);
+  color: white;
+}
+
+.comment-role-admin {
+  background-color: var(--danger);
+  color: white;
+}
+
+.comment-thread-text {
+  color: var(--text-main);
+  font-size: 15px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  margin: 8px 0;
+}
+
+.comment-thread-actions {
+  display: flex;
+  justify-content: space-between;
+  max-width: 425px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.comment-thread-action-btn {
+  flex: 1;
+  max-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  transition: color 0.2s ease;
+  border-radius: 4px;
+}
+
+.comment-thread-action-btn:hover:not(.disabled) {
+  color: var(--primary);
+}
+
+.comment-thread-action-btn.disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.comment-thread-action-btn.has-count {
+  cursor: pointer;
+}
+
+.comment-thread-action-btn.active {
+  color: var(--primary);
+}
+
+.comment-thread-action-btn.like.active {
+  color: var(--danger);
+}
+
+.comment-thread-action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.comment-thread-action-trailing {
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.comment-thread-icon-btn {
+  padding: 8px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-thread-icon-btn:hover {
+  color: var(--primary);
+}
+
+.comment-thread-icon-btn.active {
+  color: var(--primary);
+}
+
+.comment-thread-icon-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.comment-thread-show-replies {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comment-thread-show-replies:hover {
+  background-color: var(--hover);
+}
+
+.comment-thread-show-replies.expanded {
+  border-color: var(--primary);
+}
+
+.comment-thread-show-replies.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.comment-thread-show-replies svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.comment-thread-show-replies.expanded svg {
+  transform: rotate(180deg);
+}
+
+.comment-thread-quick-reply {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin-top: 8px;
+  background: var(--hover);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comment-thread-quick-reply:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.comment-thread-replies {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .comment-thread-card {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .comment-thread-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .comment-thread-actions {
+    max-width: 100%;
+    gap: 4px;
+  }
+
+  .comment-thread-action-btn {
+    max-width: 100%;
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+
+  .comment-thread-meta {
+    font-size: 12px;
+  }
+
+  .comment-thread-text {
+    font-size: 14px;
+  }
+
+  .comment-thread-parent-context {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}

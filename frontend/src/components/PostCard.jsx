@@ -28,7 +28,7 @@ const formatRelativeTime = (date) => {
   return date.toLocaleDateString();
 };
 
-const PostCard = ({ post, onDelete = () => {}, isDetailView = false, onCommentIntent }) => {
+const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentIntent }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -171,7 +171,12 @@ const PostCard = ({ post, onDelete = () => {}, isDetailView = false, onCommentIn
         <div className="post-text">{post?.content}</div>
 
         <div className="post-actions-bar">
-          <button className="action-btn comment" onClick={handleCommentClick}>
+          <button
+            className={`action-btn comment ${isOwner ? 'disabled' : ''}`}
+            onClick={handleCommentClick}
+            disabled={isOwner}
+            title={isOwner ? t('post.cannot_comment_own', "You cannot comment on your own post") : ''}
+          >
             <div className="icon-wrapper">
               <MessageCircle size={18} />
             </div>

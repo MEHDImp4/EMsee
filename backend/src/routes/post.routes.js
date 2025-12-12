@@ -7,6 +7,7 @@ const { verifyToken: authenticateToken } = require('../middlewares/authMiddlewar
 router.use(authenticateToken);
 
 router.post('/', postController.createPost);
+router.get('/class', postController.getClassPosts);
 router.get('/', postController.getAllPosts);
 router.post('/:id/like', postController.likePost);
 router.post('/:id/repost', postController.repostPost);

@@ -4,7 +4,7 @@ import { TRENDS } from './trends.constants';
 
 const TrendsList = ({ t }) => (
     <div className="trends-list">
-        <h3 style={{ padding: '1rem', fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
+        <h3 style={{ padding: '1rem 1rem 0.5rem 1rem', fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
             {t('explore.trends_for_you', 'Tendances pour vous')}
         </h3>
         {TRENDS.map((trend, index) => (
