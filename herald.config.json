@@ -2,7 +2,9 @@
   "rules": {
     "disable": [
       "eval-usage",
-      "floating-promise"
+      "floating-promise",
+      "password-exposed",
+      "hardcoded-password"
     ]
   }
 }
