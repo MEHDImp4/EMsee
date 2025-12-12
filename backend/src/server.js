@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const userRoutes = require('./routes/user.routes');
+const commentRoutes = require('./routes/comment.routes');
 
 const http = require('http'); // Import http
 const { initializeSocket } = require('./services/socketService'); // Import socket service
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/comments', commentRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

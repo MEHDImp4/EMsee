@@ -8,8 +8,15 @@ export const ModalProvider = ({ children }) => {
     const [isComposeOpen, setIsComposeOpen] = useState(false);
     const [replyTo, setReplyTo] = useState(null);
 
-    const openCompose = (postToReplyTo = null) => {
-        setReplyTo(postToReplyTo);
+    const openCompose = (target = null) => {
+        // target can be a post or a comment; we tag comments with isComment to route API
+        if (target?.isComment) {
+            setReplyTo({ ...target, isComment: true });
+        } else if (target) {
+            setReplyTo({ ...target, isComment: false });
+        } else {
+            setReplyTo(null);
+        }
         setIsComposeOpen(true);
     };
 

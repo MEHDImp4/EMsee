@@ -26,6 +26,7 @@ const LanguageSettings = lazy(() => import('./pages/LanguageSettings'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Notifications = lazy(() => import('./pages/Notifications'));
 const PostPage = lazy(() => import('./pages/PostPage'));
+const CommentPage = lazy(() => import('./pages/CommentPage'));
 
 function App() {
   return (
@@ -53,7 +54,8 @@ function App() {
                     </ProtectedRoute>
                   }>
                     <Route path="/feed" element={<Feed />} />
-                    <Route path="/post/:id" element={<PostPage />} /> {/* New Route */}
+                    <Route path="/posts/:id" element={<PostPage />} /> {/* Post detail */}
+                    <Route path="/comments/:id" element={<CommentPage />} /> {/* Comment detail */}
                     <Route path="/messages" element={<Messages />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/profile/:username" element={<Profile />} />

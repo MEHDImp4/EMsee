@@ -6,22 +6,8 @@
 ProjetJS propose une architecture moderne et claire : authentification JWT, fil d’actualité personnalisé, interactions sociales et séparation nette frontend/backend. Le tout sert de support à des travaux pratiques pour étudiants.
 
 ## Fonctionnalités ✨
-- 🔐 Inscription / connexion / JWT  
-- 📝 Tweets (texte, image optionnelle, bloc code, sondage)  
-- 🧾 Feed personnalisé (personnes suivies)  
-- ➕/➖ Follow / unfollow  
-- ❤️ Likes — 🔁 Retweets — 💬 Commentaires  
-- 👤 Profils (avatar, bio, posts)  
-- #️⃣ Hashtags et @️⃣ mentions  
-- 🔔 Notifications temps réel (Socket.IO) — optionnel  
-- 🌴 Mode « vacances » (mute des notifications)  
-- 🎵 Partage musique (Spotify) — optionnel  
-- 💻 Snippets de code avec coloration syntaxique  
 
 ## Stack technique 🛠️
-- **Frontend** : React 18, React Router, Axios  
-- **Backend** : Node.js, Express, JWT  
-- **Base de données** : PostgreSQL 
 
 ## Structure du dépôt 📂
 

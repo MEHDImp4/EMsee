@@ -221,6 +221,156 @@
     }
 }
 
+.post-detail-view {
+    border-bottom: 1px solid var(--border);
+}
+
+.reply-composer {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.reply-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.reply-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reply-input-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.reply-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    resize: none;
+    color: var(--text-main);
+    font-size: 1rem;
+    outline: none;
+    font-family: inherit;
+}
+
+.reply-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.reply-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reply-hint {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.reply-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.reply-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.comments-section-page {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.comment-avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.comment-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.comment-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-header {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.comment-name {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.comment-handle,
+.comment-time,
+.comment-dot {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.comment-text {
+    color: var(--text-main);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
 /* Post list spacing now handled by PostCard styles */
 .posts-list {
     padding: 0;

@@ -224,7 +224,9 @@
             "class": "My Class"
         },
         "role": {
-            "professor": "Professor"
+            "professor": "Professor",
+            "admin": "Admin",
+            "student": "Student"
         },
         "everyone": "Everyone",
         "followers": "Followers only",
@@ -235,7 +237,13 @@
     "post": {
         "delete": "Delete post",
         "confirm_delete": "Delete this post?",
-        "views": "Views"
+        "views": "Views",
+        "reply": "Reply",
+        "reply_placeholder": "Add your reply",
+        "replying_to": "Replying to",
+        "comment": "Comment",
+        "replies": "Replies",
+        "no_replies": "No replies yet. Be the first!"
     },
     "notifications": {
         "tabs": {

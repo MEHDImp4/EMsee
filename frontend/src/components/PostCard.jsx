@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MessageCircle, Repeat2, Heart, BarChart3, Bookmark, Share2, MoreHorizontal, Trash2 } from 'lucide-react';
 import PostService from '../services/post.service';
 import { useAuth } from '../context/AuthContext';
+import { useModal } from '../context/ModalContext';
 import './css/PostCard.css';
 
 const formatCount = (value = 0) => {
@@ -27,10 +28,11 @@ const formatRelativeTime = (date) => {
   return date.toLocaleDateString();
 };
 
-const PostCard = ({ post, onDelete = () => {}, isDetailView = false }) => {
+const PostCard = ({ post, onDelete = () => {}, isDetailView = false, onCommentIntent }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { openCompose } = useModal();
 
   const [isLiked, setIsLiked] = useState(Boolean(post?.isLiked));
   const [isReposted, setIsReposted] = useState(Boolean(post?.isReposted));
@@ -47,6 +49,7 @@ const PostCard = ({ post, onDelete = () => {}, isDetailView = false }) => {
   const avatarUrl = post?.user?.avatar ? `http://localhost:5000${post.user.avatar}` : null;
   const displayName = post?.user?.full_name || post?.user?.username || 'User';
   const handle = post?.user?.username ? `@${post.user.username}` : '';
+  const userRole = post?.user?.role?.toLowerCase();
   const createdAt = useMemo(() => (post?.createdAt ? new Date(post.createdAt) : null), [post]);
   const timeLabel = useMemo(() => formatRelativeTime(createdAt), [createdAt]);
 
@@ -99,7 +102,11 @@ const PostCard = ({ post, onDelete = () => {}, isDetailView = false }) => {
 
   const handleCommentClick = (e) => {
     e.stopPropagation();
-    navigate(`/posts/${post.id}`);
+    if (isDetailView) {
+      if (onCommentIntent) onCommentIntent();
+      return;
+    }
+    openCompose(post);
   };
 
   const handleDelete = async (e) => {
@@ -132,8 +139,14 @@ const PostCard = ({ post, onDelete = () => {}, isDetailView = false }) => {
           <div className="post-info">
             <div className="post-name-row">
               <span className="post-name">{displayName}</span>
-              {post?.user?.role === 'professor' && (
-                <span className="post-role-badge">{t('feed.role.professor', 'Professor')}</span>
+              {userRole && (
+                <span className={`post-role-badge post-role-${userRole}`}>
+                  {userRole === 'professor'
+                    ? t('feed.role.professor', 'Professor')
+                    : userRole === 'admin'
+                      ? t('feed.role.admin', 'Admin')
+                      : t('feed.role.student', 'Student')}
+                </span>
               )}
             </div>
             <div className="post-meta-row">

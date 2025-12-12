@@ -23,7 +23,8 @@ const createPost = async (req, res) => {
                         id: true,
                         username: true,
                         full_name: true,
-                        avatar: true
+                        avatar: true,
+                        role: true
                     }
                 }
             }
@@ -48,7 +49,8 @@ const getAllPosts = async (req, res) => {
                         id: true,
                         username: true,
                         full_name: true,
-                        avatar: true
+                        avatar: true,
+                        role: true
                     }
                 },
                 _count: {
@@ -229,23 +231,46 @@ const commentPost = async (req, res) => {
 const getPostComments = async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
+        const currentUserId = req.user?.id;
 
         const comments = await prisma.comment.findMany({
-            where: { postId },
+            where: { postId, parentCommentId: null },
             include: {
                 user: {
                     select: {
                         id: true,
                         username: true,
                         full_name: true,
-                        avatar: true
+                        avatar: true,
+                        role: true
                     }
-                }
+                },
+                _count: {
+                    select: {
+                        likes: true,
+                        replies: true,
+                        reposts: true,
+                        saves: true
+                    }
+                },
+                likes: { where: { userId: currentUserId }, select: { userId: true } },
+                reposts: { where: { userId: currentUserId }, select: { userId: true } },
+                saves: { where: { userId: currentUserId }, select: { userId: true } }
             },
             orderBy: { createdAt: 'asc' }
         });
 
-        res.json(comments);
+        const formatted = comments.map(c => ({
+            ...c,
+            isLiked: c.likes.length > 0,
+            isReposted: c.reposts.length > 0,
+            isSaved: c.saves.length > 0,
+            likes: undefined,
+            reposts: undefined,
+            saves: undefined
+        }));
+
+        res.json(formatted);
     } catch (error) {
         console.error('Error fetching comments:', error);
         res.status(500).json({ error: 'Server error' });
@@ -265,7 +290,8 @@ const getPostById = async (req, res) => {
                         id: true,
                         username: true,
                         full_name: true,
-                        avatar: true
+                        avatar: true,
+                        role: true
                     }
                 },
                 _count: {
@@ -321,7 +347,7 @@ const getUserPosts = async (req, res) => {
             where: { userId: user.id },
             include: {
                 user: {
-                    select: { id: true, username: true, full_name: true, avatar: true }
+                    select: { id: true, username: true, full_name: true, avatar: true, role: true }
                 },
                 _count: {
                     select: { likes: true, comments: true, reposts: true }
@@ -338,7 +364,7 @@ const getUserPosts = async (req, res) => {
                 post: {
                     include: {
                         user: {
-                            select: { id: true, username: true, full_name: true, avatar: true }
+                            select: { id: true, username: true, full_name: true, avatar: true, role: true }
                         },
                         _count: {
                             select: { likes: true, comments: true, reposts: true }
@@ -420,6 +446,142 @@ const deletePost = async (req, res) => {
     }
 };
 
+const getCommentById = async (req, res) => {
+    try {
+        const commentId = parseInt(req.params.id);
+        const currentUserId = req.user?.id;
+
+        const comment = await prisma.comment.findUnique({
+            where: { id: commentId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        full_name: true,
+                        avatar: true,
+                        role: true
+                    }
+                },
+                _count: {
+                    select: {
+                        likes: true,
+                        replies: true,
+                        reposts: true,
+                        saves: true
+                    }
+                },
+                likes: { where: { userId: currentUserId }, select: { userId: true } },
+                reposts: { where: { userId: currentUserId }, select: { userId: true } },
+                saves: { where: { userId: currentUserId }, select: { userId: true } }
+            }
+        });
+
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        const formattedComment = {
+            ...comment,
+            isLiked: comment.likes.length > 0,
+            isReposted: comment.reposts.length > 0,
+            isSaved: comment.saves.length > 0,
+            likes: undefined,
+            reposts: undefined,
+            saves: undefined
+        };
+
+        res.json(formattedComment);
+    } catch (error) {
+        console.error('Error fetching comment:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const getCommentPath = async (req, res) => {
+    try {
+        const commentId = parseInt(req.params.id);
+        const currentUserId = req.user?.id;
+
+        // Fetch the comment
+        const comment = await prisma.comment.findUnique({
+            where: { id: commentId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        full_name: true,
+                        avatar: true,
+                        role: true
+                    }
+                },
+                post: {
+                    select: {
+                        id: true,
+                        content: true,
+                        user: {
+                            select: {
+                                id: true,
+                                username: true,
+                                full_name: true,
+                                avatar: true,
+                                role: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        // Build the path recursively
+        const path = [];
+        let currentComment = comment;
+
+        // Add all parent comments in reverse order (from root to current)
+        while (currentComment.parentCommentId) {
+            const parent = await prisma.comment.findUnique({
+                where: { id: currentComment.parentCommentId },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            full_name: true,
+                            avatar: true,
+                            role: true
+                        }
+                    }
+                }
+            });
+            if (parent) {
+                path.unshift(parent); // Add at beginning to maintain order
+                currentComment = parent;
+            } else {
+                break;
+            }
+        }
+
+        res.json({
+            post: comment.post,
+            path: path, // Array of parent comments from root to immediate parent
+            comment: {
+                id: comment.id,
+                content: comment.content,
+                user: comment.user,
+                createdAt: comment.createdAt
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching comment path:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -429,5 +591,7 @@ module.exports = {
     getPostComments,
     getUserPosts,
     deletePost,
-    getPostById
+    getPostById,
+    getCommentById,
+    getCommentPath
 };

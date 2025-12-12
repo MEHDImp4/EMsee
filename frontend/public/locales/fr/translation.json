@@ -227,7 +227,9 @@
             "class": "Ma Classe"
         },
         "role": {
-            "professor": "Professeur"
+            "professor": "Professeur",
+            "admin": "Admin",
+            "student": "Étudiant"
         },
         "everyone": "Tout le monde",
         "followers": "Abonnés uniquement",
@@ -238,7 +240,13 @@
     "post": {
         "delete": "Supprimer le post",
         "confirm_delete": "Supprimer ce post ?",
-        "views": "Vues"
+        "views": "Vues",
+        "reply": "Répondre",
+        "reply_placeholder": "Ajouter une réponse",
+        "replying_to": "En réponse à",
+        "comment": "Commentaire",
+        "replies": "Réponses",
+        "no_replies": "Aucune réponse pour le moment. Soyez le premier !"
     },
     "notifications": {
         "tabs": {

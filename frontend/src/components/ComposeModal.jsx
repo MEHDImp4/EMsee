@@ -4,6 +4,7 @@ import { X, Image, BarChart2, Code, Smile, Globe, Users, Lock } from 'lucide-rea
 import { useTranslation } from 'react-i18next';
 
 import PostService from '../services/post.service';
+import CommentService from '../services/comment.service';
 
 const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
     const { t } = useTranslation();
@@ -35,7 +36,9 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
 
         setIsSubmitting(true);
         try {
-            if (replyTo) {
+            if (replyTo?.isComment) {
+                await CommentService.replyToComment(replyTo.id, text);
+            } else if (replyTo) {
                 await PostService.commentPost(replyTo.id, text);
             } else {
                 await PostService.createPost(text, replyPermission);
@@ -92,48 +95,50 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                             }}
                         />
 
-                        <div className="compose-reply-permission" style={{ position: 'relative' }} ref={permissionMenuRef}>
-                            <div
-                                onClick={() => setShowPermissionMenu(!showPermissionMenu)}
-                                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-                            >
-                                {replyPermission === 'EVERYONE' && <Globe size={16} />}
-                                {replyPermission === 'FOLLOWERS' && <Users size={16} />}
-                                {replyPermission === 'NO_ONE' && <Lock size={16} />}
+                        {!replyTo && (
+                            <div className="compose-reply-permission" style={{ position: 'relative' }} ref={permissionMenuRef}>
+                                <div
+                                    onClick={() => setShowPermissionMenu(!showPermissionMenu)}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                >
+                                    {replyPermission === 'EVERYONE' && <Globe size={16} />}
+                                    {replyPermission === 'FOLLOWERS' && <Users size={16} />}
+                                    {replyPermission === 'NO_ONE' && <Lock size={16} />}
 
-                                <span>
-                                    {replyPermission === 'EVERYONE' && t('feed.everyone_can_reply', 'Tout le monde peut répondre')}
-                                    {replyPermission === 'FOLLOWERS' && t('feed.followers_can_reply', 'Abonnés uniquement')}
-                                    {replyPermission === 'NO_ONE' && t('feed.no_one_can_reply', 'Personne ne peut répondre')}
-                                </span>
-                            </div>
-
-                            {showPermissionMenu && (
-                                <div className="permission-menu">
-                                    <div
-                                        className="permission-item"
-                                        onClick={() => { setReplyPermission('EVERYONE'); setShowPermissionMenu(false); }}
-                                    >
-                                        <Globe size={16} />
-                                        <span>Tout le monde</span>
-                                    </div>
-                                    <div
-                                        className="permission-item"
-                                        onClick={() => { setReplyPermission('FOLLOWERS'); setShowPermissionMenu(false); }}
-                                    >
-                                        <Users size={16} />
-                                        <span>Abonnés uniquement</span>
-                                    </div>
-                                    <div
-                                        className="permission-item"
-                                        onClick={() => { setReplyPermission('NO_ONE'); setShowPermissionMenu(false); }}
-                                    >
-                                        <Lock size={16} />
-                                        <span>Personne</span>
-                                    </div>
+                                    <span>
+                                        {replyPermission === 'EVERYONE' && t('feed.everyone_can_reply', 'Tout le monde peut répondre')}
+                                        {replyPermission === 'FOLLOWERS' && t('feed.followers_can_reply', 'Abonnés uniquement')}
+                                        {replyPermission === 'NO_ONE' && t('feed.no_one_can_reply', 'Personne ne peut répondre')}
+                                    </span>
                                 </div>
-                            )}
-                        </div>
+
+                                {showPermissionMenu && (
+                                    <div className="permission-menu">
+                                        <div
+                                            className="permission-item"
+                                            onClick={() => { setReplyPermission('EVERYONE'); setShowPermissionMenu(false); }}
+                                        >
+                                            <Globe size={16} />
+                                            <span>Tout le monde</span>
+                                        </div>
+                                        <div
+                                            className="permission-item"
+                                            onClick={() => { setReplyPermission('FOLLOWERS'); setShowPermissionMenu(false); }}
+                                        >
+                                            <Users size={16} />
+                                            <span>Abonnés uniquement</span>
+                                        </div>
+                                        <div
+                                            className="permission-item"
+                                            onClick={() => { setReplyPermission('NO_ONE'); setShowPermissionMenu(false); }}
+                                        >
+                                            <Lock size={16} />
+                                            <span>Personne</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         <div className="compose-modal-footer">
                             <div className="compose-icons" style={{ marginLeft: '-8px' }}>

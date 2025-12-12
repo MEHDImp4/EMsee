@@ -1,53 +1,45 @@
 # Copilot Instructions — ProjetJS
 
-Purpose: give an AI coding agent exactly the repository knowledge needed to be productive.
+Purpose: Give an AI coding agent the exact, actionable repo knowledge needed to be productive quickly.
 
-Architecture (big picture)
-- Frontend: `frontend/` — Vite + React app. Entrypoints: `frontend/src/main.jsx` and `frontend/src/App.jsx` (routing). UI split into `frontend/src/components/` and `frontend/src/pages/`.
-- i18n: translations live in `frontend/public/locales/{en,fr}/translation.json` and are wired by `frontend/src/i18n.js`.
-- Backend & DB: `backend/` and `database/` exist but are not integrated; treat backend changes as outside-scope unless given API contracts.
+Overview
+- Monorepo split: `frontend/` (Vite + React) and `backend/` (Node/Express + Prisma). The frontend is the primary active workspace for UI work; backend holds API/controllers and a Prisma schema in `backend/prisma/schema.prisma`.
 
-Developer workflows & concrete commands
-- Typical dev flow (from repo root):
-  - `cd frontend`
-  - `npm install`
-  - `npm run dev`  # starts Vite dev server with HMR
-- Build: `cd frontend && npm run build`
-- Lint/format: run whatever scripts exist in `frontend/package.json` — do not add global tooling without PR discussion.
+Quick dev commands
+- Frontend: from repo root
+  - `cd frontend && npm install`
+  - `cd frontend && npm run dev` (Vite dev server with HMR)
+- Backend: from repo root
+  - `cd backend && npm install`
+  - `cd backend && npm run dev` (nodemon server)
+- DB / Prisma:
+  - `cd backend && npx prisma migrate dev`
+  - `cd backend && npx prisma generate`
+  - `cd backend && npx prisma studio`
 
-Project-specific conventions (follow these precisely)
-- Use `.jsx` for React components. Keep file naming consistent with existing components.
-- Keep component-local CSS: component styles live next to components (e.g., `components/css/Hero.css`) and pages under `pages/css/`.
-- No global state manager observed — prefer local React hooks/contexts; follow patterns in existing pages.
-- Always add UI strings to `public/locales/*/translation.json` and reference them via i18n (do not hardcode visible text).
+Key conventions (follow precisely)
+- Use `.jsx` for React components and place component-local CSS next to components (`frontend/src/components/css/` or `frontend/src/pages/css/`).
+- UI strings: add to `frontend/public/locales/*/translation.json` and use `frontend/src/i18n.js` for lookups (do not hardcode visible text).
+- Centralize HTTP helpers under `frontend/src/services/` (existing files: `api.js`, `auth.service.js`, etc.). If adding new API helpers, keep them here.
+- No global state library: prefer local React hooks and the existing `context/` providers (`AuthContext.jsx`, `ModalContext.jsx`, `SocketContext.jsx`).
 
-Key files to inspect when working on features
-- Routing and page structure: `frontend/src/App.jsx`
-- App bootstrap: `frontend/src/main.jsx`
-- i18n init: `frontend/src/i18n.js` and `frontend/public/locales/*`
-- Example pages: `frontend/src/pages/{Landing,Login,Register,About,Contact}.jsx`
+Important files to inspect
+- Frontend routing/bootstrap: `frontend/src/App.jsx`, `frontend/src/main.jsx`
+- i18n: `frontend/src/i18n.js` and `frontend/public/locales/`
+- Frontend services: `frontend/src/services/api.js`
+- Backend entry: `backend/src/server.js` and controllers under `backend/src/controllers/`
+- Prisma schema: `backend/prisma/schema.prisma`
 
-Integration guidance
-- If you add API calls, centralize them in `frontend/src/api/` (create that folder) and document expected endpoints in PR description.
-- Static assets: use `frontend/public/` for images and locales.
+Integration & API guidance
+- Treat backend changes as out-of-scope unless given a specific API contract. If you must add frontend API calls, add a short API spec in the PR description (endpoint, method, request/response shapes).
+- Realtime: sockets are managed in `backend/src/services/socketService.js` and `frontend/src/context/SocketContext.jsx` — follow the existing event names when adding listeners/emitters.
 
-When to open issues / ask for guidance
-- If a backend contract is required (response shape, pagination, auth), request an API spec before implementing.
-- For dependency upgrades or repo-wide tooling changes, open an issue first and outline migration steps.
+Concrete examples
+- Add a page: create `frontend/src/pages/NewPage.jsx`, `frontend/src/pages/css/NewPage.css`, add a route in `frontend/src/App.jsx`, and add locale keys to `frontend/public/locales/en/translation.json` and `fr/translation.json`.
+- Add API helper: export functions from `frontend/src/services/newResource.js` and consume via `useEffect` in a page or component; mock responses if backend contract is pending.
 
-Examples (concrete, copyable patterns)
-- Add a new page:
-  - Create `frontend/src/pages/NewPage.jsx` and `frontend/src/pages/css/NewPage.css`.
-  - Add route in `frontend/src/App.jsx`.
-  - Add translation keys to `public/locales/en/translation.json` and `public/locales/fr/translation.json`.
-- Add an API helper:
-  - Create `frontend/src/api/resource.js` with exported functions `getResource`, `createResource`, etc.
-  - Use `fetch`/`axios` from components; wrap calls in `useEffect` or event handlers.
+When to open issues
+- Request an API spec when response shapes, pagination, or auth behavior are unclear.
+- Open an issue before making repo-wide tooling changes (linters, formatters, build tools).
 
-Don'ts (explicit)
-- Don't change `backend/` or `database/` structure without owner approval.
-- Don't convert CSS architecture or add a global CSS framework without PR discussion.
-
-If anything here is unclear, tell me what extra details you want (example responses for API endpoints, specific lint rules, or preferred testing setup) and I will update this file.
-
--- End of Copilot guidance
+If something here is incomplete, tell me which area (frontend build, i18n, Prisma, or API contracts) and I'll expand the guidance.

@@ -38,17 +38,25 @@ async function request(endpoint, options = {}) {
     try {
         const response = await fetch(`${API_URL}${endpoint}`, config);
 
-        // Handle 401 Unauthorized (optional: redirect to login)
         if (response.status === 401) {
-            // localStorage.removeItem('token');
-            // window.location.href = '/login';
             console.warn('Unauthorized access');
         }
 
-        const data = await response.json();
+        const contentType = response.headers.get('content-type') || '';
+        let data;
+
+        if (contentType.includes('application/json')) {
+            data = await response.json();
+        } else {
+            const text = await response.text();
+            if (!response.ok) {
+                throw new Error(text || 'API Error');
+            }
+            return text;
+        }
 
         if (!response.ok) {
-            throw new Error(data.message || 'API Error');
+            throw new Error(data?.message || 'API Error');
         }
 
         return data;

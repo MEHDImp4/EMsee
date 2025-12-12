@@ -95,6 +95,24 @@
   font-weight: 700;
 }
 
+.post-role-professor {
+  background: color-mix(in srgb, var(--primary) 40%, transparent);
+  color: #0d2f36;
+  border-color: color-mix(in srgb, var(--primary) 70%, transparent);
+}
+
+.post-role-student {
+  background: color-mix(in srgb, var(--secondary) 40%, transparent);
+  color: #10212b;
+  border-color: color-mix(in srgb, var(--secondary) 70%, transparent);
+}
+
+.post-role-admin {
+  background: color-mix(in srgb, var(--danger) 40%, transparent);
+  color: #3a0b09;
+  border-color: color-mix(in srgb, var(--danger) 70%, transparent);
+}
+
 .post-meta-row {
   display: flex;
   align-items: center;
