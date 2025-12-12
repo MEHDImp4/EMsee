@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import PostCard from '../components/PostCard';
-import PostService from '../services/post.service';
 import './css/Feed.css';
 import CommentCard from '../components/CommentCard';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import usePostPage from '../hooks/usePostPage';
 
 const PostPage = () => {
     const { id } = useParams();
@@ -16,94 +16,17 @@ const PostPage = () => {
     const { socket } = useSocket();
     const { user } = useAuth();
 
-    const [post, setPost] = useState(null);
-    const [comments, setComments] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [replyText, setReplyText] = useState('');
-    const [submitting, setSubmitting] = useState(false);
-
-    const replyRef = useRef(null);
-    const commentIdsRef = useRef(new Set());
-
-    const commentExists = (commentId) => commentIdsRef.current.has(commentId);
-
-    useEffect(() => {
-        const fetchPostAndComments = async () => {
-            try {
-                const [postData, commentsData] = await Promise.all([
-                    PostService.getPostById(id),
-                    PostService.getComments(id)
-                ]);
-
-                setPost(postData);
-                const safeComments = commentsData || [];
-                setComments(safeComments);
-                commentIdsRef.current = new Set(safeComments.map((c) => c.id));
-            } catch (error) {
-                console.error('Failed to load post', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) fetchPostAndComments();
-    }, [id]);
-
-    useEffect(() => {
-        if (!socket) return;
-
-        const handleNewComment = (newComment) => {
-            if (newComment.postId === parseInt(id) && !commentExists(newComment.id)) {
-                commentIdsRef.current.add(newComment.id);
-                setComments((prev) => [...prev, newComment]);
-                setPost((prev) => prev ? {
-                    ...prev,
-                    _count: {
-                        ...prev._count,
-                        comments: (prev._count?.comments || 0) + 1
-                    }
-                } : prev);
-            }
-        };
-
-        socket.on('new_comment', handleNewComment);
-        return () => socket.off('new_comment', handleNewComment);
-    }, [socket, id]);
-
-    const handleCommentAdded = (newComment) => {
-        if (commentExists(newComment.id)) return;
-        commentIdsRef.current.add(newComment.id);
-        setComments((prev) => [...prev, newComment]);
-        setPost((prev) => prev ? {
-            ...prev,
-            _count: {
-                ...prev._count,
-                comments: (prev._count?.comments || 0) + 1
-            }
-        } : prev);
-    };
-
-    const handleSubmitReply = async () => {
-        if (!replyText.trim() || !post?.id || submitting) return;
-        try {
-            setSubmitting(true);
-            const newComment = await PostService.commentPost(post.id, replyText.trim());
-            setReplyText('');
-            handleCommentAdded(newComment);
-            if (replyRef.current) replyRef.current.focus();
-        } catch (error) {
-            console.error('Failed to add comment', error);
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const focusReplyBox = () => {
-        if (replyRef.current) {
-            replyRef.current.focus();
-            replyRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    };
+    const {
+        post,
+        comments,
+        loading,
+        replyText,
+        setReplyText,
+        submitting,
+        replyRef,
+        handleSubmitReply,
+        focusReplyBox
+    } = usePostPage({ id, socket });
 
     if (loading) return <div className="loading-spinner">Loading...</div>;
     if (!post) return <div className="not-found">Post not found</div>;

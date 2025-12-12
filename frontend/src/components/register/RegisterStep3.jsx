@@ -3,19 +3,10 @@ import React from 'react';
 import { GraduationCap, School } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const RegisterStep3 = ({
-    isProfessor,
-    availableSubjects,
-    selectedSubjects,
-    toggleSubject,
-    filiere,
-    setFiliere,
-    year,
-    setYear,
-    FILIERES_WITH_PREPA,
-    showErrors
-}) => {
+const RegisterStep3 = ({ isProfessor, form, setField, toggleSubject, options, showErrors }) => {
     const { t } = useTranslation();
+    const { selectedSubjects, filiere, year } = form;
+    const { availableSubjects, filieresWithPrepa } = options;
 
     const FILIERE_KEYS = ['iir', 'gesi', 'iaii', 'gcb', 'gi', 'gf'];
 
@@ -31,8 +22,8 @@ const RegisterStep3 = ({
                             className="form-input select-none-appearance"
                             value={filiere}
                             onChange={(e) => {
-                                setFiliere(e.target.value);
-                                setYear(''); // Reset year when filiere changes
+                                setField('filiere', e.target.value);
+                                setField('year', '');
                             }}
                             aria-invalid={showErrors && !filiere ? "true" : "false"}
                             style={{ borderColor: showErrors && !filiere ? 'var(--danger)' : undefined }}
@@ -55,12 +46,12 @@ const RegisterStep3 = ({
                                 id="yearSelect"
                                 className="form-input select-none-appearance"
                                 value={year}
-                                onChange={(e) => setYear(e.target.value)}
+                                onChange={(e) => setField('year', e.target.value)}
                                 aria-invalid={showErrors && !year ? "true" : "false"}
                                 style={{ borderColor: showErrors && !year ? 'var(--danger)' : undefined }}
                             >
                                 <option value="">{t('auth.select_year')}</option>
-                                {FILIERES_WITH_PREPA.includes(filiere) ? (
+                                {filieresWithPrepa.includes(filiere) ? (
                                     <>
                                         <option value="prepa_1">{t('lists.years.prepa_1')}</option>
                                         <option value="prepa_2">{t('lists.years.prepa_2')}</option>

@@ -3,15 +3,10 @@ import React from 'react';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const RegisterStep4 = ({
-    password, setPassword,
-    confirmPassword, setConfirmPassword,
-    isPasswordValid,
-    doPasswordsMatch,
-    showErrors,
-    showPassword, setShowPassword
-}) => {
+const RegisterStep4 = ({ form, setField, validation, showErrors }) => {
     const { t } = useTranslation();
+    const { password, confirmPassword, showPassword } = form;
+    const { isPasswordValid, doPasswordsMatch } = validation;
 
     return (
         <>
@@ -29,7 +24,7 @@ const RegisterStep4 = ({
                             paddingRight: '2.5rem',
                             borderColor: (showErrors && !password) || isPasswordValid === false ? 'var(--danger)' : isPasswordValid === true ? 'var(--primary)' : undefined
                         }}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setField('password', e.target.value)}
                         autoFocus
                         aria-invalid={(showErrors && !password) || isPasswordValid === false ? "true" : "false"}
                         aria-describedby="password-hint password-error"
@@ -37,7 +32,7 @@ const RegisterStep4 = ({
                     />
                     <button
                         type="button"
-                        onClick={() => setShowPassword(!showPassword)}
+                        onClick={() => setField('showPassword', !showPassword)}
                         className="password-toggle-btn"
                         aria-label={showPassword ? t('auth.hide_password', 'Masquer le mot de passe') : t('auth.show_password', 'Afficher le mot de passe')}
                     >
@@ -68,7 +63,7 @@ const RegisterStep4 = ({
                         style={{
                             borderColor: (showErrors && !confirmPassword) || doPasswordsMatch === false ? 'var(--danger)' : doPasswordsMatch === true ? 'var(--primary)' : undefined
                         }}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onChange={(e) => setField('confirmPassword', e.target.value)}
                         aria-invalid={doPasswordsMatch === false ? "true" : "false"}
                         aria-describedby="match-error"
                         autoComplete="new-password"

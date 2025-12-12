@@ -3,19 +3,11 @@ import React from 'react';
 import { User, Mail, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const RegisterStep2 = ({
-    fullName, setFullName,
-    username, setUsername,
-    email, setEmail,
-    accountType,
-    showErrors,
-    isUsernameValid,
-    isEmailValid,
-    usernameApiError,
-    emailApiError,
-    onBlur
-}) => {
+const RegisterStep2 = ({ form, setField, validation, errors, showErrors, onBlur }) => {
     const { t } = useTranslation();
+    const { fullName, username, email, accountType } = form;
+    const { isUsernameValid, isEmailValid } = validation;
+    const { usernameApiError, emailApiError } = errors;
 
     return (
         <>
@@ -29,7 +21,7 @@ const RegisterStep2 = ({
                         placeholder={t('auth.fullname_placeholder', 'John Doe')}
                         className="form-input"
                         value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
+                        onChange={(e) => setField('fullName', e.target.value)}
                         autoFocus
                         aria-invalid={showErrors && !fullName ? "true" : "false"}
                         aria-describedby={showErrors && !fullName ? "fullname-error" : undefined}
@@ -53,7 +45,7 @@ const RegisterStep2 = ({
                             borderColor: (showErrors && !username) || isUsernameValid === false ? 'var(--danger)' : isUsernameValid === true ? 'var(--primary)' : undefined
                         }}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setField('username', e.target.value)}
                         onBlur={() => onBlur('username', username)}
                         aria-invalid={isUsernameValid === false ? "true" : "false"}
                         aria-describedby="username-error"
@@ -75,7 +67,7 @@ const RegisterStep2 = ({
                         id="email"
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setField('email', e.target.value)}
                         onBlur={() => onBlur('email', email)}
                         placeholder={accountType === 'student' ? t('auth.student_placeholder') : t('auth.professor_placeholder')}
                         className="form-input"

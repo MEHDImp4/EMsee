@@ -1,147 +1,166 @@
-# ProjetJS — Clone Twitter (EMSI) 🐦⚙️
+# EMsee
 
-> Projet fullstack éducatif : React + TypeScript côté frontend, Node.js/Express + TypeScript côté backend. Une mini-plateforme sociale avec posts texte/images, likes, retweets, follows, profils, notifications… le tout pensé pour l’apprentissage. 🚀
+[![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white)](https://react.dev) 
+[![Vite](https://img.shields.io/badge/-Vite-646cff?logo=vite&logoColor=white)](https://vitejs.dev) 
+[![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org) 
+[![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white)](https://expressjs.com) 
+[![Prisma](https://img.shields.io/badge/-Prisma-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io) 
+[![Socket.IO](https://img.shields.io/badge/-Socket.IO-010101?logo=socket.io&logoColor=white)](https://socket.io) 
+[![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) 
+[![MySQL](https://img.shields.io/badge/-MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com)
 
-## Présentation 📚
-ProjetJS propose une architecture moderne et claire : authentification JWT, fil d’actualité personnalisé, interactions sociales et séparation nette frontend/backend. Le tout sert de support à des travaux pratiques pour étudiants.
+EMsee est un projet web full‑stack de type « réseau social » léger (posts, commentaires, profils, notifications). L'objectif est de fournir une plateforme moderne de partage et de communication en temps réel.
 
-## Fonctionnalités ✨
+**Résumé court**
 
-## Stack technique 🛠️
+EMsee combine un front‑end React (Vite) et un back‑end Node/Express avec Prisma pour la persistance. Il permet la création et l'interaction autour de contenus (posts, commentaires) avec des notifications et du temps réel.
 
-## Structure du dépôt 📂
+**Technologies principales**
 
-```
-ProjetJS/
-├─ backend/
-│  ├─ src/                 # Code source du backend (controllers, services, models, routes...)
-│  ├─ dist/                # Fichiers compilés TypeScript
-│  ├─ node_modules/        # Dépendances du backend
-│  ├─ .env.example         # Exemple de variables d'environnement pour le backend
-│  ├─ package.json         # Dépendances et scripts du backend
-│  ├─ tsconfig.json        # Configuration TypeScript pour le backend
-│  └─ ...                  # Autres fichiers de configuration ou utilitaires
-├─ frontend/
-│  ├─ public/              # Fichiers statiques (index.html, assets)
-│  ├─ src/                 # Code source du frontend (composants, pages, services, styles...)
-│  ├─ build/               # Fichiers de production compilés
-│  ├─ node_modules/        # Dépendances du frontend
-│  ├─ .env.example         # Exemple de variables d'environnement pour le frontend
-│  ├─ package.json         # Dépendances et scripts du frontend
-│  ├─ tsconfig.json        # Configuration TypeScript pour le frontend
-│  └─ ...                  # Autres fichiers de configuration ou utilitaires
-├─ .gitignore              # Fichiers et dossiers à ignorer par Git
-├─ README.md               # Ce fichier
-└─ ...                     # Autres fichiers à la racine (ex: .git, LICENSE)
-```
+- **Frontend:** React + Vite, JSX, CSS
+- **Backend:** Node.js, Express
+- **Base de données & ORM:** Prisma (schema dans `backend/prisma/schema.prisma`)
+- **Realtime:** Socket.IO (ou service socket intégré)
+- **Langage:** JavaScript
 
-## Installation & Lancement ⚙️
+**Public cible & contexte**
 
-### 1. Cloner
-```bash
-git clone https://github.com/MEHDImp4/ProjetJS.git
-cd ProjetJS
-````
+Ce README vise deux lecteurs :
+- vos camarades de projet — instructions claires pour démarrer et contribuer
+- la prof — rapport synthétique expliquant le but, l'architecture, les choix techniques et les pistes d'amélioration
 
-### 2. Backend
+**Fonctionnalités clés**
 
-```bash
-cd backend
-npm install
-cp .env.example .env   # ou 'copy .env.example .env' sous Windows
-npm run dev
-```
+- Création, lecture, mise à jour et suppression des posts
+- Commentaires et interactions (likes, réponses)
+- Profils utilisateurs et authentification
+- Notifications et événements temps réel
+- Pages publiques: landing, explore, profil, post, feed
 
-Remplir les variables dans `backend/.env`.
+**Structure du dépôt (vue rapide)**
 
-### 3. Frontend
+- `frontend/` – application React (Vite)
+  - points d'entrée: `frontend/src/main.jsx`, `frontend/src/App.jsx`
+  - pages: `frontend/src/pages/`
+  - composants: `frontend/src/components/`
+  - services API: `frontend/src/services/` (ex: `api.js`, `post.service.js`)
+- `backend/` – API Node/Express
+  - entrée: `backend/src/server.js`
+  - routes: `backend/src/routes/`
+  - controllers: `backend/src/controllers/`
+  - Prisma: `backend/prisma/schema.prisma`
+
+Consultez le code pour les détails (exemples : `frontend/src/App.jsx`, `backend/src/server.js`).
+
+**Installation et démarrage (développement)**
+
+Prerequis: Node.js (>=16), npm, une base MySQL (ou autre SGBD supporté par Prisma).
+
+1) Installer les dépendances frontend et backend
 
 ```bash
 cd frontend
 npm install
-cp .env.example .env
-npm start
+
+cd ../backend
+npm install
 ```
 
-Remplir `frontend/.env`.
+2) Configurer la base de données (fichier d'environnement)
 
-Accès :
+Créez un fichier `.env` dans `backend/` (ou adaptez) contenant la variable `DATABASE_URL` pointant vers votre instance PostgreSQL. Exemple :
 
-* Frontend : [http://localhost:3000](http://localhost:3000)
-* Backend : [http://localhost:5000](http://localhost:5000) (modifiable dans `.env`)
-
-## Scripts utiles 🧩
-
-### Backend
-
-* `npm run dev` — développement (nodemon + ts-node)
-* `npm run build` — compilation TypeScript
-* `npm start` — mode production
-* `npm run lint` / `npm run format` — qualité du code
-
-### Frontend
-
-* `npm start` — développement
-* `npm run build` — build production
-* `npm test` — tests unitaires
-* `npm run lint` / `npm run format` — qualité du code
-
-## Variables d’environnement 🔑
-
-### backend/.env
-
-```env
-PORT=5000
-NODE_ENV=development
-DATABASE_URL=mysql://user:pass@host:port/dbname
-JWT_SECRET=your_jwt_secret
+```bash
+DATABASE_URL="mysql://user:password@localhost:3306/nom_de_la_db"
 ```
 
-### frontend/.env
+3) Générer/Exécuter les migrations Prisma
 
-```env
-REACT_APP_API_URL=http://localhost:5000
+```bash
+cd backend
+npx prisma generate
+npx prisma migrate dev --name init
 ```
 
-## Tests & Build 🧪
+4) Lancer les serveurs en développement
 
-* Tests frontend : `cd frontend && npm test`
-* Build production :
+Terminal 1 — backend
 
-  * `cd frontend && npm run build`
-  * `cd backend && npm run build`
-
-## UI/UX 🎨
-
-Objectif graphique : un Twitter version EMSI, sobre et académique.
-
-* Couleurs : vert EMSI (#006837) + orange pour les alertes.
-* Thèmes light/dark.
-* Arrangement 3 colonnes (sidebar, feed, widgets).
-* Composants principaux : Sidebar, Composer, TweetCard, Rightbar.
-* Fonctions scolaires : badges (étudiant, prof, admin, BDE), onglets « Pour vous » / « Ma Classe », affichage code (PrismJS/Highlight.js).
-
-### Backlog priorisé
-
-1. Thème & typographie
-2. Responsive (3 → 2 → 1 colonnes)
-3. Routing + Sidebar
-4. Composer (UI d’abord)
-5. TweetCard
-6. Rightbar
-7. Tabs « Pour vous » / « Ma Classe »
-
-## Contribution 🤝
-
-* Copier `.env.example` dans chaque dossier.
-* Respecter TypeScript, séparer logique métier (services), contrôleurs (routes), middlewares et validations.
-* Voir le README racine pour workflow complet (lint, format, conventions).
-
-## Licence 📜
-
-MIT — voir fichier LICENSE.
-
+```bash
+cd backend
+npm run dev
 ```
 
-Si tu veux une version encore plus courte, ou avec des badges GitHub (build, licence, tech stack), je peux t’en préparer une autre.
+Terminal 2 — frontend
+
+```bash
+cd frontend
+npm run dev
 ```
+
+Après ces étapes, ouvrez l'URL fournie par Vite (généralement `http://localhost:5173`).
+
+**API & points d'entrée importants**
+
+- `backend/src/server.js` — serveur Express et configuration globale
+- Routes principales: `backend/src/routes/post.routes.js`, `backend/src/routes/comment.routes.js`, `backend/src/routes/auth.routes.js`
+- Contrôleurs: `backend/src/controllers/` gèrent la logique métier
+- Prisma schema: `backend/prisma/schema.prisma` définit les modèles (User, Post, Comment, etc.)
+
+Si vous devez ajouter un nouvel endpoint frontal, ajoutez le helper dans `frontend/src/services/`.
+
+**Guide de contribution rapide**
+
+- Branche feature: `git checkout -b feat/ma-fonctionnalite`
+- Petites tâches: commit atomique avec message clair
+- Tests & lint: respecter les conventions du dépôt
+- Ouvrir une Pull Request avec description et captures d'écran
+
+**Rapport synthétique (pour la prof)**
+
+Objectif: concevoir et implémenter une application web collaborative permettant le partage de contenu et la communication en temps réel. Le projet illustre l'application d'un stack moderne JS (React + Node + Prisma) et couvre les notions suivantes:
+
+- Conception d'une API REST organisée selon controllers/routes
+- Persistance via Prisma et migrations gérées
+- Authentification et protection des routes
+- Intégration temps réel (notifications) via sockets
+- UI réactive avec React et architecture par composants
+
+Choix techniques et justifications:
+
+- React + Vite: démarrage rapide, HMR, compatibilité moderne
+- Prisma: ORM type-safe, migrations simples et productivité accrue
+- Express: minimaliste et adapté aux API REST
+
+Sécurité et qualité:
+
+- Authentification JWT pour sécuriser les endpoints privés
+- Validation d'entrées côté serveur
+- Middleware d'authentification dans `backend/src/middlewares/authMiddleware.js`
+
+Limites et pistes d'amélioration:
+
+- Ajouter tests automatisés (unitaires & e2e)
+- Déployer CI/CD et staging
+- Support multi-tenant / montée en charge (caching, pagination)
+- Améliorer accessibilité et internationalisation (i18n déjà partiellement en place)
+
+**Fichiers utiles à consulter**
+
+- Point d'entrée frontend: [frontend/src/main.jsx](frontend/src/main.jsx)
+- Routing et bootstrapping: [frontend/src/App.jsx](frontend/src/App.jsx)
+- Services API: [frontend/src/services/api.js](frontend/src/services/api.js)
+- Serveur backend: [backend/src/server.js](backend/src/server.js)
+- Schema Prisma: [backend/prisma/schema.prisma](backend/prisma/schema.prisma)
+
+**Licence & crédits**
+
+Indiquez ici la licence choisie (ex: MIT) et les crédits pour les librairies principales.
+
+---
+
+Si vous voulez, je peux :
+- ajouter des badges CI/coverage
+- générer un CHANGELOG.md et un modèle de Pull Request
+
+Bon travail à toute l'équipe !

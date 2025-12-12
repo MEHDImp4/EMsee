@@ -1,4 +1,10 @@
 const { PrismaClient } = require('@prisma/client');
+const {
+    profileSelectFields,
+    userSearchSelectFields,
+    checkIsFollowing,
+    formatProfile
+} = require('./helpers/user.helpers');
 const prisma = new PrismaClient();
 
 const getProfile = async (req, res) => {
@@ -8,53 +14,15 @@ const getProfile = async (req, res) => {
 
         const user = await prisma.user.findUnique({
             where: { username },
-            select: {
-                id: true,
-                username: true,
-                email: true,
-                full_name: true,
-                role: true,
-                avatar: true,
-                bio: true,
-                location: true,
-                year: true,
-                filiere: true,
-                created_at: true,
-                _count: {
-                    select: {
-                        posts: true,
-                        followedBy: true, // followers
-                        following: true   // following
-                    }
-                }
-            }
+            select: profileSelectFields
         });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        let isFollowing = false;
-        if (currentUserId && currentUserId !== user.id) {
-            const follow = await prisma.follow.findUnique({
-                where: {
-                    followerId_followingId: {
-                        followerId: currentUserId,
-                        followingId: user.id
-                    }
-                }
-            });
-            isFollowing = !!follow;
-        }
-
-        const profile = {
-            ...user,
-            isOwner: user.id === currentUserId,
-            isFollowing,
-            followersCount: user._count.followedBy,
-            followingCount: user._count.following,
-            _count: undefined // Clean up
-        };
+        const isFollowing = await checkIsFollowing(currentUserId, user.id);
+        const profile = formatProfile(user, currentUserId, isFollowing);
 
         res.json(profile);
     } catch (error) {
@@ -75,36 +43,27 @@ const followUser = async (req, res) => {
         const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
         if (!targetUser) return res.status(404).json({ error: 'User not found' });
 
-        const existingFollow = await prisma.follow.findUnique({
-            where: {
-                followerId_followingId: {
-                    followerId: currentUserId,
-                    followingId: targetUserId
-                }
+        const whereClause = {
+            followerId_followingId: {
+                followerId: currentUserId,
+                followingId: targetUserId
             }
-        });
+        };
+
+        const existingFollow = await prisma.follow.findUnique({ where: whereClause });
 
         if (existingFollow) {
-            // Unfollow
-            await prisma.follow.delete({
-                where: {
-                    followerId_followingId: {
-                        followerId: currentUserId,
-                        followingId: targetUserId
-                    }
-                }
-            });
+            await prisma.follow.delete({ where: whereClause });
             return res.json({ following: false });
-        } else {
-            // Follow
-            await prisma.follow.create({
-                data: {
-                    followerId: currentUserId,
-                    followingId: targetUserId
-                }
-            });
-            return res.json({ following: true });
         }
+
+        await prisma.follow.create({
+            data: {
+                followerId: currentUserId,
+                followingId: targetUserId
+            }
+        });
+        return res.json({ following: true });
     } catch (error) {
         console.error('Error toggling follow:', error);
         res.status(500).json({ error: 'Server error' });
@@ -114,6 +73,7 @@ const followUser = async (req, res) => {
 const searchUsers = async (req, res) => {
     try {
         const { q } = req.query;
+
         if (!q || q.trim() === '') {
             return res.json([]);
         }
@@ -121,17 +81,11 @@ const searchUsers = async (req, res) => {
         const users = await prisma.user.findMany({
             where: {
                 OR: [
-                    { username: { contains: q } }, // Remove mode: 'insensitive' for compatibility if needed, or keep if DB supports it (MySQL usually case insensitive by default for some collations, but let's stick to simple contains)
+                    { username: { contains: q } },
                     { full_name: { contains: q } }
                 ]
             },
-            select: {
-                id: true,
-                username: true,
-                full_name: true,
-                avatar: true,
-                role: true
-            },
+            select: userSearchSelectFields,
             take: 10
         });
 

@@ -1,23 +1,22 @@
 const { PrismaClient } = require('@prisma/client');
 const { getIo } = require('../services/socketService');
+const {
+    userSelectFields,
+    commentCountFields,
+    buildCommentInclude
+} = require('./helpers/post.helpers');
 const prisma = new PrismaClient();
 
-const formatComment = (comment, currentUserId) => {
+const formatCommentForResponse = (comment, currentUserId) => {
     if (!comment) return null;
 
-    const isLiked = comment.likes?.some(l => l.userId === currentUserId) || false;
-    const isReposted = comment.reposts?.some(r => r.userId === currentUserId) || false;
-    const isSaved = comment.saves?.some(s => s.userId === currentUserId) || false;
-
-    const replies = comment.replies?.map(r => formatComment(r, currentUserId)) || [];
-
-    const {_count = {}} = comment;
+    const { _count = {} } = comment;
 
     return {
         ...comment,
-        isLiked,
-        isReposted,
-        isSaved,
+        isLiked: comment.likes?.some(l => l.userId === currentUserId) || false,
+        isReposted: comment.reposts?.some(r => r.userId === currentUserId) || false,
+        isSaved: comment.saves?.some(s => s.userId === currentUserId) || false,
         _count: {
             likes: _count.likes || 0,
             replies: _count.replies || 0,
@@ -27,25 +26,20 @@ const formatComment = (comment, currentUserId) => {
         likes: undefined,
         reposts: undefined,
         saves: undefined,
-        replies,
+        replies: comment.replies?.map(r => formatCommentForResponse(r, currentUserId)) || []
     };
-};
-
-const ensureCommentExists = async (commentId) => {
-    return prisma.comment.findUnique({ where: { id: commentId } });
 };
 
 const toggleLike = async (req, res) => {
     try {
         const commentId = parseInt(req.params.id, 10);
         const userId = req.user.id;
+        const whereClause = { commentId_userId: { commentId, userId } };
 
-        const existing = await prisma.commentLike.findUnique({
-            where: { commentId_userId: { commentId, userId } }
-        });
+        const existing = await prisma.commentLike.findUnique({ where: whereClause });
 
         if (existing) {
-            await prisma.commentLike.delete({ where: { commentId_userId: { commentId, userId } } });
+            await prisma.commentLike.delete({ where: whereClause });
             return res.json({ liked: false });
         }
 
@@ -61,13 +55,12 @@ const toggleRepost = async (req, res) => {
     try {
         const commentId = parseInt(req.params.id, 10);
         const userId = req.user.id;
+        const whereClause = { commentId_userId: { commentId, userId } };
 
-        const existing = await prisma.commentRepost.findUnique({
-            where: { commentId_userId: { commentId, userId } }
-        });
+        const existing = await prisma.commentRepost.findUnique({ where: whereClause });
 
         if (existing) {
-            await prisma.commentRepost.delete({ where: { commentId_userId: { commentId, userId } } });
+            await prisma.commentRepost.delete({ where: whereClause });
             return res.json({ reposted: false });
         }
 
@@ -83,13 +76,12 @@ const toggleSave = async (req, res) => {
     try {
         const commentId = parseInt(req.params.id, 10);
         const userId = req.user.id;
+        const whereClause = { commentId_userId: { commentId, userId } };
 
-        const existing = await prisma.commentSave.findUnique({
-            where: { commentId_userId: { commentId, userId } }
-        });
+        const existing = await prisma.commentSave.findUnique({ where: whereClause });
 
         if (existing) {
-            await prisma.commentSave.delete({ where: { commentId_userId: { commentId, userId } } });
+            await prisma.commentSave.delete({ where: whereClause });
             return res.json({ saved: false });
         }
 
@@ -113,25 +105,24 @@ const replyToComment = async (req, res) => {
         if (!parent) return res.status(404).json({ error: 'Comment not found' });
 
         const reply = await prisma.comment.create({
-            data: {
-                content,
-                postId: parent.postId,
-                userId,
-                parentCommentId,
-            },
+            data: { content, postId: parent.postId, userId, parentCommentId },
             include: {
-                user: { select: { id: true, username: true, full_name: true, avatar: true, role: true } },
-                _count: { select: { likes: true, replies: true, reposts: true, saves: true } },
+                user: { select: userSelectFields },
+                _count: { select: commentCountFields },
                 likes: { where: { userId } },
                 reposts: { where: { userId } },
                 saves: { where: { userId } },
-                replies: true,
+                replies: true
             }
         });
 
-        const formatted = formatComment(reply, userId);
+        const formatted = formatCommentForResponse(reply, userId);
 
-        try { getIo().emit('new_comment', formatted); } catch (err) { console.error('Socket emission failed:', err); }
+        try {
+            getIo().emit('new_comment', formatted);
+        } catch (err) {
+            console.error('Socket emission failed:', err);
+        }
 
         res.status(201).json(formatted);
     } catch (error) {
@@ -148,25 +139,25 @@ const getCommentReplies = async (req, res) => {
         const replies = await prisma.comment.findMany({
             where: { parentCommentId: commentId },
             include: {
-                user: { select: { id: true, username: true, full_name: true, avatar: true, role: true } },
-                _count: { select: { likes: true, replies: true, reposts: true, saves: true } },
+                user: { select: userSelectFields },
+                _count: { select: commentCountFields },
                 likes: { where: { userId: currentUserId }, select: { userId: true } },
                 reposts: { where: { userId: currentUserId }, select: { userId: true } },
                 saves: { where: { userId: currentUserId }, select: { userId: true } },
                 replies: {
                     include: {
-                        user: { select: { id: true, username: true, full_name: true, avatar: true, role: true } },
-                        _count: { select: { likes: true, replies: true, reposts: true, saves: true } },
+                        user: { select: userSelectFields },
+                        _count: { select: commentCountFields },
                         likes: { where: { userId: currentUserId }, select: { userId: true } },
                         reposts: { where: { userId: currentUserId }, select: { userId: true } },
-                        saves: { where: { userId: currentUserId }, select: { userId: true } },
+                        saves: { where: { userId: currentUserId }, select: { userId: true } }
                     }
                 }
             },
             orderBy: { createdAt: 'asc' }
         });
 
-        res.json(replies.map(r => formatComment(r, currentUserId)));
+        res.json(replies.map(r => formatCommentForResponse(r, currentUserId)));
     } catch (error) {
         console.error('Error fetching comment replies:', error);
         res.status(500).json({ error: 'Server error' });

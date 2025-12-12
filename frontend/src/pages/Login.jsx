@@ -1,47 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import useLoginForm from '../hooks/useLoginForm';
 import './css/Login.css';
 
 const Login = () => {
     const { t } = useTranslation();
     const { login } = useAuth();
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [errors, setErrors] = useState({});
 
-    const validateForm = () => {
-        const newErrors = {};
-        if (!email) newErrors.email = true;
-        if (!password) newErrors.password = true;
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-            try {
-                const success = await login(email, password);
-                if (success) {
-                    navigate('/feed');
-                } else {
-                    setErrors({ form: 'Identifiants incorrects' });
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                // Extract error message from API response if possible
-                const msg = error.message || 'Une erreur est survenue. Veuillez réessayer.';
-                setErrors({ form: msg });
-            }
-        }
-    };
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        showPassword,
+        setShowPassword,
+        errors,
+        setErrors,
+        handleSubmit
+    } = useLoginForm({ login, navigate });
 
     return (
         <div className="auth-page">

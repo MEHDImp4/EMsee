@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mail, GraduationCap, Users, Calendar, MapPin, Edit2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -6,8 +6,7 @@ import { useParams } from 'react-router-dom';
 import './css/Profile.css';
 import EditProfileModal from '../components/profile/EditProfileModal';
 import PostCard from '../components/PostCard';
-import PostService from '../services/post.service';
-import UserService from '../services/user.service';
+import useProfilePage from '../hooks/useProfilePage';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -15,72 +14,30 @@ const Profile = () => {
   const { user: authUser } = useAuth();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [profileData, setProfileData] = useState(null);
-  const [userPosts, setUserPosts] = useState([]);
-  const [loadingPosts, setLoadingPosts] = useState(true);
-  const [loadingProfile, setLoadingProfile] = useState(true);
 
-  // Determine which username to target
-  // If no params, default to auth user (e.g. /profile route)
   const targetUsername = username || authUser?.username;
-  const isOwner = authUser?.username === targetUsername;
 
-  useEffect(() => {
-    if (targetUsername) {
-      fetchProfileData();
-      fetchUserPosts();
-    }
-  }, [targetUsername]);
-
-  const fetchProfileData = async () => {
-    setLoadingProfile(true);
-    try {
-      const data = await UserService.getUserByHandle(targetUsername);
-      setProfileData(data);
-    } catch (error) {
-      console.error("Failed to fetch profile data", error);
-    } finally {
-      setLoadingProfile(false);
-    }
-  };
-
-  const fetchUserPosts = async () => {
-    setLoadingPosts(true);
-    try {
-      const posts = await PostService.getUserPosts(targetUsername);
-      setUserPosts(posts || []);
-    } catch (error) {
-      console.error("Failed to fetch user posts", error);
-    } finally {
-      setLoadingPosts(false);
-    }
-  };
-
-  const handleDeletePost = (postId) => {
-    setUserPosts(prevPosts => prevPosts.filter(p => p.id !== postId));
-  };
+  const {
+    profileData,
+    userPosts,
+    loadingPosts,
+    loadingProfile,
+    isOwner,
+    userView,
+    handleDeletePost,
+    toggleFollow
+  } = useProfilePage({ targetUsername, authUser });
 
   if (!authUser && !targetUsername) return null;
   if (loadingProfile && !profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>Loading Profile...</div>;
   if (!profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>User not found</div>;
 
-  const user = {
-    name: profileData.full_name || profileData.username || "User",
-    handle: `@${profileData.username || 'user'}`,
-    role: profileData.role || "student",
-    level: profileData.year ? t(`lists.years.${profileData.year}`) : "N/A",
-    class: profileData.filiere ? t(`lists.filieres.${profileData.filiere}`) : "N/A",
-    email: profileData.email,
-    location: profileData.location || "",
-    bio: profileData.bio || "",
-    joinDate: new Date(profileData.created_at || profileData.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }),
-    avatar: profileData.avatar ? `http://localhost:5000${profileData.avatar}` : null,
-    stats: {
-      posts: userPosts?.length || 0, // Ideally this comes from user._count.posts too, but for list view this is fine. Actually controller returns posts count too.
-      followers: profileData.followersCount || 0,
-      following: profileData.followingCount || 0
-    }
-  };
+  const user = userView ? {
+    ...userView,
+    level: userView.level ? t(`lists.years.${userView.level}`) : 'N/A',
+    class: userView.class ? t(`lists.filieres.${userView.class}`) : 'N/A',
+    joinDate: userView.joinDate ? new Date(userView.joinDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) : ''
+  } : null;
 
   return (
     <div className="profile-container">
@@ -110,18 +67,7 @@ const Profile = () => {
           ) : (
             <button
               className={`btn-follow ${profileData.isFollowing ? 'following' : ''}`}
-              onClick={async () => {
-                try {
-                  const res = await UserService.followUser(profileData.id);
-                  setProfileData(prev => ({
-                    ...prev,
-                    isFollowing: res.following,
-                    followersCount: res.following ? prev.followersCount + 1 : prev.followersCount - 1
-                  }));
-                } catch (error) {
-                  console.error('Failed to toggle follow', error);
-                }
-              }}
+              onClick={toggleFollow}
               style={{
                 padding: '8px 24px',
                 borderRadius: '20px',

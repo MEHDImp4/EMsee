@@ -1,5 +1,14 @@
 const { PrismaClient } = require('@prisma/client');
 const { getIo } = require('../services/socketService');
+const {
+    userSelectFields,
+    buildPostInclude,
+    buildCommentInclude,
+    formatPost,
+    formatComment,
+    checkReplyPermission,
+    buildCommentPath
+} = require('./helpers/post.helpers');
 const prisma = new PrismaClient();
 
 const createPost = async (req, res) => {
@@ -17,17 +26,7 @@ const createPost = async (req, res) => {
                 userId,
                 replyPermission: replyPermission || 'EVERYONE'
             },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        full_name: true,
-                        avatar: true,
-                        role: true
-                    }
-                }
-            }
+            include: { user: { select: userSelectFields } }
         });
 
         res.status(201).json(post);
@@ -43,43 +42,10 @@ const getAllPosts = async (req, res) => {
 
         const posts = await prisma.post.findMany({
             orderBy: { createdAt: 'desc' },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        full_name: true,
-                        avatar: true,
-                        role: true
-                    }
-                },
-                _count: {
-                    select: {
-                        likes: true,
-                        comments: true,
-                        reposts: true
-                    }
-                },
-                likes: {
-                    where: { userId: currentUserId },
-                    select: { userId: true }
-                },
-                reposts: {
-                    where: { userId: currentUserId },
-                    select: { userId: true }
-                }
-            }
+            include: buildPostInclude(currentUserId)
         });
 
-        const formattedPosts = posts.map(post => ({
-            ...post,
-            isLiked: post.likes.length > 0,
-            isReposted: post.reposts.length > 0,
-            likes: undefined, // Create clean structure
-            reposts: undefined
-        }));
-
-        res.json(formattedPosts);
+        res.json(posts.map(formatPost));
     } catch (error) {
         console.error('Error fetching posts:', error);
         res.status(500).json({ error: 'Server error' });
@@ -90,35 +56,17 @@ const likePost = async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
         const userId = req.user.id;
+        const whereClause = { postId_userId: { postId, userId } };
 
-        const existingLike = await prisma.like.findUnique({
-            where: {
-                postId_userId: {
-                    postId,
-                    userId
-                }
-            }
-        });
+        const existingLike = await prisma.like.findUnique({ where: whereClause });
 
         if (existingLike) {
-            await prisma.like.delete({
-                where: {
-                    postId_userId: {
-                        postId,
-                        userId
-                    }
-                }
-            });
+            await prisma.like.delete({ where: whereClause });
             return res.json({ liked: false });
-        } else {
-            await prisma.like.create({
-                data: {
-                    postId,
-                    userId
-                }
-            });
-            return res.json({ liked: true });
         }
+
+        await prisma.like.create({ data: { postId, userId } });
+        return res.json({ liked: true });
     } catch (error) {
         console.error('Error liking post:', error);
         res.status(500).json({ error: 'Server error' });
@@ -129,35 +77,17 @@ const repostPost = async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
         const userId = req.user.id;
+        const whereClause = { postId_userId: { postId, userId } };
 
-        const existingRepost = await prisma.repost.findUnique({
-            where: {
-                postId_userId: {
-                    postId,
-                    userId
-                }
-            }
-        });
+        const existingRepost = await prisma.repost.findUnique({ where: whereClause });
 
         if (existingRepost) {
-            await prisma.repost.delete({
-                where: {
-                    postId_userId: {
-                        postId,
-                        userId
-                    }
-                }
-            });
+            await prisma.repost.delete({ where: whereClause });
             return res.json({ reposted: false });
-        } else {
-            await prisma.repost.create({
-                data: {
-                    postId,
-                    userId
-                }
-            });
-            return res.json({ reposted: true });
         }
+
+        await prisma.repost.create({ data: { postId, userId } });
+        return res.json({ reposted: true });
     } catch (error) {
         console.error('Error reposting:', error);
         res.status(500).json({ error: 'Server error' });
@@ -172,49 +102,17 @@ const commentPost = async (req, res) => {
 
         if (!content) return res.status(400).json({ error: 'Content required' });
 
-        // Check Reply Permission
-        const post = await prisma.post.findUnique({ where: { id: postId } });
-        if (!post) return res.status(404).json({ error: 'Post not found' });
-
-        if (post.replyPermission === 'NO_ONE' && post.userId !== userId) {
-            return res.status(403).json({ error: 'Replies are disabled for this post' });
-        }
-
-        if (post.replyPermission === 'FOLLOWERS' && post.userId !== userId) {
-            // Check if current user follows the post author
-            const isFollowing = await prisma.follow.findUnique({
-                where: {
-                    followerId_followingId: {
-                        followerId: userId,
-                        followingId: post.userId
-                    }
-                }
-            });
-
-            if (!isFollowing) {
-                return res.status(403).json({ error: 'Only followers can reply to this post' });
-            }
+        const permissionCheck = await checkReplyPermission(postId, userId);
+        if (!permissionCheck.allowed) {
+            const status = permissionCheck.error === 'Post not found' ? 404 : 403;
+            return res.status(status).json({ error: permissionCheck.error });
         }
 
         const comment = await prisma.comment.create({
-            data: {
-                content,
-                postId,
-                userId
-            },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        full_name: true,
-                        avatar: true
-                    }
-                }
-            }
+            data: { content, postId, userId },
+            include: { user: { select: userSelectFields } }
         });
 
-        // Emit socket event
         try {
             getIo().emit('new_comment', comment);
         } catch (socketError) {
@@ -235,42 +133,11 @@ const getPostComments = async (req, res) => {
 
         const comments = await prisma.comment.findMany({
             where: { postId, parentCommentId: null },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        full_name: true,
-                        avatar: true,
-                        role: true
-                    }
-                },
-                _count: {
-                    select: {
-                        likes: true,
-                        replies: true,
-                        reposts: true,
-                        saves: true
-                    }
-                },
-                likes: { where: { userId: currentUserId }, select: { userId: true } },
-                reposts: { where: { userId: currentUserId }, select: { userId: true } },
-                saves: { where: { userId: currentUserId }, select: { userId: true } }
-            },
+            include: buildCommentInclude(currentUserId),
             orderBy: { createdAt: 'asc' }
         });
 
-        const formatted = comments.map(c => ({
-            ...c,
-            isLiked: c.likes.length > 0,
-            isReposted: c.reposts.length > 0,
-            isSaved: c.saves.length > 0,
-            likes: undefined,
-            reposts: undefined,
-            saves: undefined
-        }));
-
-        res.json(formatted);
+        res.json(comments.map(formatComment));
     } catch (error) {
         console.error('Error fetching comments:', error);
         res.status(500).json({ error: 'Server error' });
@@ -284,47 +151,14 @@ const getPostById = async (req, res) => {
 
         const post = await prisma.post.findUnique({
             where: { id: postId },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        full_name: true,
-                        avatar: true,
-                        role: true
-                    }
-                },
-                _count: {
-                    select: {
-                        likes: true,
-                        comments: true,
-                        reposts: true
-                    }
-                },
-                likes: {
-                    where: { userId: currentUserId },
-                    select: { userId: true }
-                },
-                reposts: {
-                    where: { userId: currentUserId },
-                    select: { userId: true }
-                }
-            }
+            include: buildPostInclude(currentUserId)
         });
 
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });
         }
 
-        const formattedPost = {
-            ...post,
-            isLiked: post.likes.length > 0,
-            isReposted: post.reposts.length > 0,
-            likes: undefined,
-            reposts: undefined
-        };
-
-        res.json(formattedPost);
+        res.json(formatPost(post));
     } catch (error) {
         console.error('Error fetching post:', error);
         res.status(500).json({ error: 'Server error' });
@@ -336,69 +170,35 @@ const getUserPosts = async (req, res) => {
         const username = req.params.username;
         const currentUserId = req.user?.id;
 
-        const user = await prisma.user.findUnique({
-            where: { username }
-        });
-
+        const user = await prisma.user.findUnique({ where: { username } });
         if (!user) return res.status(404).json({ error: 'User not found' });
 
-        // Fetch posts created by user
-        const posts = await prisma.post.findMany({
-            where: { userId: user.id },
-            include: {
-                user: {
-                    select: { id: true, username: true, full_name: true, avatar: true, role: true }
-                },
-                _count: {
-                    select: { likes: true, comments: true, reposts: true }
-                },
-                likes: { where: { userId: currentUserId }, select: { userId: true } },
-                reposts: { where: { userId: currentUserId }, select: { userId: true } }
-            }
-        });
+        const postInclude = buildPostInclude(currentUserId);
 
-        // Fetch posts reposted by user
-        const reposts = await prisma.repost.findMany({
-            where: { userId: user.id },
-            include: {
-                post: {
-                    include: {
-                        user: {
-                            select: { id: true, username: true, full_name: true, avatar: true, role: true }
-                        },
-                        _count: {
-                            select: { likes: true, comments: true, reposts: true }
-                        },
-                        likes: { where: { userId: currentUserId }, select: { userId: true } },
-                        reposts: { where: { userId: currentUserId }, select: { userId: true } }
-                    }
-                }
-            }
-        });
+        const [posts, reposts] = await Promise.all([
+            prisma.post.findMany({
+                where: { userId: user.id },
+                include: postInclude
+            }),
+            prisma.repost.findMany({
+                where: { userId: user.id },
+                include: { post: { include: postInclude } }
+            })
+        ]);
 
-        // Flatten reposts to match post structure and add isRepost flag if needed
         const formattedReposts = reposts.map(r => ({
             ...r.post,
-            isRepostContext: true, // Marker to show "Reposted by X"
+            isRepostContext: true,
             repostedAt: r.createdAt
         }));
 
-        // Combine and sort
         const allPosts = [...posts, ...formattedReposts].sort((a, b) => {
             const dateA = new Date(a.repostedAt || a.createdAt);
             const dateB = new Date(b.repostedAt || b.createdAt);
             return dateB - dateA;
         });
 
-        const finalPosts = allPosts.map(post => ({
-            ...post,
-            isLiked: post.likes.length > 0,
-            isReposted: post.reposts.length > 0,
-            likes: undefined,
-            reposts: undefined
-        }));
-
-        res.json(finalPosts);
+        res.json(allPosts.map(formatPost));
     } catch (error) {
         console.error('Error fetching user posts:', error);
         res.status(500).json({ error: 'Server error' });
@@ -408,11 +208,9 @@ const getUserPosts = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
-        const userId = req.user.id; // From auth middleware
+        const userId = req.user.id;
 
-        const post = await prisma.post.findUnique({
-            where: { id: postId }
-        });
+        const post = await prisma.post.findUnique({ where: { id: postId } });
 
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });
@@ -422,22 +220,13 @@ const deletePost = async (req, res) => {
             return res.status(403).json({ error: 'Unauthorized' });
         }
 
-        // Delete related data first (cascade should handle this but explicit is safer without cascade)
-        // Prisma schema usually handles cascade delete if configured, assuming it is.
-        // If not, we might need to delete likes/comments/reposts first.
-        // Let's rely on Prisma relations or simple delete for now.
-        // Assuming relations allow cascade or we need to delete manually.
-        // Given previous simple setup, let's delete depedencies manually to be safe or wrap in transaction.
-        // Actually, simple delete might trip foreign keys if not CASCADE.
-        // Let's try simple delete, if it fails we add transaction.
+        await Promise.all([
+            prisma.comment.deleteMany({ where: { postId } }),
+            prisma.like.deleteMany({ where: { postId } }),
+            prisma.repost.deleteMany({ where: { postId } })
+        ]);
 
-        await prisma.comment.deleteMany({ where: { postId } });
-        await prisma.like.deleteMany({ where: { postId } });
-        await prisma.repost.deleteMany({ where: { postId } });
-
-        await prisma.post.delete({
-            where: { id: postId }
-        });
+        await prisma.post.delete({ where: { id: postId } });
 
         res.json({ message: 'Post deleted successfully' });
     } catch (error) {
@@ -453,45 +242,14 @@ const getCommentById = async (req, res) => {
 
         const comment = await prisma.comment.findUnique({
             where: { id: commentId },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        full_name: true,
-                        avatar: true,
-                        role: true
-                    }
-                },
-                _count: {
-                    select: {
-                        likes: true,
-                        replies: true,
-                        reposts: true,
-                        saves: true
-                    }
-                },
-                likes: { where: { userId: currentUserId }, select: { userId: true } },
-                reposts: { where: { userId: currentUserId }, select: { userId: true } },
-                saves: { where: { userId: currentUserId }, select: { userId: true } }
-            }
+            include: buildCommentInclude(currentUserId)
         });
 
         if (!comment) {
             return res.status(404).json({ error: 'Comment not found' });
         }
 
-        const formattedComment = {
-            ...comment,
-            isLiked: comment.likes.length > 0,
-            isReposted: comment.reposts.length > 0,
-            isSaved: comment.saves.length > 0,
-            likes: undefined,
-            reposts: undefined,
-            saves: undefined
-        };
-
-        res.json(formattedComment);
+        res.json(formatComment(comment));
     } catch (error) {
         console.error('Error fetching comment:', error);
         res.status(500).json({ error: 'Server error' });
@@ -501,34 +259,16 @@ const getCommentById = async (req, res) => {
 const getCommentPath = async (req, res) => {
     try {
         const commentId = parseInt(req.params.id);
-        const currentUserId = req.user?.id;
 
-        // Fetch the comment
         const comment = await prisma.comment.findUnique({
             where: { id: commentId },
             include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        full_name: true,
-                        avatar: true,
-                        role: true
-                    }
-                },
+                user: { select: userSelectFields },
                 post: {
                     select: {
                         id: true,
                         content: true,
-                        user: {
-                            select: {
-                                id: true,
-                                username: true,
-                                full_name: true,
-                                avatar: true,
-                                role: true
-                            }
-                        }
+                        user: { select: userSelectFields }
                     }
                 }
             }
@@ -538,37 +278,11 @@ const getCommentPath = async (req, res) => {
             return res.status(404).json({ error: 'Comment not found' });
         }
 
-        // Build the path recursively
-        const path = [];
-        let currentComment = comment;
-
-        // Add all parent comments in reverse order (from root to current)
-        while (currentComment.parentCommentId) {
-            const parent = await prisma.comment.findUnique({
-                where: { id: currentComment.parentCommentId },
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            username: true,
-                            full_name: true,
-                            avatar: true,
-                            role: true
-                        }
-                    }
-                }
-            });
-            if (parent) {
-                path.unshift(parent); // Add at beginning to maintain order
-                currentComment = parent;
-            } else {
-                break;
-            }
-        }
+        const path = await buildCommentPath(comment.parentCommentId);
 
         res.json({
             post: comment.post,
-            path: path, // Array of parent comments from root to immediate parent
+            path,
             comment: {
                 id: comment.id,
                 content: comment.content,

@@ -1,77 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, BarChart2, Code, Smile, Globe, Users, Lock } from 'lucide-react';
 import PostCard from '../components/PostCard';
-import PostService from '../services/post.service';
 import { useAuth } from '../context/AuthContext';
+import useFeed from '../hooks/useFeed';
 import './css/Feed.css';
 
 const Feed = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('foryou');
-  const [posts, setPosts] = useState([]);
-  const [newPostContent, setNewPostContent] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [replyPermission, setReplyPermission] = useState('EVERYONE');
-  const [showPermissionMenu, setShowPermissionMenu] = useState(false);
-  const permissionMenuRef = React.useRef(null);
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (permissionMenuRef.current && !permissionMenuRef.current.contains(event.target)) {
-        setShowPermissionMenu(false);
-      }
-    };
-
-    if (showPermissionMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showPermissionMenu]);
-
-  const fetchPosts = async () => {
-    try {
-      const data = await PostService.getAllPosts();
-      setPosts(data || []);
-    } catch (error) {
-      console.error("Failed to load posts", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePostSubmit = async () => {
-    if (!newPostContent.trim()) return;
-
-    try {
-      const newPost = await PostService.createPost(newPostContent, replyPermission);
-      // newPost from create API might not have all the _count and user fields populated as deeply as getAllPosts
-      // But our controller returns include user.
-      // We might need to manually add structured fields for optimistic update or just simple structure
-      const optimizedPost = {
-        ...newPost,
-        _count: { likes: 0, comments: 0, reposts: 0 },
-        isLiked: false,
-        isReposted: false
-      };
-      setPosts([optimizedPost, ...posts]);
-      setNewPostContent('');
-      setReplyPermission('EVERYONE');
-    } catch (error) {
-      console.error("Failed to create post", error);
-    }
-  };
-
-  const handleDeletePost = (postId) => {
-    setPosts(prevPosts => prevPosts.filter(p => p.id !== postId));
-  };
+  const {
+    activeTab,
+    setActiveTab,
+    posts,
+    loading,
+    newPostContent,
+    setNewPostContent,
+    replyPermission,
+    setReplyPermission,
+    showPermissionMenu,
+    setShowPermissionMenu,
+    permissionMenuRef,
+    handlePostSubmit,
+    handleDeletePost
+  } = useFeed();
 
   return (
     <div className="feed-container">

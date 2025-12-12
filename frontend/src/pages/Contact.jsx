@@ -1,32 +1,15 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Mail, Send, CheckCircle, User, MessageSquare } from 'lucide-react';
+import useContactForm from '../hooks/useContactForm';
 
 import './css/Contact.css';
 
 const Contact = () => {
     const { t } = useTranslation();
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        message: ''
-    });
-    const [submitted, setSubmitted] = useState(false);
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Simulate form submission
-        setTimeout(() => {
-            setSubmitted(true);
-            setFormData({ name: '', email: '', message: '' });
-        }, 1000);
-    };
+    const { formData, submitted, handleChange, handleSubmit } = useContactForm();
 
     return (
         <section className="contact-section">
