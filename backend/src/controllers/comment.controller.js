@@ -131,6 +131,24 @@ const replyToComment = async (req, res) => {
     }
 };
 
+// Helper to build include object for replies to reduce nesting
+const buildRepliesInclude = (currentUserId) => ({
+    user: { select: userSelectFields },
+    _count: { select: commentCountFields },
+    likes: { where: { userId: currentUserId }, select: { userId: true } },
+    reposts: { where: { userId: currentUserId }, select: { userId: true } },
+    saves: { where: { userId: currentUserId }, select: { userId: true } },
+    replies: {
+        include: {
+            user: { select: userSelectFields },
+            _count: { select: commentCountFields },
+            likes: { where: { userId: currentUserId }, select: { userId: true } },
+            reposts: { where: { userId: currentUserId }, select: { userId: true } },
+            saves: { where: { userId: currentUserId }, select: { userId: true } }
+        }
+    }
+});
+
 const getCommentReplies = async (req, res) => {
     try {
         const commentId = parseInt(req.params.id, 10);
@@ -138,22 +156,7 @@ const getCommentReplies = async (req, res) => {
 
         const replies = await prisma.comment.findMany({
             where: { parentCommentId: commentId },
-            include: {
-                user: { select: userSelectFields },
-                _count: { select: commentCountFields },
-                likes: { where: { userId: currentUserId }, select: { userId: true } },
-                reposts: { where: { userId: currentUserId }, select: { userId: true } },
-                saves: { where: { userId: currentUserId }, select: { userId: true } },
-                replies: {
-                    include: {
-                        user: { select: userSelectFields },
-                        _count: { select: commentCountFields },
-                        likes: { where: { userId: currentUserId }, select: { userId: true } },
-                        reposts: { where: { userId: currentUserId }, select: { userId: true } },
-                        saves: { where: { userId: currentUserId }, select: { userId: true } }
-                    }
-                }
-            },
+            include: buildRepliesInclude(currentUserId),
             orderBy: { createdAt: 'asc' }
         });
 

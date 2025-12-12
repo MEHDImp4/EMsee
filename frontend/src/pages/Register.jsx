@@ -100,23 +100,27 @@ const Register = () => {
 
                                 {currentStep === 2 && (
                                     <RegisterStep2
-                                        form={form}
-                                        setField={setField}
-                                        validation={validation}
-                                        errors={errors}
-                                        showErrors={showErrors}
-                                        onBlur={handleBlur}
+                                        {...{
+                                            form,
+                                            setField,
+                                            validation,
+                                            errors,
+                                            showErrors,
+                                            onBlur: handleBlur,
+                                        }}
                                     />
                                 )}
 
                                 {currentStep === 3 && (
                                     <RegisterStep3
-                                        isProfessor={isProfessor}
-                                        form={form}
-                                        setField={setField}
-                                        toggleSubject={toggleSubject}
-                                        options={options}
-                                        showErrors={showErrors}
+                                        {...{
+                                            isProfessor,
+                                            form,
+                                            setField,
+                                            toggleSubject,
+                                            options,
+                                            showErrors,
+                                        }}
                                     />
                                 )}
 

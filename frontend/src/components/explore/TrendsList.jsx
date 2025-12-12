@@ -1,6 +1,6 @@
 import React from 'react';
 import { MoreHorizontal } from 'lucide-react';
-import { TRENDS } from '../../hooks/useExplore';
+import { TRENDS } from './trends.constants';
 
 const TrendsList = ({ t }) => (
     <div className="trends-list">

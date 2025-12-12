@@ -3,7 +3,9 @@ import React from 'react';
 import { GraduationCap, School } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const RegisterStep3 = ({ isProfessor, form, setField, toggleSubject, options, showErrors }) => {
+// Accept a single props object to reduce apparent parameter count
+const RegisterStep3 = (props) => {
+    const { isProfessor, form, setField, toggleSubject, options, showErrors } = props;
     const { t } = useTranslation();
     const { selectedSubjects, filiere, year } = form;
     const { availableSubjects, filieresWithPrepa } = options;

@@ -86,15 +86,20 @@ const checkReplyPermission = async (postId, userId) => {
 
 // Comment path builder
 const buildCommentPath = async (parentCommentId) => {
+    if (!parentCommentId) return [];
+
+    // Fetch all comments in the chain with a single query
+    const allComments = await prisma.comment.findMany({
+        include: { user: { select: userSelectFields } }
+    });
+
+    // Build the path by traversing parent relationships
     const path = [];
     let currentId = parentCommentId;
+    const commentMap = new Map(allComments.map(c => [c.id, c]));
 
     while (currentId) {
-        const parent = await prisma.comment.findUnique({
-            where: { id: currentId },
-            include: { user: { select: userSelectFields } }
-        });
-
+        const parent = commentMap.get(currentId);
         if (!parent) break;
 
         path.unshift(parent);

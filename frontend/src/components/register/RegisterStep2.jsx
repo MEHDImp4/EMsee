@@ -3,7 +3,9 @@ import React from 'react';
 import { User, Mail, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const RegisterStep2 = ({ form, setField, validation, errors, showErrors, onBlur }) => {
+// Accept a single props object to reduce apparent parameter count
+const RegisterStep2 = (props) => {
+    const { form, setField, validation, errors, showErrors, onBlur } = props;
     const { t } = useTranslation();
     const { fullName, username, email, accountType } = form;
     const { isUsernameValid, isEmailValid } = validation;

@@ -150,24 +150,28 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
     const handleBlur = (field, value) => {
         if (!value) return;
         if (field === 'username' && validation.isUsernameValid !== false) {
-            checkAvailability({ username: value }).then(async (response) => {
-                if (!response.ok) {
-                    const data = await response.json();
-                    applyAvailabilityError(data);
-                } else {
-                    clearAvailabilityError('username');
-                }
-            }).catch(() => {/* ignore blur errors */});
+            checkAvailability({ username: value })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        const data = await response.json();
+                        applyAvailabilityError(data);
+                    } else {
+                        clearAvailabilityError('username');
+                    }
+                })
+                .catch(() => {/* ignore blur errors */});
         }
         if (field === 'email' && validation.isEmailValid !== false) {
-            checkAvailability({ email: value }).then(async (response) => {
-                if (!response.ok) {
-                    const data = await response.json();
-                    applyAvailabilityError(data);
-                } else {
-                    clearAvailabilityError('email');
-                }
-            }).catch(() => {/* ignore blur errors */});
+            checkAvailability({ email: value })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        const data = await response.json();
+                        applyAvailabilityError(data);
+                    } else {
+                        clearAvailabilityError('email');
+                    }
+                })
+                .catch(() => {/* ignore blur errors */});
         }
     };
 
