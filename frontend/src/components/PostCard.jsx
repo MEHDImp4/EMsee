@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MessageCircle, Repeat2, Heart, BarChart3, Bookmark, Share2, MoreHorizontal, Trash2 } from 'lucide-react';
 import PostService from '../services/post.service';
+import { BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import './css/PostCard.css';
@@ -46,7 +47,7 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
 
   const isOwner = user?.id && post?.user?.id && user.id === post.user.id;
 
-  const avatarUrl = post?.user?.avatar ? `http://localhost:5000${post.user.avatar}` : null;
+  const avatarUrl = post?.user?.avatar ? `${BASE_URL}${post.user.avatar}` : null;
   const displayName = post?.user?.full_name || post?.user?.username || 'User';
   const handle = post?.user?.username ? `@${post.user.username}` : '';
   const userRole = post?.user?.role?.toLowerCase();

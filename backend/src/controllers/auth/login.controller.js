@@ -6,10 +6,8 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if (!email || !password) {
-            res.status(400).json({ error: 'Please provide email and password' });
-            return;
-        }
+        // Validation handled by middleware
+
 
         const user = await UserModel.findByEmail(email);
         if (!user || !user.password) {

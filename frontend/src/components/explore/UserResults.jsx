@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../../services/api';
 
 const UserResults = ({ results, searchQuery, isSearching, t }) => {
     if (isSearching) {
@@ -14,7 +15,7 @@ const UserResults = ({ results, searchQuery, isSearching, t }) => {
                         <div style={{ padding: '1rem', display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
                             <div className="avatar-circle" style={{ width: 40, height: 40, overflow: 'hidden' }}>
                                 {user.avatar ? (
-                                    <img src={`http://localhost:5000${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 ) : (
                                     (user.full_name || user.username).charAt(0).toUpperCase()
                                 )}

@@ -7,7 +7,10 @@
     "dev": "nodemon src/server.js",
     "build": "echo 'No build needed for JS'",
     "start": "node src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:studio": "node scripts/prisma-wrapper.js studio",
+    "db:migrate": "node scripts/prisma-wrapper.js migrate dev",
+    "db:generate": "node scripts/prisma-wrapper.js generate"
   },
   "keywords": [],
   "author": "",
@@ -18,11 +21,13 @@
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "dotenv-expand": "^12.0.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
     "mysql2": "^3.15.3",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "nodemon": "^3.1.11",

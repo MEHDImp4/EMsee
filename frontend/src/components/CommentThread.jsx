@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import './css/CommentThread.css';
 import CommentService from '../services/comment.service';
 import { useModal } from '../context/ModalContext';
+import { BASE_URL } from '../services/api';
 
 const formatCount = (value = 0) => {
   const abs = Math.abs(value);
@@ -30,7 +31,7 @@ const CommentThreadItem = ({ comment, depth = 0, maxDepth = 1, onReplySuccess, c
     views: comment?.views ?? comment?.viewCount ?? 0,
   });
 
-  const avatarUrl = comment?.user?.avatar ? `http://localhost:5000${comment.user.avatar}` : null;
+  const avatarUrl = comment?.user?.avatar ? `${BASE_URL}${comment.user.avatar}` : null;
   const displayName = comment?.user?.full_name || comment?.user?.username || 'User';
   const handle = comment?.user?.username ? `@${comment.user.username}` : '';
   const userRole = comment?.user?.role?.toLowerCase() || 'student';

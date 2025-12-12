@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import CommentService from '../services/comment.service';
+import { API_URL } from '../services/api';
 
 const useCommentPage = ({ id, socket }) => {
     const [comment, setComment] = useState(null);
@@ -16,7 +17,7 @@ const useCommentPage = ({ id, socket }) => {
         const loadComment = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5000/api/posts/comments/${id}`, {
+                const response = await fetch(`${API_URL}/posts/comments/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                         'Content-Type': 'application/json'

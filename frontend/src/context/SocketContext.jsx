@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { useAuth } from './AuthContext';
+import { BASE_URL } from '../services/api';
 
 const SocketContext = createContext();
 
@@ -15,7 +16,7 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         if (user) {
             const token = localStorage.getItem('token'); // Or however you retrieve the token
-            const socketInstance = io('http://localhost:5000', {
+            const socketInstance = io(BASE_URL, {
                 auth: {
                     token: token
                 }

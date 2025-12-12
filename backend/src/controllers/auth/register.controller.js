@@ -6,11 +6,8 @@ const register = async (req, res) => {
     try {
         const { username, email, password, full_name, role, filiere, year, studentClass, subjects } = req.body;
 
-        // Basic validation
-        if (!username || !email || !password || !full_name) {
-            res.status(400).json({ error: 'Missing required fields' });
-            return;
-        }
+        // Basic validation handled by middleware
+
 
         // Check if user exists (email)
         const existingEmail = await UserModel.findByEmail(email);

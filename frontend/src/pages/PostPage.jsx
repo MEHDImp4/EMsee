@@ -8,6 +8,7 @@ import CommentCard from '../components/CommentCard';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import usePostPage from '../hooks/usePostPage';
+import { BASE_URL } from '../services/api';
 
 const PostPage = () => {
     const { id } = useParams();
@@ -55,7 +56,7 @@ const PostPage = () => {
                 <div className="reply-composer">
                     <div className="reply-avatar">
                         {user?.avatar ? (
-                            <img src={`http://localhost:5000${user.avatar}`} alt={user.username} />
+                            <img src={`${BASE_URL}${user.avatar}`} alt={user.username} />
                         ) : (
                             <span>{(user?.full_name || user?.username || 'U').charAt(0)}</span>
                         )}

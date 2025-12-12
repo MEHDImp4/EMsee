@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import PostService from '../services/post.service';
 import UserService from '../services/user.service';
+import { BASE_URL } from '../services/api';
 
 const useProfilePage = ({ targetUsername, authUser }) => {
     const [profileData, setProfileData] = useState(null);
@@ -72,8 +73,8 @@ const useProfilePage = ({ targetUsername, authUser }) => {
             location: profileData.location || 'Rabat, Maroc',
             bio: profileData.bio || '',
             joinDate: profileData.created_at || profileData.createdAt,
-            avatar: profileData.avatar ? `http://localhost:5000${profileData.avatar}` : null,
-            banner: profileData.banner ? `http://localhost:5000${profileData.banner}` : null,
+            avatar: profileData.avatar ? `${BASE_URL}${profileData.avatar}` : null,
+            banner: profileData.banner ? `${BASE_URL}${profileData.banner}` : null,
             stats: {
                 posts: userPosts?.length || 0,
                 followers: profileData.followersCount || 0,

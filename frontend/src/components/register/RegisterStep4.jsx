@@ -3,7 +3,7 @@ import React from 'react';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const RegisterStep4 = ({ form, setField, validation, showErrors }) => {
+const RegisterStep4 = ({ form, setField, validation, showErrors, errors }) => {
     const { t } = useTranslation();
     const { password, confirmPassword, showPassword } = form;
     const { isPasswordValid, doPasswordsMatch } = validation;
@@ -45,7 +45,7 @@ const RegisterStep4 = ({ form, setField, validation, showErrors }) => {
                 {showErrors && !password && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {isPasswordValid === false && (
                     <p id="password-error" className="error-message" role="alert">
-                        {t('auth.password_requirements')}
+                        {errors?.passwordError || t('auth.password_requirements')}
                     </p>
                 )}
             </div>

@@ -9,9 +9,16 @@ const { checkAvailability } = require('../controllers/auth/availability.controll
 const { updateProfile } = require('../controllers/auth/profile.controller');
 const { verifyToken } = require('../middlewares/authMiddleware');
 
-router.post('/register', register);
-router.post('/login', login);
-router.post('/check-availability', checkAvailability);
+const {
+    registerSchema,
+    loginSchema,
+    updateProfileSchema
+} = require('../validators/auth.validator');
+const validate = require('../middlewares/validate.middleware');
+
+router.post('/register', validate(registerSchema), register);
+router.post('/login', validate(loginSchema), login);
+router.post('/check-availability', checkAvailability); // Usually doesn't need strict schema or can use partial
 
 // Multer Config
 const storage = multer.diskStorage({
@@ -40,6 +47,6 @@ const upload = multer({
 router.put('/profile', verifyToken, upload.fields([
     { name: 'avatar', maxCount: 1 },
     { name: 'banner', maxCount: 1 }
-]), updateProfile);
+]), validate(updateProfileSchema), updateProfile);
 
 module.exports = router;

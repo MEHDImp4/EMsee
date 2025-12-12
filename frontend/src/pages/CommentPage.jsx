@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import useCommentPage from '../hooks/useCommentPage';
 import CommentService from '../services/comment.service';
 import '../pages/css/CommentPage.css';
+import { BASE_URL } from '../services/api';
 
 const formatCount = (value = 0) => {
   const abs = Math.abs(value);
@@ -17,7 +18,7 @@ const formatCount = (value = 0) => {
 
 // Mini card for parent post/comment in thread
 const ThreadParentCard = ({ item, type = 'post', onClick }) => {
-  const avatarUrl = item?.user?.avatar ? `http://localhost:5000${item.user.avatar}` : null;
+  const avatarUrl = item?.user?.avatar ? `${BASE_URL}${item.user.avatar}` : null;
   const displayName = item?.user?.full_name || item?.user?.username || 'User';
   const handle = item?.user?.username ? `@${item.user.username}` : '';
 
@@ -97,7 +98,7 @@ const ThreadMainCard = ({ comment, isReply }) => {
     views: comment?.views ?? 0,
   });
 
-  const avatarUrl = comment?.user?.avatar ? `http://localhost:5000${comment.user.avatar}` : null;
+  const avatarUrl = comment?.user?.avatar ? `${BASE_URL}${comment.user.avatar}` : null;
   const displayName = comment?.user?.full_name || comment?.user?.username || 'User';
   const handle = comment?.user?.username ? `@${comment.user.username}` : '';
 
@@ -220,7 +221,7 @@ const ThreadMainCard = ({ comment, isReply }) => {
 
 // Reply composer inline
 const ThreadReplyComposer = ({ user, replyText, setReplyText, isSubmitting, onSubmit }) => {
-  const avatarUrl = user?.avatar ? `http://localhost:5000${user.avatar}` : null;
+  const avatarUrl = user?.avatar ? `${BASE_URL}${user.avatar}` : null;
 
   return (
     <div className="thread-reply-composer">
@@ -257,7 +258,7 @@ const ThreadReplyComposer = ({ user, replyText, setReplyText, isSubmitting, onSu
 
 // Reply item in the replies list  
 const ThreadReplyItem = ({ reply }) => {
-  const avatarUrl = reply?.user?.avatar ? `http://localhost:5000${reply.user.avatar}` : null;
+  const avatarUrl = reply?.user?.avatar ? `${BASE_URL}${reply.user.avatar}` : null;
   const displayName = reply?.user?.full_name || reply?.user?.username || 'User';
   const handle = reply?.user?.username ? `@${reply.user.username}` : '';
 

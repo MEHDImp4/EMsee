@@ -9,7 +9,7 @@ const RegisterStep2 = (props) => {
     const { t } = useTranslation();
     const { fullName, username, email, accountType } = form;
     const { isUsernameValid, isEmailValid } = validation;
-    const { usernameApiError, emailApiError } = errors;
+    const { usernameApiError, emailApiError, emailError } = errors;
 
     return (
         <>
@@ -86,7 +86,7 @@ const RegisterStep2 = (props) => {
                 {showErrors && !email && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {isEmailValid === false && (
                     <p id="email-error" className="error-message" role="alert">
-                        {emailApiError ? emailApiError : (
+                        {emailError || emailApiError || (
                             <>
                                 {t('auth.email_error')} <strong>{accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'}</strong>
                             </>

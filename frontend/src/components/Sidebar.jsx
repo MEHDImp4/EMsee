@@ -6,6 +6,7 @@ import logo from '../assets/logo.svg';
 import LogoutModal from './LogoutModal';
 import ComposeModal from './ComposeModal';
 import { useAuth } from '../context/AuthContext';
+import { BASE_URL } from '../services/api';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
@@ -24,7 +25,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     const userName = user?.full_name || user?.name || 'User';
     const userHandle = user?.username ? `@${user.username}` : '@user';
     const userInitials = getInitials(userName);
-    const avatarUrl = user?.avatar ? `http://localhost:5000${user.avatar}` : null;
+    const avatarUrl = user?.avatar ? `${BASE_URL}${user.avatar}` : null;
 
     const navItems = [
         { icon: Home, label: t('sidebar.home', 'Accueil'), path: '/feed', hideOnMobile: true },

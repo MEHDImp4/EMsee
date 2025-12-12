@@ -4,6 +4,7 @@ import { Image, BarChart2, Code, Smile, Globe, Users, Lock } from 'lucide-react'
 import PostCard from '../components/PostCard';
 import { useAuth } from '../context/AuthContext';
 import useFeed from '../hooks/useFeed';
+import { BASE_URL } from '../services/api';
 import './css/Feed.css';
 
 const Feed = () => {
@@ -53,7 +54,7 @@ const Feed = () => {
         <div className="compose-avatar">
           <div className="avatar-circle">
             {user?.avatar ?
-              <img src={`http://localhost:5000${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+              <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
               : (user?.full_name?.charAt(0) || user?.username?.charAt(0) || 'U')}
           </div>
         </div>

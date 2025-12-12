@@ -4,6 +4,7 @@ import { MessageCircle, Repeat2, Heart, BarChart3, Bookmark, Share2 } from 'luci
 import './css/CommentCard.css';
 import CommentService from '../services/comment.service';
 import { useModal } from '../context/ModalContext';
+import { BASE_URL } from '../services/api';
 
 const formatCount = (value = 0) => {
   const abs = Math.abs(value);
@@ -25,7 +26,7 @@ const CommentCard = ({ comment, onReply, disableReply = false }) => {
     views: comment?.views ?? comment?.viewCount ?? 0,
   });
 
-  const avatarUrl = comment?.user?.avatar ? `http://localhost:5000${comment.user.avatar}` : null;
+  const avatarUrl = comment?.user?.avatar ? `${BASE_URL}${comment.user.avatar}` : null;
   const displayName = comment?.user?.full_name || comment?.user?.username || 'User';
   const handle = comment?.user?.username ? `@${comment.user.username}` : '';
   const userRole = comment?.user?.role?.toLowerCase() || 'student';

@@ -130,6 +130,7 @@ const Register = () => {
                                         setField={setField}
                                         validation={validation}
                                         showErrors={showErrors}
+                                        errors={errors}
                                     />
                                 )}
                             </motion.div>

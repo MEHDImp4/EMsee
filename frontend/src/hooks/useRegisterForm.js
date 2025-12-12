@@ -32,7 +32,9 @@ const initialValidation = {
 const initialErrors = {
     general: '',
     emailApiError: '',
-    usernameApiError: ''
+    usernameApiError: '',
+    passwordError: '',
+    emailError: ''
 };
 
 const useRegisterForm = ({ loginAction, navigate, t }) => {
@@ -84,11 +86,22 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
     const validatePassword = (value) => {
         if (!value) {
             setValidation(prev => ({ ...prev, isPasswordValid: null }));
+            setErrors(prev => ({ ...prev, passwordError: '' }));
             return;
         }
-        const hasLength = value.length >= 8;
+        const hasLength = value.length >= 6;
         const hasUpper = /[A-Z]/.test(value);
-        setValidation(prev => ({ ...prev, isPasswordValid: hasLength && hasUpper }));
+        const isValid = hasLength && hasUpper;
+
+        setValidation(prev => ({ ...prev, isPasswordValid: isValid }));
+
+        if (!hasLength) {
+            setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe est petit (minimum 6 caractères)' }));
+        } else if (!hasUpper) {
+            setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe doit contenir une majuscule' }));
+        } else {
+            setErrors(prev => ({ ...prev, passwordError: '' }));
+        }
     };
 
     const validateEmail = (value, type) => {
@@ -97,7 +110,14 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
             return;
         }
         const domain = type === 'student' ? '@emsi-edu.ma' : '@emsi.ma';
-        setValidation(prev => ({ ...prev, isEmailValid: value.endsWith(domain) }));
+        const isValid = value.endsWith(domain);
+        setValidation(prev => ({ ...prev, isEmailValid: isValid }));
+
+        if (!isValid) {
+            setErrors(prev => ({ ...prev, emailError: "L'email n'est pas valable (doit finir par " + domain + ")" }));
+        } else {
+            setErrors(prev => ({ ...prev, emailError: '' }));
+        }
     };
 
     const validateCurrentStep = () => {

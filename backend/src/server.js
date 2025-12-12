@@ -10,7 +10,14 @@ const http = require('http'); // Import http
 const { initializeSocket } = require('./services/socketService'); // Import socket service
 
 // Load environment variables
-dotenv.config();
+const dotenvExpand = require('dotenv-expand');
+const dotenvConfig = dotenv.config();
+dotenvExpand.expand(dotenvConfig);
+
+if (!process.env.JWT_SECRET) {
+    console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables.');
+    process.exit(1);
+}
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server

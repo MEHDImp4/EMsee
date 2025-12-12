@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Search, MoreHorizontal } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import UserService from '../services/user.service';
+import { BASE_URL } from '../services/api';
 
 const TRENDS = [
     { metaKey: ['right_sidebar.trending', 'right_sidebar.morocco'], name: '#SaharaMarocain', count: '12.5k' },
@@ -49,7 +50,7 @@ const SuggestionItem = ({ user, onFollow, t }) => (
         <Link to={`/profile/${user.username}`} className="suggestion-avatar" style={{ textDecoration: 'none', display: 'block' }}>
             <div className="avatar-circle" style={{ width: 40, height: 40, overflow: 'hidden' }}>
                 {user.avatar ? (
-                    <img src={`http://localhost:5000${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                     (user.full_name || user.username).charAt(0).toUpperCase()
                 )}

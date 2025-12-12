@@ -4,6 +4,7 @@ import { X, Upload, Save } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { BASE_URL } from '../../services/api';
 
 const EditProfileModal = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
@@ -20,8 +21,8 @@ const EditProfileModal = ({ isOpen, onClose }) => {
 
     const [avatarFile, setAvatarFile] = useState(null);
     const [bannerFile, setBannerFile] = useState(null);
-    const [preview, setPreview] = useState(user?.avatar ? `http://localhost:5000${user.avatar}` : null);
-    const [bannerPreview, setBannerPreview] = useState(user?.banner ? `http://localhost:5000${user.banner}` : null);
+    const [preview, setPreview] = useState(user?.avatar ? `${BASE_URL}${user.avatar}` : null);
+    const [bannerPreview, setBannerPreview] = useState(user?.banner ? `${BASE_URL}${user.banner}` : null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
