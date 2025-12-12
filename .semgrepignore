@@ -1,0 +1,3 @@
+# Ignore i18n locale files and build output to avoid false positives for UI labels
+frontend/public/locales/
+frontend/dist/

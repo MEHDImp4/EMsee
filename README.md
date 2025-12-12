@@ -168,3 +168,10 @@ Si vous voulez, je peux :
 - générer un CHANGELOG.md et un modèle de Pull Request
 
 Bon travail à toute l'équipe !
+\n+## Sécurité & secrets
+\n+Les occurrences de "password" repérées dans les fichiers d'i18n (par exemple dans [frontend/public/locales/en/translation.json](frontend/public/locales/en/translation.json#L98), [frontend/public/locales/es/translation.json](frontend/public/locales/es/translation.json#L95) et [frontend/public/locales/fr/translation.json](frontend/public/locales/fr/translation.json#L101)) sont des libellés d'interface (traductions) et non des identifiants ou secrets. Certains outils de scan peuvent les signaler à tort comme « mots de passe en dur ».
+\n+Mesures pour éviter les faux positifs tout en gardant la détection réelle des secrets :
+- Exclure les dossiers d'i18n et de build des règles de détection de secrets (ex. `frontend/public/locales/`, `frontend/dist/`).
+- Un fichier `.semgrepignore` est fourni pour Semgrep afin d'ignorer ces chemins.
+- Ne jamais committer de véritables secrets. Utiliser des variables d'environnement (`.env`) et des stores de secrets.
+\n+Si vous utilisez un autre outil (CodeQL, Trivy, Gitleaks, etc.), configurez l'équivalent pour ignorer les chemins des locales.
