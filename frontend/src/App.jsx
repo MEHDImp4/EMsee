@@ -28,7 +28,6 @@ const Notifications = lazy(() => import('./pages/Notifications'));
 const PostPage = lazy(() => import('./pages/PostPage'));
 
 function App() {
-  console.log('App Rendering');
   return (
     <ThemeProvider>
       <AuthProvider>

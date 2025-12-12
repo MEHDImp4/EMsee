@@ -235,6 +235,11 @@
         "followers_can_reply": "Abonnés uniquement",
         "no_one_can_reply": "Personne ne peut répondre"
     },
+    "post": {
+        "delete": "Supprimer le post",
+        "confirm_delete": "Supprimer ce post ?",
+        "views": "Vues"
+    },
     "notifications": {
         "tabs": {
             "all": "Tous",

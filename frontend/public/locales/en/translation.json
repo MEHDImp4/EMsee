@@ -232,6 +232,11 @@
         "followers_can_reply": "Followers only",
         "no_one_can_reply": "No one can reply"
     },
+    "post": {
+        "delete": "Delete post",
+        "confirm_delete": "Delete this post?",
+        "views": "Views"
+    },
     "notifications": {
         "tabs": {
             "all": "All",

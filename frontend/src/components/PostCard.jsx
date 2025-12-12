@@ -1,173 +1,203 @@
-import React, { useState } from 'react';
-import { MessageCircle, Repeat, Heart, Share, MoreHorizontal } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useModal } from '../context/ModalContext';
+import { MessageCircle, Repeat2, Heart, BarChart3, Bookmark, Share2, MoreHorizontal, Trash2 } from 'lucide-react';
 import PostService from '../services/post.service';
-import '../styles/PostCard.css';
+import { useAuth } from '../context/AuthContext';
+import './css/PostCard.css';
 
-const PostCard = ({ post, onLike, onRepost, onDelete, isDetailView = false }) => {
-    const { t } = useTranslation();
-    const { user } = useAuth();
-    const navigate = useNavigate();
-    const { openCompose } = useModal();
-    const [showOptions, setShowOptions] = useState(false);
+const formatCount = (value = 0) => {
+  const abs = Math.abs(value);
+  if (abs >= 1000000) return `${(abs / 1000000).toFixed(abs >= 10000000 ? 0 : 1).replace(/\.0$/, '')}M`;
+  if (abs >= 1000) return `${(abs / 1000).toFixed(abs >= 10000 ? 0 : 1).replace(/\.0$/, '')}K`;
+  return `${value}`;
+};
 
-    // State for likes and reposts
-    const [isLiked, setIsLiked] = useState(post.isLiked);
-    const [likesCount, setLikesCount] = useState(post._count?.likes || 0);
-    const [isReposted, setIsReposted] = useState(post.isReposted);
-    const [repostsCount, setRepostsCount] = useState(post._count?.reposts || 0);
+const formatRelativeTime = (date) => {
+  if (!date) return '';
+  const diff = Date.now() - date.getTime();
+  const minute = 60000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
 
-    const handleDelete = async (e) => {
-        e.stopPropagation();
-        if (window.confirm(t('post.confirm_delete', 'Are you sure you want to delete this post?'))) {
-            try {
-                await PostService.deletePost(post.id);
-                if (onDelete) onDelete(post.id);
-            } catch (error) {
-                console.error("Failed to delete post", error);
-            }
-        }
-    };
+  if (diff < minute) return 'now';
+  if (diff < hour) return `${Math.floor(diff / minute)}m`;
+  if (diff < day) return `${Math.floor(diff / hour)}h`;
+  if (diff < day * 7) return `${Math.floor(diff / day)}d`;
+  return date.toLocaleDateString();
+};
 
-    const handleLike = async (e) => {
-        e.stopPropagation();
-        try {
-            await PostService.likePost(post.id);
-            setIsLiked(!isLiked);
-            setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
-        } catch (error) {
-            console.error("Failed to like post", error);
-        }
-    };
+const PostCard = ({ post, onDelete = () => {}, isDetailView = false }) => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { user } = useAuth();
 
-    const handleRepost = async (e) => {
-        e.stopPropagation();
-        try {
-            await PostService.repostPost(post.id);
-            setIsReposted(!isReposted);
-            setRepostsCount(prev => isReposted ? prev - 1 : prev + 1);
-        } catch (error) {
-            console.error("Failed to repost", error);
-        }
-    };
+  const [isLiked, setIsLiked] = useState(Boolean(post?.isLiked));
+  const [isReposted, setIsReposted] = useState(Boolean(post?.isReposted));
+  const [isBusy, setIsBusy] = useState(false);
+  const [counts, setCounts] = useState({
+    likes: post?._count?.likes ?? 0,
+    comments: post?._count?.comments ?? 0,
+    reposts: post?._count?.reposts ?? 0,
+    views: post?.views ?? post?.viewCount ?? 0,
+  });
 
-    const handleCommentClick = (e) => {
-        e.stopPropagation();
-        openCompose(post);
-    };
+  const isOwner = user?.id && post?.user?.id && user.id === post.user.id;
 
-    const handleCardClick = (e) => {
-        if (isDetailView) return;
-        const selection = window.getSelection();
-        if (selection.toString().length > 0) return;
-        navigate(`/post/${post.id}`);
-    };
+  const avatarUrl = post?.user?.avatar ? `http://localhost:5000${post.user.avatar}` : null;
+  const displayName = post?.user?.full_name || post?.user?.username || 'User';
+  const handle = post?.user?.username ? `@${post.user.username}` : '';
+  const createdAt = useMemo(() => (post?.createdAt ? new Date(post.createdAt) : null), [post]);
+  const timeLabel = useMemo(() => formatRelativeTime(createdAt), [createdAt]);
 
-    const formatTime = (dateString) => {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffInSeconds = Math.floor((now - date) / 1000);
+  const optimisticUpdate = (field, delta) => {
+    setCounts((prev) => ({ ...prev, [field]: Math.max(0, (prev[field] || 0) + delta) }));
+  };
 
-        if (diffInSeconds < 60) return `${diffInSeconds}s`;
-        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
-        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
-        return date.toLocaleDateString();
-    };
+  const toggleLike = async (e) => {
+    e.stopPropagation();
+    if (!post?.id || isBusy) return;
 
-    return (
-        <div className={`post-card ${isDetailView ? 'detail-view' : ''}`} onClick={handleCardClick} style={{ cursor: isDetailView ? 'default' : 'pointer' }}>
-            {/* Repost Indicator */}
-            {post.isRepostContext && (
-                <div className="post-repost-indicator">
-                    <Repeat size={14} />
-                    <span>Reposted</span>
-                </div>
-            )}
+    const next = !isLiked;
+    setIsLiked(next);
+    optimisticUpdate('likes', next ? 1 : -1);
+    try {
+      setIsBusy(true);
+      await PostService.likePost(post.id);
+    } catch (error) {
+      console.error('Failed to toggle like', error);
+      setIsLiked(!next);
+      optimisticUpdate('likes', next ? -1 : 1);
+    } finally {
+      setIsBusy(false);
+    }
+  };
 
-            <div className="post-row">
-                <div className="post-avatar-col">
-                    <Link to={`/profile/${post.user?.username}`} onClick={(e) => e.stopPropagation()}>
-                        {post.user?.avatar ?
-                            <img src={`http://localhost:5000${post.user.avatar}`} alt={post.user.username} className="avatar-img" />
-                            :
-                            <div className="avatar-placeholder">
-                                {(post.user?.full_name?.charAt(0) || post.user?.username?.charAt(0) || 'U')}
-                            </div>
-                        }
-                    </Link>
-                </div>
+  const toggleRepost = async (e) => {
+    e.stopPropagation();
+    if (!post?.id || isBusy) return;
 
-                <div className="post-content-col">
-                    <div className="post-header">
-                        <div className="post-meta">
-                            <span className="post-name">{post.user?.full_name || post.user?.username}</span>
-                            <span className="post-handle">@{post.user?.username}</span>
-                            <span className="post-dot">·</span>
-                            <span className="post-time">{formatTime(post.createdAt)}</span>
-                        </div>
-                        <div style={{ position: 'relative' }}>
-                            <button className="more-options-btn" onClick={(e) => { e.stopPropagation(); setShowOptions(!showOptions); }}>
-                                <MoreHorizontal size={16} />
-                            </button>
-                            {showOptions && (
-                                <div className="options-dropdown" style={{
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: '100%',
-                                    background: 'var(--bg-card)',
-                                    border: '1px solid var(--border)',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                                    zIndex: 10,
-                                    overflow: 'hidden'
-                                }}>
-                                    {user && post.userId === user.id ? (
-                                        <button
-                                            onClick={handleDelete}
-                                            style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', background: 'none', border: 'none', color: 'red', cursor: 'pointer', fontSize: '14px' }}
-                                        >
-                                            {t('post.delete', 'Delete')}
-                                        </button>
-                                    ) : (
-                                        <button
-                                            style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', background: 'none', border: 'none', color: 'var(--text-main)', fontSize: '14px', whiteSpace: 'nowrap' }}
-                                        >
-                                            {t('post.report', 'Report')}
-                                        </button>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
+    const next = !isReposted;
+    setIsReposted(next);
+    optimisticUpdate('reposts', next ? 1 : -1);
+    try {
+      setIsBusy(true);
+      await PostService.repostPost(post.id);
+    } catch (error) {
+      console.error('Failed to toggle repost', error);
+      setIsReposted(!next);
+      optimisticUpdate('reposts', next ? -1 : 1);
+    } finally {
+      setIsBusy(false);
+    }
+  };
 
-                    <div className="post-text">
-                        {post.content}
-                    </div>
+  const goToPost = () => {
+    if (isDetailView) return;
+    navigate(`/posts/${post.id}`);
+  };
 
-                    <div className="post-actions">
-                        <button className="action-btn comment" onClick={handleCommentClick}>
-                            <div className="icon-wrapper"><MessageCircle size={18} /></div>
-                            <span>{post._count?.comments || 0}</span>
-                        </button>
-                        <button className={`action-btn retweet ${isReposted ? 'active' : ''}`} onClick={handleRepost}>
-                            <div className="icon-wrapper"><Repeat size={18} /></div>
-                            <span>{repostsCount}</span>
-                        </button>
-                        <button className={`action-btn like ${isLiked ? 'active' : ''}`} onClick={handleLike}>
-                            <div className="icon-wrapper"><Heart size={18} fill={isLiked ? "currentColor" : "none"} /></div>
-                            <span>{likesCount}</span>
-                        </button>
-                        <button className="action-btn share" onClick={(e) => e.stopPropagation()}>
-                            <div className="icon-wrapper"><Share size={18} /></div>
-                        </button>
-                    </div>
-                </div>
-            </div>
+  const handleCommentClick = (e) => {
+    e.stopPropagation();
+    navigate(`/posts/${post.id}`);
+  };
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    if (!post?.id || !isOwner) return;
+    const confirmed = window.confirm(t('post.confirm_delete', 'Delete this post?'));
+    if (!confirmed) return;
+    try {
+      await PostService.deletePost(post.id);
+      onDelete(post.id);
+    } catch (error) {
+      console.error('Failed to delete post', error);
+    }
+  };
+
+  return (
+    <article className={`post-card ${isDetailView ? 'post-card-detail' : ''}`} onClick={goToPost} role="article">
+      <div className="post-avatar-col">
+        <div className="post-avatar">
+          {avatarUrl ? (
+            <img src={avatarUrl} alt={displayName} />
+          ) : (
+            <span>{displayName.charAt(0)}</span>
+          )}
         </div>
-    );
+      </div>
+
+      <div className="post-content-col">
+        <header className="post-header">
+          <div className="post-info">
+            <div className="post-name-row">
+              <span className="post-name">{displayName}</span>
+              {post?.user?.role === 'professor' && (
+                <span className="post-role-badge">{t('feed.role.professor', 'Professor')}</span>
+              )}
+            </div>
+            <div className="post-meta-row">
+              {handle && <span className="post-handle">{handle}</span>}
+              {timeLabel && <span className="post-dot">•</span>}
+              {timeLabel && <span className="post-time">{timeLabel}</span>}
+            </div>
+          </div>
+
+          <div className="post-header-actions">
+            {isOwner && (
+              <button className="ghost-icon-btn danger" onClick={handleDelete} aria-label={t('post.delete', 'Delete post')}>
+                <Trash2 size={18} />
+              </button>
+            )}
+            <button className="ghost-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="More">
+              <MoreHorizontal size={18} />
+            </button>
+          </div>
+        </header>
+
+        <div className="post-text">{post?.content}</div>
+
+        <div className="post-actions-bar">
+          <button className="action-btn comment" onClick={handleCommentClick}>
+            <div className="icon-wrapper">
+              <MessageCircle size={18} />
+            </div>
+            <span className="action-count">{formatCount(counts.comments)}</span>
+          </button>
+
+          <button className={`action-btn repost ${isReposted ? 'active' : ''}`} onClick={toggleRepost}>
+            <div className="icon-wrapper">
+              <Repeat2 size={18} />
+            </div>
+            <span className="action-count">{formatCount(counts.reposts)}</span>
+          </button>
+
+          <button className={`action-btn like ${isLiked ? 'active' : ''}`} onClick={toggleLike}>
+            <div className="icon-wrapper">
+              <Heart size={18} />
+            </div>
+            <span className="action-count">{formatCount(counts.likes)}</span>
+          </button>
+
+          <button className="action-btn views" onClick={(e) => e.stopPropagation()}>
+            <div className="icon-wrapper">
+              <BarChart3 size={18} />
+            </div>
+            <span className="action-count">{formatCount(counts.views)}</span>
+          </button>
+
+          <div className="action-btn-group">
+            <button className="ghost-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Bookmark">
+              <Bookmark size={17} />
+            </button>
+            <button className="ghost-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Share">
+              <Share2 size={17} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
 };
 
 export default PostCard;

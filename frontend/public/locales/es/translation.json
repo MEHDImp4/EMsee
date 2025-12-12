@@ -223,6 +223,11 @@
         "followers_can_reply": "Seguidores solo",
         "no_one_can_reply": "Nadie puede responder"
     },
+    "post": {
+        "delete": "Eliminar publicación",
+        "confirm_delete": "¿Eliminar esta publicación?",
+        "views": "Vistas"
+    },
     "notifications": {
         "tabs": {
             "all": "Todos",

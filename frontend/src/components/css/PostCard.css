@@ -1,0 +1,242 @@
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+.post-card {
+  display: flex;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.post-card:hover {
+  background-color: color-mix(in srgb, var(--hover) 65%, transparent);
+  border-color: var(--border);
+}
+
+.post-card-detail {
+  cursor: default;
+}
+
+.post-avatar-col {
+  flex-shrink: 0;
+}
+
+.post-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bg-main) 60%, var(--hover) 40%);
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.post-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-content-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.post-info {
+  min-width: 0;
+}
+
+.post-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.post-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-role-badge {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.post-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.post-handle,
+.post-time,
+.post-dot {
+  color: var(--text-muted);
+}
+
+.post-dot {
+  line-height: 1;
+}
+
+.post-header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ghost-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.ghost-icon-btn:hover {
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
+  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.ghost-icon-btn.danger:hover {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 24%, transparent);
+}
+
+.post-text {
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.post-actions-bar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  width: 100%;
+}
+
+.action-btn .icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--hover) 80%, transparent);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.action-count {
+  min-width: 12px;
+}
+
+.action-btn.comment:hover {
+  color: var(--primary);
+}
+
+.action-btn.repost:hover,
+.action-btn.repost.active {
+  color: #00ba7c;
+}
+
+.action-btn.like:hover,
+.action-btn.like.active {
+  color: #f91880;
+}
+
+.action-btn.views:hover {
+  color: var(--text-main);
+}
+
+.action-btn:hover .icon-wrapper,
+.action-btn.active .icon-wrapper {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.action-btn-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.post-card-detail {
+  border-color: color-mix(in srgb, var(--primary) 20%, var(--border) 80%);
+}
+
+@media (max-width: 640px) {
+  .post-card {
+    padding: 12px 12px;
+    border-radius: 0;
+  }
+
+  .post-actions-bar {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .action-btn {
+    padding: 6px 6px;
+    font-size: 0.85rem;
+  }
+}
