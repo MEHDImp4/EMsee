@@ -19,17 +19,19 @@
     ```bash
     cp .env.example .env
     ```
-2.  The `.env` file should contain your database credentials and the `DATABASE_URL` for Prisma:
+2.  The `.env` file should contain your database credentials and the `DATABASE_URL` for Prisma (replace placeholders with your own values and keep this file out of version control):
     ```ini
     PORT=5000
     DB_HOST=localhost
-    DB_USER=root
-    DB_PASSWORD=your_password
+    DB_USER=<DB_USER>
+    DB_PASSWORD=<DB_PASSWORD>
     DB_NAME=projetjs_db
-    JWT_SECRET=your_secret_key
+    JWT_SECRET=<JWT_SECRET>
     # Prisma connection string
-    DATABASE_URL="mysql://root:your_password@localhost:3306/projetjs_db"
+    DATABASE_URL="mysql://<DB_USER>:<DB_PASSWORD>@<HOST>:<PORT>/<DB_NAME>"
     ```
+
+If any credential was ever committed, rotate it immediately (DB user/password, JWT secret) and invalidate old values.
 
 ## Database Migration (Prisma)
 

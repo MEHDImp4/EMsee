@@ -68,11 +68,15 @@ npm install
 
 2) Configurer la base de données (fichier d'environnement)
 
-Créez un fichier `.env` dans `backend/` (ou adaptez) contenant la variable `DATABASE_URL` pointant vers votre instance PostgreSQL. Exemple :
+Créez un fichier `.env` dans `backend/` (ou adaptez) contenant la variable `DATABASE_URL` pointant vers votre instance PostgreSQL/MySQL. Exemple (à personnaliser) :
 
 ```bash
-DATABASE_URL="mysql://user:password@localhost:3306/nom_de_la_db"
+DATABASE_URL="mysql://<DB_USER>:<DB_PASSWORD>@<HOST>:<PORT>/<DB_NAME>"
 ```
+
+Ne mettez jamais de véritables identifiants en dur dans les fichiers suivis par Git : utilisez un `.env` local ou un gestionnaire de secrets.
+
+Si des identifiants ont déjà été exposés, remplacez-les immédiatement (rotation des mots de passe/JWT/DB) et révoquez les anciens secrets.
 
 3) Générer/Exécuter les migrations Prisma
 
