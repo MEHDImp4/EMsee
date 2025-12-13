@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post.controller');
+const commentController = require('../controllers/comment.controller');
 const { verifyToken: authenticateToken } = require('../middlewares/authMiddleware');
 const { createPostSchema } = require('../validators/post.schema');
 const validateRequest = require('../middlewares/validateRequest');
@@ -176,8 +177,8 @@ router.get('/:id/comments', postController.getPostComments);
  */
 router.get('/user/:username', postController.getUserPosts);
 
-router.get('/comments/:id/path', postController.getCommentPath);
-router.get('/comments/:id', postController.getCommentById);
+router.get('/comments/:id/path', commentController.getCommentPath);
+router.get('/comments/:id', commentController.getCommentById);
 
 /**
  * @swagger

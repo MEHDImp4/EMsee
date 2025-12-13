@@ -14,21 +14,40 @@ const formatCount = (value = 0) => {
   return `${value}`;
 };
 
-const CommentThreadItem = ({ comment, depth = 0, maxDepth = 1, onReplySuccess, currentUserId, parentComment = null }) => {
+const CommentThreadItem = ({ comment, options = {} }) => {
+  const {
+    depth = 0,
+    maxDepth = 1,
+    onReplySuccess,
+    currentUserId,
+    parentComment = null
+  } = options;
+
   const navigate = useNavigate();
   const { openCompose } = useModal();
   const { t } = useTranslation();
-  const [isLiked, setIsLiked] = useState(Boolean(comment?.isLiked));
-  const [isReposted, setIsReposted] = useState(Boolean(comment?.isReposted));
-  const [isSaved, setIsSaved] = useState(Boolean(comment?.isSaved));
+  const initialIsLiked = Boolean(comment?.isLiked);
+  const initialIsReposted = Boolean(comment?.isReposted);
+  const initialIsSaved = Boolean(comment?.isSaved);
+
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [isReposted, setIsReposted] = useState(initialIsReposted);
+  const [isSaved, setIsSaved] = useState(initialIsSaved);
+
   const [showReplies, setShowReplies] = useState(depth === 0);
   const [replies, setReplies] = useState(comment?.replies || []);
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
+
+  const initialLikes = comment?._count?.likes ?? 0;
+  const initialReplies = comment?._count?.replies ?? 0;
+  const initialReposts = comment?._count?.reposts ?? 0;
+  const initialViews = comment?.views ?? comment?.viewCount ?? 0;
+
   const [counts, setCounts] = useState({
-    likes: comment?._count?.likes ?? 0,
-    replies: comment?._count?.replies ?? 0,
-    reposts: comment?._count?.reposts ?? 0,
-    views: comment?.views ?? comment?.viewCount ?? 0,
+    likes: initialLikes,
+    replies: initialReplies,
+    reposts: initialReposts,
+    views: initialViews,
   });
 
   const avatarUrl = comment?.user?.avatar ? `${BASE_URL}${comment.user.avatar}` : null;
@@ -234,11 +253,13 @@ const CommentThreadItem = ({ comment, depth = 0, maxDepth = 1, onReplySuccess, c
             <CommentThreadItem
               key={reply.id}
               comment={reply}
-              depth={depth + 1}
-              maxDepth={maxDepth}
-              onReplySuccess={onReplySuccess}
-              currentUserId={currentUserId}
-              parentComment={comment}
+              options={{
+                depth: depth + 1,
+                maxDepth,
+                onReplySuccess,
+                currentUserId,
+                parentComment: comment
+              }}
             />
           ))}
         </div>
@@ -258,10 +279,12 @@ export const CommentThread = ({ comment, currentUserId, maxReplyDepth = 1 }) => 
     <div className="comment-thread-container">
       <CommentThreadItem
         comment={mainComment}
-        depth={0}
-        maxDepth={maxReplyDepth}
-        onReplySuccess={handleReplySuccess}
-        currentUserId={currentUserId}
+        options={{
+          depth: 0,
+          maxDepth: maxReplyDepth,
+          onReplySuccess: handleReplySuccess,
+          currentUserId
+        }}
       />
     </div>
   );

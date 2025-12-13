@@ -118,5 +118,12 @@ module.exports = {
     formatPost,
     formatComment,
     checkReplyPermission,
-    buildCommentPath
+    buildCommentPath,
+    postSelectFields // Export new helper
+};
+
+const postSelectFields = {
+    id: true,
+    content: true,
+    user: { select: userSelectFields }
 };

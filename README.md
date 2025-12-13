@@ -1,19 +1,21 @@
 # EMsee
 
-[![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white)](https://react.dev) 
-[![Vite](https://img.shields.io/badge/-Vite-646cff?logo=vite&logoColor=white)](https://vitejs.dev) 
-[![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org) 
-[![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white)](https://expressjs.com) 
-[![Prisma](https://img.shields.io/badge/-Prisma-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io) 
-[![Socket.IO](https://img.shields.io/badge/-Socket.IO-010101?logo=socket.io&logoColor=white)](https://socket.io) 
-[![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) 
+[![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![Vite](https://img.shields.io/badge/-Vite-646cff?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white)](https://expressjs.com)
+[![Prisma](https://img.shields.io/badge/-Prisma-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io)
+[![Socket.IO](https://img.shields.io/badge/-Socket.IO-010101?logo=socket.io&logoColor=white)](https://socket.io)
+[![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![MySQL](https://img.shields.io/badge/-MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com)
 
-EMsee est un projet web full‑stack de type « réseau social » léger (posts, commentaires, profils, notifications). L'objectif est de fournir une plateforme moderne de partage et de communication en temps réel.
+EMsee est un projet web full‑stack de type « réseau social » léger (posts, commentaires, profils, notifications).
+L'objectif est de fournir une plateforme moderne de partage et de communication en temps réel.
 
 **Résumé court**
 
-EMsee combine un front‑end React (Vite) et un back‑end Node/Express avec Prisma pour la persistance. Il permet la création et l'interaction autour de contenus (posts, commentaires) avec des notifications et du temps réel.
+EMsee combine un front‑end React (Vite) et un back‑end Node/Express avec Prisma pour la persistance. Il permet la
+création et l'interaction autour de contenus (posts, commentaires) avec des notifications et du temps réel.
 
 **Technologies principales**
 
@@ -62,15 +64,18 @@ npm install
 
 2) Configurer la base de données (fichier d'environnement)
 
-Créez un fichier `.env` dans `backend/` (ou adaptez) contenant la variable `DATABASE_URL` pointant vers votre instance PostgreSQL/MySQL. Exemple (à personnaliser) :
+Créez un fichier `.env` dans `backend/` (ou adaptez) contenant la variable `DATABASE_URL` pointant vers votre
+instance PostgreSQL/MySQL. Exemple (à personnaliser) :
 
 ```bash
 DATABASE_URL="mysql://<DB_USER>:<DB_PASSWORD>@<HOST>:<PORT>/<DB_NAME>"
 ```
 
-Ne mettez jamais de véritables identifiants en dur dans les fichiers suivis par Git : utilisez un `.env` local ou un gestionnaire de secrets.
+Ne mettez jamais de véritables identifiants en dur dans les fichiers suivis par Git : utilisez un `.env` local ou
+un gestionnaire de secrets.
 
-Si des identifiants ont déjà été exposés, remplacez-les immédiatement (rotation des mots de passe/JWT/DB) et révoquez les anciens secrets.
+Si des identifiants ont déjà été exposés, remplacez-les immédiatement (rotation des mots de passe/JWT/DB) et
+révoquez les anciens secrets.
 
 3) Générer/Exécuter les migrations Prisma
 
@@ -101,7 +106,8 @@ Après ces étapes, ouvrez l'URL fournie par Vite (généralement `http://localh
 **API & points d'entrée importants**
 
 - `backend/src/server.js` — serveur Express et configuration globale
-- Routes principales: `backend/src/routes/post.routes.js`, `backend/src/routes/comment.routes.js`, `backend/src/routes/auth.routes.js`
+- Routes principales: `backend/src/routes/post.routes.js`, `backend/src/routes/comment.routes.js`,
+  `backend/src/routes/auth.routes.js`
 - Contrôleurs: `backend/src/controllers/` gèrent la logique métier
 - Prisma schema: `backend/prisma/schema.prisma` définit les modèles (User, Post, Comment, etc.)
 
@@ -116,7 +122,9 @@ Si vous devez ajouter un nouvel endpoint frontal, ajoutez le helper dans `fronte
 
 **Rapport synthétique**
 
-Objectif: concevoir et implémenter une application web collaborative permettant le partage de contenu et la communication en temps réel. Le projet illustre l'application d'un stack moderne JS (React + Node + Prisma) et couvre les notions suivantes:
+Objectif: concevoir et implémenter une application web collaborative permettant le partage de contenu et la
+communication en temps réel. Le projet illustre l'application d'un stack moderne JS (React + Node + Prisma) et couvre
+les notions suivantes:
 
 - Conception d'une API REST organisée selon controllers/routes
 - Persistance via Prisma et migrations gérées
@@ -162,10 +170,19 @@ Si vous voulez, je peux :
 - générer un CHANGELOG.md et un modèle de Pull Request
 
 Bon travail à toute l'équipe !
-\n+## Sécurité & secrets
-\n+Les occurrences de "password" repérées dans les fichiers d'i18n (par exemple dans [frontend/public/locales/en/translation.json](frontend/public/locales/en/translation.json#L98), [frontend/public/locales/es/translation.json](frontend/public/locales/es/translation.json#L95) et [frontend/public/locales/fr/translation.json](frontend/public/locales/fr/translation.json#L101)) sont des libellés d'interface (traductions) et non des identifiants ou secrets. Certains outils de scan peuvent les signaler à tort comme « mots de passe en dur ».
-\n+Mesures pour éviter les faux positifs tout en gardant la détection réelle des secrets :
-- Exclure les dossiers d'i18n et de build des règles de détection de secrets (ex. `frontend/public/locales/`, `frontend/dist/`).
+
+## Sécurité & secrets
+
+Les occurrences de "password" repérées dans les fichiers d'i18n (par exemple dans `frontend/public/locales/en/translation.json`,
+`frontend/public/locales/es/translation.json` et `frontend/public/locales/fr/translation.json`) sont des libellés
+d'interface (traductions) et non des identifiants ou secrets. Certains outils de scan peuvent les signaler à tort
+comme « mots de passe en dur ».
+
+Mesures pour éviter les faux positifs tout en gardant la détection réelle des secrets :
+- Exclure les dossiers d'i18n et de build des règles de détection de secrets (ex. `frontend/public/locales/`,
+  `frontend/dist/`).
 - Un fichier `.semgrepignore` est fourni pour Semgrep afin d'ignorer ces chemins.
 - Ne jamais committer de véritables secrets. Utiliser des variables d'environnement (`.env`) et des stores de secrets.
-\n+Si vous utilisez un autre outil (CodeQL, Trivy, Gitleaks, etc.), configurez l'équivalent pour ignorer les chemins des locales.
+
+Si vous utilisez un autre outil (CodeQL, Trivy, Gitleaks, etc.), configurez l'équivalent pour ignorer les chemins
+des locales.

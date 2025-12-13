@@ -3,7 +3,10 @@ const { getIo } = require('../services/socketService');
 const {
     userSelectFields,
     commentCountFields,
-    buildCommentInclude
+    buildCommentInclude,
+    formatComment,
+    buildCommentPath,
+    postSelectFields
 } = require('./helpers/post.helpers');
 const prisma = new PrismaClient();
 
@@ -168,7 +171,11 @@ const getCommentReplies = async (req, res) => {
     try {
         const commentId = parseInt(req.params.id, 10);
         const currentUserId = req.user?.id;
-        const depth = req.query.depth ? Math.min(parseInt(req.query.depth, 10), 3) : 2;
+
+        let depth = 2;
+        if (req.query.depth) {
+            depth = Math.min(parseInt(req.query.depth, 10), 3);
+        }
 
         const replies = await prisma.comment.findMany({
             where: { parentCommentId: commentId },
@@ -183,10 +190,69 @@ const getCommentReplies = async (req, res) => {
     }
 };
 
+const getCommentById = async (req, res) => {
+    try {
+        const commentId = parseInt(req.params.id);
+        const currentUserId = req.user?.id;
+
+        const comment = await prisma.comment.findUnique({
+            where: { id: commentId },
+            include: buildCommentInclude(currentUserId)
+        });
+
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        res.json(formatComment(comment));
+    } catch (error) {
+        console.error('Error fetching comment:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const getCommentPath = async (req, res) => {
+    try {
+        const commentId = parseInt(req.params.id);
+
+        const comment = await prisma.comment.findUnique({
+            where: { id: commentId },
+            include: {
+                user: { select: userSelectFields },
+                post: {
+                    select: postSelectFields
+                }
+            }
+        });
+
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        const path = await buildCommentPath(comment.parentCommentId);
+
+        res.json({
+            post: comment.post,
+            path,
+            comment: {
+                id: comment.id,
+                content: comment.content,
+                user: comment.user,
+                createdAt: comment.createdAt
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching comment path:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 module.exports = {
     toggleLike,
     toggleRepost,
     toggleSave,
     replyToComment,
     getCommentReplies,
+    getCommentById,
+    getCommentPath
 };

@@ -16,14 +16,24 @@ const formatCount = (value = 0) => {
 const CommentCard = ({ comment, onReply, disableReply = false }) => {
   const navigate = useNavigate();
   const { openCompose } = useModal();
-  const [isLiked, setIsLiked] = useState(Boolean(comment?.isLiked));
-  const [isReposted, setIsReposted] = useState(Boolean(comment?.isReposted));
-  const [isSaved, setIsSaved] = useState(Boolean(comment?.isSaved));
+  const initialIsLiked = Boolean(comment?.isLiked);
+  const initialIsReposted = Boolean(comment?.isReposted);
+  const initialIsSaved = Boolean(comment?.isSaved);
+
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [isReposted, setIsReposted] = useState(initialIsReposted);
+  const [isSaved, setIsSaved] = useState(initialIsSaved);
+
+  const initialLikes = comment?._count?.likes ?? 0;
+  const initialReplies = comment?._count?.replies ?? 0;
+  const initialReposts = comment?._count?.reposts ?? 0;
+  const initialViews = comment?.views ?? comment?.viewCount ?? 0;
+
   const [counts, setCounts] = useState({
-    likes: comment?._count?.likes ?? 0,
-    replies: comment?._count?.replies ?? 0,
-    reposts: comment?._count?.reposts ?? 0,
-    views: comment?.views ?? comment?.viewCount ?? 0,
+    likes: initialLikes,
+    replies: initialReplies,
+    reposts: initialReposts,
+    views: initialViews,
   });
 
   const avatarUrl = comment?.user?.avatar ? `${BASE_URL}${comment.user.avatar}` : null;

@@ -20,6 +20,14 @@ const AuthService = {
     },
 
     /**
+     * Check availability of username/email
+     * @param {object} payload { username } or { email }
+     */
+    checkAvailability: async (payload) => {
+        return await api.post('/auth/check-availability', payload);
+    },
+
+    /**
      * Logout user
      */
     logout: () => {

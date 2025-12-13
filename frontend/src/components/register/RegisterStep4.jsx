@@ -8,6 +8,15 @@ const RegisterStep4 = ({ form, setField, validation, showErrors, errors }) => {
     const { password, confirmPassword, showPassword } = form;
     const { isPasswordValid, doPasswordsMatch } = validation;
 
+    const getBorderColor = (hasError, isValid) => {
+        if (hasError || isValid === false) return 'var(--danger)';
+        if (isValid === true) return 'var(--primary)';
+        return undefined;
+    };
+
+    const passwordBorderColor = getBorderColor(showErrors && !password, isPasswordValid);
+    const confirmPasswordBorderColor = getBorderColor(showErrors && !confirmPassword, doPasswordsMatch);
+
     return (
         <>
             <div className="form-group">
@@ -22,7 +31,7 @@ const RegisterStep4 = ({ form, setField, validation, showErrors, errors }) => {
                         value={password}
                         style={{
                             paddingRight: '2.5rem',
-                            borderColor: (showErrors && !password) || isPasswordValid === false ? 'var(--danger)' : isPasswordValid === true ? 'var(--primary)' : undefined
+                            borderColor: passwordBorderColor
                         }}
                         onChange={(e) => setField('password', e.target.value)}
                         autoFocus
@@ -61,7 +70,7 @@ const RegisterStep4 = ({ form, setField, validation, showErrors, errors }) => {
                         className="form-input"
                         value={confirmPassword}
                         style={{
-                            borderColor: (showErrors && !confirmPassword) || doPasswordsMatch === false ? 'var(--danger)' : doPasswordsMatch === true ? 'var(--primary)' : undefined
+                            borderColor: confirmPasswordBorderColor
                         }}
                         onChange={(e) => setField('confirmPassword', e.target.value)}
                         aria-invalid={doPasswordsMatch === false ? "true" : "false"}

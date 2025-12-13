@@ -1,6 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import PostService from '../services/post.service';
 
+// Helper to reduce nesting in state updates
+const incrementCommentCount = (prevPost) => {
+    if (!prevPost) return prevPost;
+    return {
+        ...prevPost,
+        _count: {
+            ...prevPost._count,
+            comments: (prevPost._count?.comments || 0) + 1
+        }
+    };
+};
+
 const usePostPage = ({ id, socket }) => {
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
@@ -43,13 +55,7 @@ const usePostPage = ({ id, socket }) => {
             if (newComment.postId === parseInt(id, 10) && !commentExists(newComment.id)) {
                 commentIdsRef.current.add(newComment.id);
                 setComments((prev) => [...prev, newComment]);
-                setPost((prev) => prev ? {
-                    ...prev,
-                    _count: {
-                        ...prev._count,
-                        comments: (prev._count?.comments || 0) + 1
-                    }
-                } : prev);
+                setPost(incrementCommentCount);
             }
         };
 
@@ -61,13 +67,7 @@ const usePostPage = ({ id, socket }) => {
         if (commentExists(newComment.id)) return;
         commentIdsRef.current.add(newComment.id);
         setComments((prev) => [...prev, newComment]);
-        setPost((prev) => prev ? {
-            ...prev,
-            _count: {
-                ...prev._count,
-                comments: (prev._count?.comments || 0) + 1
-            }
-        } : prev);
+        setPost(incrementCommentCount);
     };
 
     const handleSubmitReply = async () => {

@@ -35,14 +35,23 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
   const { user } = useAuth();
   const { openCompose } = useModal();
 
-  const [isLiked, setIsLiked] = useState(Boolean(post?.isLiked));
-  const [isReposted, setIsReposted] = useState(Boolean(post?.isReposted));
+  const initialIsLiked = Boolean(post?.isLiked);
+  const initialIsReposted = Boolean(post?.isReposted);
+
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [isReposted, setIsReposted] = useState(initialIsReposted);
   const [isBusy, setIsBusy] = useState(false);
+
+  const initialLikes = post?._count?.likes ?? 0;
+  const initialComments = post?._count?.comments ?? 0;
+  const initialReposts = post?._count?.reposts ?? 0;
+  const initialViews = post?.views ?? post?.viewCount ?? 0;
+
   const [counts, setCounts] = useState({
-    likes: post?._count?.likes ?? 0,
-    comments: post?._count?.comments ?? 0,
-    reposts: post?._count?.reposts ?? 0,
-    views: post?.views ?? post?.viewCount ?? 0,
+    likes: initialLikes,
+    comments: initialComments,
+    reposts: initialReposts,
+    views: initialViews,
   });
 
   const isOwner = user?.id && post?.user?.id && user.id === post.user.id;
@@ -142,11 +151,16 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
               <span className="post-name">{displayName}</span>
               {userRole && (
                 <span className={`post-role-badge post-role-${userRole}`}>
-                  {userRole === 'professor'
-                    ? t('feed.role.professor', 'Professor')
-                    : userRole === 'admin'
-                      ? t('feed.role.admin', 'Admin')
-                      : t('feed.role.student', 'Student')}
+                  {(() => {
+                    switch (userRole) {
+                      case 'professor':
+                        return t('feed.role.professor', 'Professor');
+                      case 'admin':
+                        return t('feed.role.admin', 'Admin');
+                      default:
+                        return t('feed.role.student', 'Student');
+                    }
+                  })()}
                 </span>
               )}
             </div>

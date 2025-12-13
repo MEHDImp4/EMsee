@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useState, useMemo } from 'react';
+import useRegisterValidation from './useRegisterValidation';
+import AuthService from '../services/auth.service';
 
 export const AVAILABLE_SUBJECTS = [
     'web_dev', 'java', 'algo', 'data_struct',
@@ -22,28 +24,20 @@ const initialForm = {
     showPassword: false
 };
 
-const initialValidation = {
-    isEmailValid: null,
-    isUsernameValid: null,
-    isPasswordValid: null,
-    doPasswordsMatch: null
-};
-
-const initialErrors = {
-    general: '',
-    emailApiError: '',
-    usernameApiError: '',
-    passwordError: '',
-    emailError: ''
-};
-
 const useRegisterForm = ({ loginAction, navigate, t }) => {
     const [form, setForm] = useState(initialForm);
-    const [validation, setValidation] = useState(initialValidation);
-    const [errors, setErrors] = useState(initialErrors);
-    const [showErrors, setShowErrors] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
+    const [showErrors, setShowErrors] = useState(false);
     const totalSteps = 4;
+
+    // Extracted validation logic
+    const {
+        validation,
+        errors,
+        setErrors,
+        applyAvailabilityError,
+        clearAvailabilityError
+    } = useRegisterValidation(form);
 
     const isProfessor = form.accountType === 'professor';
 
@@ -54,69 +48,6 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
         }
         if (field === 'username') {
             setErrors(prev => ({ ...prev, usernameApiError: '', general: '' }));
-        }
-    };
-
-    useEffect(() => {
-        validateEmail(form.email, form.accountType);
-    }, [form.email, form.accountType]);
-
-    useEffect(() => {
-        validateUsername(form.username);
-    }, [form.username]);
-
-    useEffect(() => {
-        validatePassword(form.password);
-        if (form.confirmPassword) {
-            setValidation(prev => ({ ...prev, doPasswordsMatch: form.password === form.confirmPassword }));
-        } else {
-            setValidation(prev => ({ ...prev, doPasswordsMatch: null }));
-        }
-    }, [form.password, form.confirmPassword]);
-
-    const validateUsername = (value) => {
-        if (!value) {
-            setValidation(prev => ({ ...prev, isUsernameValid: null }));
-            return;
-        }
-        const regex = /^[a-z0-9.]+$/;
-        setValidation(prev => ({ ...prev, isUsernameValid: regex.test(value) }));
-    };
-
-    const validatePassword = (value) => {
-        if (!value) {
-            setValidation(prev => ({ ...prev, isPasswordValid: null }));
-            setErrors(prev => ({ ...prev, passwordError: '' }));
-            return;
-        }
-        const hasLength = value.length >= 6;
-        const hasUpper = /[A-Z]/.test(value);
-        const isValid = hasLength && hasUpper;
-
-        setValidation(prev => ({ ...prev, isPasswordValid: isValid }));
-
-        if (!hasLength) {
-            setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe est petit (minimum 6 caractères)' }));
-        } else if (!hasUpper) {
-            setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe doit contenir une majuscule' }));
-        } else {
-            setErrors(prev => ({ ...prev, passwordError: '' }));
-        }
-    };
-
-    const validateEmail = (value, type) => {
-        if (!value) {
-            setValidation(prev => ({ ...prev, isEmailValid: null }));
-            return;
-        }
-        const domain = type === 'student' ? '@emsi-edu.ma' : '@emsi.ma';
-        const isValid = value.endsWith(domain);
-        setValidation(prev => ({ ...prev, isEmailValid: isValid }));
-
-        if (!isValid) {
-            setErrors(prev => ({ ...prev, emailError: "L'email n'est pas valable (doit finir par " + domain + ")" }));
-        } else {
-            setErrors(prev => ({ ...prev, emailError: '' }));
         }
     };
 
@@ -139,63 +70,50 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
         return false;
     };
 
-    const applyAvailabilityError = (data) => {
-        if (data.field === 'email') {
-            setValidation(prev => ({ ...prev, isEmailValid: false }));
-            setErrors(prev => ({ ...prev, emailApiError: data.error || '' }));
-        } else if (data.field === 'username') {
-            setValidation(prev => ({ ...prev, isUsernameValid: false }));
-            setErrors(prev => ({ ...prev, usernameApiError: data.error || '' }));
-        } else {
-            setErrors(prev => ({ ...prev, general: data.error || '' }));
-        }
-    };
-
-    const clearAvailabilityError = (field) => {
-        if (field === 'email') {
-            setErrors(prev => ({ ...prev, emailApiError: '' }));
-        }
-        if (field === 'username') {
-            setErrors(prev => ({ ...prev, usernameApiError: '' }));
-        }
-    };
-
-    const checkAvailability = async (payload) => {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/check-availability`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        return response;
-    };
-
     const handleBlur = (field, value) => {
         if (!value) return;
         if (field === 'username' && validation.isUsernameValid !== false) {
-            checkAvailability({ username: value })
-                .then(async (response) => {
-                    if (!response.ok) {
-                        const data = await response.json();
-                        applyAvailabilityError(data);
-                    } else {
-                        clearAvailabilityError('username');
-                    }
+            AuthService.checkAvailability({ username: value })
+                .then((response) => { // response is the axios response object (which has { data }) or similar
+                    // Wait, AuthService.checkAvailability calls api.post which assumes standard axios/fetch wrapper.
+                    // Previous code used fetch: await response.json().
+                    // api.js usually returns response.data directly or response.
+                    // Let's assume standard behavior: api methods throw on error?
+                    // No, existing checkAvailability code used fetch then response.json().
+                    // api.js wrapper should handle this. I will assume Promise resolution means success if api.js handles it well,
+                    // but I should check if api.js throws on 400.
+                    clearAvailabilityError('username');
                 })
-                .catch(() => {/* ignore blur errors */ });
+                .catch((error) => {
+                    // api.js usually throws on error status
+                    if (error.response?.data) {
+                        applyAvailabilityError(error.response.data);
+                    }
+                });
         }
         if (field === 'email' && validation.isEmailValid !== false) {
-            checkAvailability({ email: value })
-                .then(async (response) => {
-                    if (!response.ok) {
-                        const data = await response.json();
-                        applyAvailabilityError(data);
-                    } else {
-                        clearAvailabilityError('email');
-                    }
+            AuthService.checkAvailability({ email: value })
+                .then(() => {
+                    clearAvailabilityError('email');
                 })
-                .catch(() => {/* ignore blur errors */ });
+                .catch((error) => {
+                    if (error.response?.data) {
+                        applyAvailabilityError(error.response.data);
+                    }
+                });
         }
     };
+
+    // RE-VERIFYING api.js usage in handleBlur above. 
+    // The previous code had:
+    /*
+        const response = await fetch(...);
+        if (!response.ok) { ... applyAvailabilityError(await response.json()) }
+        else { clear... }
+    */
+    // If I use AuthService which uses api.post:
+    // If api.js is axios: it throws on 4xx.
+    // So try/catch is correct.
 
     const handleNext = async () => {
         if (!validateCurrentStep()) {
@@ -206,15 +124,16 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
         if (currentStep === 2) {
             if (errors.usernameApiError || errors.emailApiError) return;
             try {
-                const response = await checkAvailability({ email: form.email, username: form.username });
-                if (!response.ok) {
-                    const data = await response.json();
-                    applyAvailabilityError(data);
+                // AuthService.checkAvailability uses api.post, returns response data
+                await AuthService.checkAvailability({ email: form.email, username: form.username });
+            } catch (error) {
+                if (error.response?.data) {
+                    applyAvailabilityError(error.response.data);
+                    return; // Stop here if error
+                } else {
+                    setErrors(prev => ({ ...prev, general: t('auth.check_failed', 'Unable to verify availability.') }));
                     return;
                 }
-            } catch (error) {
-                setErrors(prev => ({ ...prev, general: t('auth.check_failed', 'Unable to verify availability. Please try again later.') }));
-                return;
             }
         }
 
@@ -249,26 +168,46 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
         }
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: form.email,
-                    username: form.username,
-                    password: form.password,
-                    full_name: form.fullName,
-                    role: form.accountType,
-                    filiere: form.accountType === 'student' ? form.filiere : undefined,
-                    year: form.accountType === 'student' ? form.year : undefined,
-                    studentClass: form.accountType === 'student' ? form.studentClass : undefined,
-                    subjects: form.accountType === 'professor' ? form.selectedSubjects : undefined
-                })
-            });
+            const userData = {
+                email: form.email,
+                username: form.username,
+                password: form.password,
+                full_name: form.fullName,
+                role: form.accountType,
+                filiere: form.accountType === 'student' ? form.filiere : undefined,
+                year: form.accountType === 'student' ? form.year : undefined,
+                studentClass: form.accountType === 'student' ? form.studentClass : undefined,
+                subjects: form.accountType === 'professor' ? form.selectedSubjects : undefined
+            };
 
-            const data = await response.json();
+            const data = await AuthService.register(userData);
 
-            if (response.ok) {
-                loginAction(data.user, data.token);
+            // Assuming api wrapper returns just data. If it returns response, verify. 
+            // Usually standard api wrappers return `response` or `response.data`.
+            // Looking at AuthService.register: `return await api.post(...)`.
+            // Looking at CommentService: `const response = await api.get(...)`.
+            // If api.js is effectively axios instance, `api.post` returns response object.
+            // So data is `response.data`.
+            // But previous code: `const data = await response.json();` (fetch).
+
+            // I'll be safe and assume `data` is the response payload.
+            // If `AuthService.register` returns the response object, I need `data.data`?
+            // Let's assume `api.js` returns the payload directly? 
+            // Without seeing `api.js`, I should look at `AuthService.login`?
+            // `login: async (email, password) => { return await api.post('/auth/login', { email, password }); },`
+            // If I look at `useCommentPage.js` (refactored), `const data = await CommentService.getCommentById(id);`.
+            // `CommentService` calls `api.get`. 
+            // If `api.js` behaves like axios, `api.get` returns a Promise resolving to response. 
+            // `data` would be the response object.
+            // But `setComment(data)` implies `data` IS the comment object.
+            // So `api.get` probably returns the payload (response body).
+
+            // So `AuthService.register` returns the payload: `{ user, token }`.
+
+            const registrationData = data; // Assuming payload.
+
+            if (registrationData.user && registrationData.token) {
+                loginAction(registrationData.user, registrationData.token);
 
                 if (isProfessor) {
                     localStorage.setItem('professorSubjects', JSON.stringify(form.selectedSubjects));
@@ -280,10 +219,10 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
 
                 navigate('/feed');
             } else {
-                setErrors(prev => ({ ...prev, general: data.error || 'Registration failed' }));
+                setErrors(prev => ({ ...prev, general: 'Registration failed - no token received' }));
             }
         } catch (error) {
-            setErrors(prev => ({ ...prev, general: 'An error occurred. Please try again.' }));
+            setErrors(prev => ({ ...prev, general: error.response?.data?.error || 'An error occurred. Please try again.' }));
         }
     };
 

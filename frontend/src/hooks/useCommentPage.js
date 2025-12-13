@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import CommentService from '../services/comment.service';
-import { API_URL } from '../services/api';
 
 const useCommentPage = ({ id, socket }) => {
     const [comment, setComment] = useState(null);
@@ -17,18 +16,7 @@ const useCommentPage = ({ id, socket }) => {
         const loadComment = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_URL}/posts/comments/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to load comment');
-                }
-
-                const data = await response.json();
+                const data = await CommentService.getCommentById(id);
                 setComment(data);
 
                 const repliesData = await CommentService.getCommentReplies(id);
@@ -43,7 +31,7 @@ const useCommentPage = ({ id, socket }) => {
                 }
             } catch (err) {
                 console.error('Error loading comment:', err);
-                setError(err.message);
+                setError(err.message || 'Failed to load comment');
             } finally {
                 setLoading(false);
             }

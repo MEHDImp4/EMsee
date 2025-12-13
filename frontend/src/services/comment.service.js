@@ -24,6 +24,10 @@ const CommentService = {
     getCommentPath: async (commentId) => {
         const response = await api.get(`/posts/comments/${commentId}/path`);
         return response;
+    },
+    getCommentById: async (commentId) => {
+        const response = await api.get(`/posts/comments/${commentId}`);
+        return response;
     }
 };
 
