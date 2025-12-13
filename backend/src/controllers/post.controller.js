@@ -11,41 +11,79 @@ const {
 } = require('./helpers/post.helpers');
 const prisma = new PrismaClient();
 
-const createPost = async (req, res) => {
-    try {
-        const { content, replyPermission } = req.body;
-        const userId = req.user.id;
+/**
+ * Creates a new post.
+ * @param {Object} req - The request object
+ * @param {Object} req.body - The request body
+ * @param {string} req.body.content - The content of the post
+ * @param {string} [req.body.replyPermission] - Reply permission setting
+ * @param {Object} res - The response object
+ * @returns {Promise<void>}
+ */
+const asyncHandler = require('../middlewares/asyncHandler');
 
-        if (!content) {
-            return res.status(400).json({ error: 'Content is required' });
-        }
+/**
+ * Creates a new post.
+ * @param {Object} req - The request object
+ * @param {Object} req.body - The request body
+ * @param {string} req.body.content - The content of the post
+ * @param {string} [req.body.replyPermission] - Reply permission setting
+ * @param {Object} res - The response object
+ * @returns {Promise<void>}
+ */
+const createPost = asyncHandler(async (req, res) => {
+    const { content, replyPermission } = req.body;
+    const userId = req.user.id;
 
-        const post = await prisma.post.create({
-            data: {
-                content,
-                userId,
-                replyPermission: replyPermission || 'EVERYONE'
-            },
-            include: { user: { select: userSelectFields } }
-        });
+    const post = await prisma.post.create({
+        data: {
+            content,
+            userId,
+            replyPermission: replyPermission || 'EVERYONE'
+        },
+        include: { user: { select: userSelectFields } }
+    });
 
-        res.status(201).json(post);
-    } catch (error) {
-        console.error('Error creating post:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-};
+    res.status(201).json(post);
+});
 
+/**
+ * Retrieves all posts with optional pagination.
+ * @param {Object} req - The request object
+ * @param {number} [req.query.limit] - Max number of posts
+ * @param {number} [req.query.cursor] - Cursor for pagination
+ * @param {Object} res - The response object
+ * @returns {Promise<void>}
+ */
 const getAllPosts = async (req, res) => {
     try {
         const currentUserId = req.user?.id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
 
-        const posts = await prisma.post.findMany({
-            orderBy: { createdAt: 'desc' },
-            include: buildPostInclude(currentUserId)
+        // Validation simple du limit pour éviter l'abus
+        const take = Math.min(Math.max(limit, 1), 50);
+
+        const [posts, total] = await Promise.all([
+            prisma.post.findMany({
+                take,
+                skip,
+                orderBy: { createdAt: 'desc' },
+                include: buildPostInclude(currentUserId)
+            }),
+            prisma.post.count()
+        ]);
+
+        res.json({
+            data: posts.map(formatPost),
+            meta: {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit)
+            }
         });
-
-        res.json(posts.map(formatPost));
     } catch (error) {
         console.error('Error fetching posts:', error);
         res.status(500).json({ error: 'Server error' });
@@ -165,14 +203,30 @@ const getPostComments = async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
         const currentUserId = req.user?.id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
 
-        const comments = await prisma.comment.findMany({
-            where: { postId, parentCommentId: null },
-            include: buildCommentInclude(currentUserId),
-            orderBy: { createdAt: 'asc' }
+        const [comments, total] = await Promise.all([
+            prisma.comment.findMany({
+                where: { postId, parentCommentId: null },
+                take: limit,
+                skip,
+                include: buildCommentInclude(currentUserId),
+                orderBy: { createdAt: 'asc' }
+            }),
+            prisma.comment.count({ where: { postId, parentCommentId: null } })
+        ]);
+
+        res.json({
+            data: comments.map(formatComment),
+            meta: {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit)
+            }
         });
-
-        res.json(comments.map(formatComment));
     } catch (error) {
         console.error('Error fetching comments:', error);
         res.status(500).json({ error: 'Server error' });
@@ -200,40 +254,76 @@ const getPostById = async (req, res) => {
     }
 };
 
+/**
+ * Retrieves posts and reposts for a specific user using a UNION query.
+ * @param {Object} req - The request object
+ * @param {string} req.params.username - Target username
+ * @param {Object} res - The response object
+ * @returns {Promise<void>}
+ */
 const getUserPosts = async (req, res) => {
     try {
         const username = req.params.username;
         const currentUserId = req.user?.id;
+        const limit = parseInt(req.query.limit) || 20;
+        const offset = parseInt(req.query.offset) || 0;
 
         const user = await prisma.user.findUnique({ where: { username } });
         if (!user) return res.status(404).json({ error: 'User not found' });
 
-        const postInclude = buildPostInclude(currentUserId);
+        // Optimisation: Utilisation d'une requête SQL brute pour unir et trier posts/reposts
+        // sans tout charger en mémoire.
+        const timeline = await prisma.$queryRaw`
+            SELECT 
+                id, 
+                createdAt, 
+                'post' as type, 
+                id as originalPostId 
+            FROM posts 
+            WHERE userId = ${user.id}
+            
+            UNION ALL
+            
+            SELECT 
+                id, 
+                createdAt, 
+                'repost' as type, 
+                postId as originalPostId 
+            FROM reposts 
+            WHERE userId = ${user.id}
+            
+            ORDER BY createdAt DESC
+            LIMIT ${limit} OFFSET ${offset}
+        `;
 
-        const [posts, reposts] = await Promise.all([
-            prisma.post.findMany({
-                where: { userId: user.id },
-                include: postInclude
-            }),
-            prisma.repost.findMany({
-                where: { userId: user.id },
-                include: { post: { include: postInclude } }
-            })
-        ]);
+        if (timeline.length === 0) {
+            return res.json([]);
+        }
 
-        const formattedReposts = reposts.map(r => ({
-            ...r.post,
-            isRepostContext: true,
-            repostedAt: r.createdAt
-        }));
+        const postIds = timeline.map(item => item.originalPostId);
 
-        const allPosts = [...posts, ...formattedReposts].sort((a, b) => {
-            const dateA = new Date(a.repostedAt || a.createdAt);
-            const dateB = new Date(b.repostedAt || b.createdAt);
-            return dateB - dateA;
-        });
+        // Charger les posts complets
+        const postsMap = await prisma.post.findMany({
+            where: { id: { in: postIds } },
+            include: buildPostInclude(currentUserId)
+        }).then(posts => new Map(posts.map(p => [p.id, p])));
 
-        res.json(allPosts.map(formatPost));
+        // Reconstruire la liste dans l'ordre du timeline
+        const result = timeline.map(item => {
+            const post = postsMap.get(item.originalPostId);
+            if (!post) return null; // Should not happen ideally
+
+            if (item.type === 'repost') {
+                return {
+                    ...post,
+                    isRepostContext: true,
+                    repostedAt: item.createdAt
+                };
+            }
+            return post;
+        }).filter(Boolean);
+
+        res.json(result.map(formatPost));
     } catch (error) {
         console.error('Error fetching user posts:', error);
         res.status(500).json({ error: 'Server error' });

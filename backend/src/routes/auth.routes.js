@@ -13,11 +13,102 @@ const {
     registerSchema,
     loginSchema,
     updateProfileSchema
-} = require('../validators/auth.validator');
-const validate = require('../middlewares/validate.middleware');
+} = require('../validators/auth.schema');
+const validateRequest = require('../middlewares/validateRequest');
 
-router.post('/register', validate(registerSchema), register);
-router.post('/login', validate(loginSchema), login);
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication and user management
+ */
+
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - username
+ *               - firstName
+ *               - lastName
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Validation error
+ */
+router.post('/register', validateRequest(registerSchema), register);
+
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful, returns token
+ *       401:
+ *         description: Invalid credentials
+ */
+router.post('/login', validateRequest(loginSchema), login);
+
+/**
+ * @swagger
+ * /api/auth/check-availability:
+ *   post:
+ *     summary: Check if username or email is available
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Availability check result
+ */
 router.post('/check-availability', checkAvailability); // Usually doesn't need strict schema or can use partial
 
 // Multer Config
@@ -44,9 +135,41 @@ const upload = multer({
     }
 });
 
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   put:
+ *     summary: Update user profile
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *               banner:
+ *                 type: string
+ *                 format: binary
+ *               bio:
+ *                 type: string
+ *               filiere:
+ *                 type: string
+ *               year:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated
+ *       401:
+ *         description: Unauthorized
+ */
 router.put('/profile', verifyToken, upload.fields([
     { name: 'avatar', maxCount: 1 },
     { name: 'banner', maxCount: 1 }
-]), validate(updateProfileSchema), updateProfile);
+]), validateRequest(updateProfileSchema), updateProfile);
 
 module.exports = router;

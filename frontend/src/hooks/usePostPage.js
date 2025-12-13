@@ -21,7 +21,9 @@ const usePostPage = ({ id, socket }) => {
                 ]);
 
                 setPost(postData);
-                const safeComments = commentsData || [];
+                // Handle paginated response ({ data, meta }) or legacy array
+                const commentsList = commentsData.data ? commentsData.data : commentsData;
+                const safeComments = commentsList || [];
                 setComments(safeComments);
                 commentIdsRef.current = new Set(safeComments.map((c) => c.id));
             } catch (error) {

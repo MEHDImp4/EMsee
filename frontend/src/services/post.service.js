@@ -1,9 +1,9 @@
 import api from './api';
 
 const PostService = {
-    getAllPosts: async () => {
+    getAllPosts: async (page = 1, limit = 20) => {
         try {
-            const response = await api.get('/posts');
+            const response = await api.get(`/posts?page=${page}&limit=${limit}`);
             return response;
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -71,9 +71,9 @@ const PostService = {
         }
     },
 
-    getComments: async (postId) => {
+    getComments: async (postId, page = 1, limit = 20) => {
         try {
-            const response = await api.get(`/posts/${postId}/comments`);
+            const response = await api.get(`/posts/${postId}/comments?page=${page}&limit=${limit}`);
             return response;
         } catch (error) {
             console.error('Error fetching comments:', error);

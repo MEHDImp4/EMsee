@@ -30,10 +30,13 @@ const useFeed = () => {
     const fetchPosts = async () => {
         setLoading(true);
         try {
-            const data = activeTab === 'class'
+            const response = activeTab === 'class'
                 ? await PostService.getClassPosts()
                 : await PostService.getAllPosts();
-            setPosts(data || []);
+
+            // Handle paginated response ({ data, meta }) or legacy array
+            const postsData = response.data ? response.data : response;
+            setPosts(postsData || []);
         } catch (error) {
             console.error('Failed to load posts', error);
         } finally {
