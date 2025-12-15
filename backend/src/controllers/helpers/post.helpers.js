@@ -109,6 +109,12 @@ const buildCommentPath = async (parentCommentId) => {
     return path;
 };
 
+const postSelectFields = {
+    id: true,
+    content: true,
+    user: { select: userSelectFields }
+};
+
 module.exports = {
     userSelectFields,
     postCountFields,
@@ -120,10 +126,4 @@ module.exports = {
     checkReplyPermission,
     buildCommentPath,
     postSelectFields // Export new helper
-};
-
-const postSelectFields = {
-    id: true,
-    content: true,
-    user: { select: userSelectFields }
 };
