@@ -1,0 +1,121 @@
+.hashtag-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.hashtag-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color, #e1e8ed);
+    margin-bottom: 1rem;
+}
+
+.hashtag-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary, #14171a);
+}
+
+.hashtag-stats {
+    color: var(--text-secondary, #657786);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.hashtag-content {
+    background: var(--card-background, #ffffff);
+}
+
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.no-posts {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary, #657786);
+}
+
+.no-posts p {
+    font-size: 1.1rem;
+}
+
+.error-message {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.error-message h2 {
+    color: var(--error-color, #e0245e);
+    margin-bottom: 1rem;
+}
+
+.error-message p {
+    color: var(--text-secondary, #657786);
+}
+
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.load-more-btn {
+    padding: 0.75rem 2rem;
+    background-color: var(--primary-color, #1DA1F2);
+    color: white;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.load-more-btn:hover:not(:disabled) {
+    background-color: var(--primary-hover, #1a8cd8);
+}
+
+.load-more-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dark mode */
+[data-theme="dark"] .hashtag-header {
+    border-bottom-color: #38444d;
+}
+
+[data-theme="dark"] .hashtag-header h1 {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .hashtag-stats {
+    color: #8899a6;
+}
+
+[data-theme="dark"] .hashtag-content {
+    background: #15202b;
+}
+
+[data-theme="dark"] .no-posts p,
+[data-theme="dark"] .error-message p {
+    color: #8899a6;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .hashtag-page {
+        padding: 0;
+    }
+
+    .hashtag-header {
+        padding: 1rem;
+    }
+
+    .hashtag-header h1 {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,216 @@
+.media-picker {
+    margin-top: 0.75rem;
+}
+
+.media-picker-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.media-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.media-btn:hover {
+    background: var(--hover-bg, rgba(0,0,0,0.05));
+    color: var(--primary-color, #1DA1F2);
+}
+
+.media-btn.active {
+    background: rgba(29, 161, 242, 0.1);
+    color: var(--primary-color, #1DA1F2);
+    border-color: var(--primary-color, #1DA1F2);
+}
+
+.media-content {
+    margin-top: 0.75rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+}
+
+/* Image Upload */
+.image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.5rem;
+}
+
+.image-preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.remove-image-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.add-image-btn {
+    aspect-ratio: 1;
+    border: 2px dashed var(--border);
+    background: transparent;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.add-image-btn:hover {
+    border-color: var(--primary-color, #1DA1F2);
+    color: var(--primary-color, #1DA1F2);
+    background: rgba(29, 161, 242, 0.05);
+}
+
+/* Code Editor */
+.code-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.language-select {
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.code-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    resize: vertical;
+}
+
+/* Poll Creator */
+.poll-creator {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.poll-question-input {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.poll-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.poll-option-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.poll-option-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.remove-option-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.remove-option-btn:hover {
+    background: var(--danger-color, #ff4444);
+    color: white;
+    border-color: var(--danger-color, #ff4444);
+}
+
+.add-option-btn {
+    padding: 0.5rem 1rem;
+    border: 1px dashed var(--border);
+    background: transparent;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.add-option-btn:hover {
+    border-color: var(--primary-color, #1DA1F2);
+    color: var(--primary-color, #1DA1F2);
+    background: rgba(29, 161, 242, 0.05);
+}
+
+.poll-question-input:focus,
+.poll-option-input:focus,
+.code-textarea:focus,
+.language-select:focus {
+    outline: none;
+    border-color: var(--primary-color, #1DA1F2);
+}

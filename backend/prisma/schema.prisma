@@ -34,6 +34,8 @@ model User {
   commentSaves   CommentSave[]
   reposts        Repost[]
   likes          Like[]
+  pollVotes      PollVote[]
+  postViews      PostView[]
   followedBy     Follow[]        @relation("following")
   following      Follow[]        @relation("follower")
 
@@ -48,6 +50,11 @@ model Post {
   comments        Comment[]
   reposts         Repost[]
   likes           Like[]
+  hashtags        PostHashtag[]
+  media           Media[]
+  poll            Poll?
+  views           Int             @default(0)
+  postViews       PostView[]
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   replyPermission ReplyPermission @default(EVERYONE)
@@ -74,6 +81,7 @@ model Comment {
   likes           CommentLike[]
   reposts         CommentRepost[]
   saves           CommentSave[]
+  hashtags        CommentHashtag[]
   createdAt       DateTime        @default(now())
 
   @@map("comments")
@@ -149,4 +157,115 @@ model Follow {
 
   @@unique([followerId, followingId])
   @@map("follows")
+}
+
+model Hashtag {
+  id        Int              @id @default(autoincrement())
+  name      String           @unique @db.VarChar(100)
+  posts     PostHashtag[]
+  comments  CommentHashtag[]
+  createdAt DateTime         @default(now())
+
+  @@index([name])
+  @@map("hashtags")
+}
+
+model PostHashtag {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  hashtagId Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  hashtag   Hashtag  @relation(fields: [hashtagId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, hashtagId])
+  @@index([hashtagId])
+  @@index([createdAt])
+  @@map("post_hashtags")
+}
+
+model CommentHashtag {
+  id        Int      @id @default(autoincrement())
+  commentId Int
+  hashtagId Int
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  hashtag   Hashtag  @relation(fields: [hashtagId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, hashtagId])
+  @@index([hashtagId])
+  @@index([createdAt])
+  @@map("comment_hashtags")
+}
+
+model Media {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  type      MediaType // 'image', 'code'
+  url       String?   // For images
+  code      String?   @db.Text // For code snippets
+  language  String?   // Programming language for code
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@index([postId])
+  @@map("media")
+}
+
+enum MediaType {
+  IMAGE
+  CODE
+}
+
+model Poll {
+  id        Int          @id @default(autoincrement())
+  postId    Int          @unique
+  question  String       @db.Text
+  options   PollOption[]
+  votes     PollVote[]
+  endsAt    DateTime?
+  post      Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@map("polls")
+}
+
+model PollOption {
+  id        Int        @id @default(autoincrement())
+  pollId    Int
+  text      String     @db.VarChar(255)
+  votes     PollVote[]
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+
+  @@index([pollId])
+  @@map("poll_options")
+}
+
+model PollVote {
+  id        Int        @id @default(autoincrement())
+  pollId    Int
+  optionId  Int
+  userId    Int
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option    PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+
+  @@unique([pollId, userId])
+  @@index([pollId])
+  @@index([optionId])
+  @@map("poll_votes")
+}
+
+model PostView {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([postId, userId])
+  @@map("post_views")
 }

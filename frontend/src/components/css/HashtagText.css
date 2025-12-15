@@ -1,0 +1,30 @@
+.hashtag-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.hashtag-link {
+    color: var(--primary-color, #1DA1F2);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.hashtag-link:hover {
+    text-decoration: underline;
+    color: var(--primary-hover, #1a8cd8);
+}
+
+.hashtag-link:active {
+    color: var(--primary-active, #1570b3);
+}
+
+/* Dark mode support */
+[data-theme="dark"] .hashtag-link {
+    color: #1DA1F2;
+}
+
+[data-theme="dark"] .hashtag-link:hover {
+    color: #4db8ff;
+}

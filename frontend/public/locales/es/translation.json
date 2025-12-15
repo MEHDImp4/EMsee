@@ -71,8 +71,13 @@
         "contact": "Contacto",
         "contributors": "Colaboradores:",
         "made_with_love": "Hecho con ❤️ para estudiantes."
-    },
-    "features": {
+    },    "trending": {
+        "hot_posts": "Posts en tendencia",
+        "hot_topics": "Temas en tendencia",
+        "no_posts": "No hay posts en tendencia en este momento",
+        "no_topics": "No hay temas en tendencia en este momento",
+        "most_engaged": "Temas más comprometidos"
+    },    "features": {
         "title": "Todo lo que necesitas",
         "subtitle": "Una suite completa de herramientas para interactuar.",
         "discussions_title": "Discusiones",
@@ -218,6 +223,7 @@
         "morocco": "Marruecos"
     },
     "feed": {
+        "uploading": "Publicando...",
         "title": "Noticias",
         "placeholder": "¿Qué está pasando en EMSI?",
         "onboarding_title": "Bienvenido",
@@ -241,6 +247,7 @@
         "no_one_can_reply": "Nadie puede responder"
     },
     "post": {
+        "cannot_comment_own": "No puedes comentar en tu propia publicación",
         "delete": "Eliminar publicación",
         "confirm_delete": "¿Eliminar esta publicación?",
         "views": "Vistas",
@@ -309,5 +316,41 @@
         "welcome_title": "Bienvenido a tus mensajes",
         "welcome_desc": "Conéctate con otros estudiantes y profesores en privado. Selecciona una conversación para comenzar.",
         "start_conv": "Nueva conversación"
+    },
+    "explore": {
+        "tabs": {
+            "foryou": "Para ti",
+            "users": "Usuarios",
+            "hashtags": "Hashtags",
+            "trending": "Tendencias"
+        },
+        "search_placeholder": "Buscar en EMsee",
+        "searching": "Buscando...",
+        "no_results": "No hay resultados para \"{{query}}\"",
+        "search_hint": "Usa la barra de búsqueda para encontrar personas.",
+        "for_you": "Para ti",
+        "no_trends": "No hay tendencias en este momento",
+        "recent_users": "Nuevos usuarios",
+        "category": {
+            "your_activity": "Tu actividad",
+            "following": "Siguiendo",
+            "your_class": "Tu clase",
+            "trending": "Tendencias",
+            "popular": "Popular"
+        }
+    },
+    "hashtags": {
+        "trending": "Tendencias",
+        "explore": "Explorar hashtag",
+        "posts_count": "publicaciones",
+        "no_posts": "No se encontraron publicaciones con este hashtag",
+        "error": "Error",
+        "error_loading": "Error al cargar el contenido del hashtag"
+    },
+    "common": {
+        "loading": "Cargando...",
+        "load_more": "Cargar más",
+        "error": "Error",
+        "retry": "Reintentar"
     }
 }

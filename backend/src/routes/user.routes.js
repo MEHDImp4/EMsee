@@ -32,6 +32,24 @@ router.get('/search', authenticateToken, userController.searchUsers);
 
 /**
  * @swagger
+ * /api/users/recent:
+ *   get:
+ *     summary: Get recently registered users
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: List of recently registered users
+ */
+router.get('/recent', authenticateToken, userController.getRecentUsers);
+
+/**
+ * @swagger
  * /api/users/suggestions:
  *   get:
  *     summary: Get user suggestions

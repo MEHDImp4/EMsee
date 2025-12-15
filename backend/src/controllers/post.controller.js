@@ -6,10 +6,10 @@ const { getIo } = require('../services/socketService');
  * Creates a new post.
  */
 const createPost = asyncHandler(async (req, res) => {
-    const { content, replyPermission } = req.body;
+    const { content, replyPermission, media, poll } = req.body;
     const userId = req.user.id;
 
-    const post = await postService.createPost(userId, content, replyPermission);
+    const post = await postService.createPost(userId, content, replyPermission, media, poll);
 
     res.status(201).json(post);
 });
@@ -49,6 +49,12 @@ const likePost = async (req, res) => {
         const userId = req.user.id;
 
         const result = await postService.toggleLikePost(postId, userId);
+        
+        // Increment view count (async, don't wait)
+        postService.incrementPostViews(postId, userId).catch(err => 
+            console.error('Error incrementing views:', err)
+        );
+        
         return res.json(result);
     } catch (error) {
         console.error('Error liking post:', error);
@@ -78,6 +84,11 @@ const commentPost = async (req, res) => {
         if (!content) return res.status(400).json({ error: 'Content required' });
 
         const comment = await postService.createComment(postId, userId, content);
+
+        // Increment view count (async, don't wait)
+        postService.incrementPostViews(postId, userId).catch(err => 
+            console.error('Error incrementing views:', err)
+        );
 
         try {
             getIo().emit('new_comment', comment);
@@ -120,6 +131,13 @@ const getPostById = async (req, res) => {
 
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });
+        }
+
+        // Increment view count (async, don't wait)
+        if (currentUserId) {
+            postService.incrementPostViews(postId, currentUserId).catch(err => 
+                console.error('Error incrementing views:', err)
+            );
         }
 
         res.json(post);
@@ -165,6 +183,18 @@ const deletePost = async (req, res) => {
     }
 };
 
+const incrementViews = async (req, res) => {
+    try {
+        const postId = parseInt(req.params.id);
+        const userId = req.user?.id;
+        await postService.incrementPostViews(postId, userId);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error incrementing views:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -175,5 +205,6 @@ module.exports = {
     getUserPosts,
     deletePost,
     getPostById,
-    getClassPosts
+    getClassPosts,
+    incrementViews
 };

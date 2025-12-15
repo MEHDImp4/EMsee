@@ -51,6 +51,28 @@
             }
         }
     },
+    "explore": {
+        "tabs": {
+            "foryou": "Pour vous",
+            "users": "Utilisateurs",
+            "hashtags": "Hashtags",
+            "trending": "Tendances"
+        },
+        "search_placeholder": "Rechercher sur EMsee",
+        "searching": "Recherche en cours...",
+        "no_results": "Aucun résultat pour \"{{query}}\"",
+        "search_hint": "Utilisez la barre de recherche pour trouver des personnes.",
+        "for_you": "Pour vous",
+        "no_trends": "Aucune tendance pour le moment",
+        "recent_users": "Nouveaux utilisateurs",
+        "category": {
+            "your_activity": "Votre activité",
+            "following": "Personnes suivies",
+            "your_class": "Votre classe",
+            "trending": "Tendances",
+            "popular": "Populaire"
+        }
+    },
     "app_name": "ProjetJS",
     "step": "Étape",
     "next": "Suivant",
@@ -71,6 +93,13 @@
         "contact": "Contact",
         "contributors": "Contributeurs :",
         "made_with_love": "Fait avec ❤️ pour les étudiants."
+    },
+    "trending": {
+        "hot_posts": "Posts tendance",
+        "hot_topics": "Sujets tendance",
+        "no_posts": "Aucun post tendance pour le moment",
+        "no_topics": "Aucun sujet tendance pour le moment",
+        "most_engaged": "Sujets les plus engageants"
     },
     "features": {
         "title": "Tout ce dont vous avez besoin",
@@ -221,6 +250,7 @@
         "morocco": "Maroc"
     },
     "feed": {
+        "uploading": "Publication...",
         "title": "Fil d'actualité",
         "placeholder": "Quoi de neuf à l'EMSI ?",
         "onboarding_title": "Bienvenue",
@@ -244,6 +274,7 @@
         "no_one_can_reply": "Personne ne peut répondre"
     },
     "post": {
+        "cannot_comment_own": "Vous ne pouvez pas commenter votre propre post",
         "delete": "Supprimer le post",
         "confirm_delete": "Supprimer ce post ?",
         "views": "Vues",
@@ -308,5 +339,19 @@
         "welcome_title": "Bienvenue dans vos messages",
         "welcome_desc": "Connectez-vous avec d'autres étudiants et professeurs en privé. Sélectionnez une conversation pour commencer.",
         "start_conv": "Nouvelle conversation"
+    },
+    "hashtags": {
+        "trending": "Tendances",
+        "explore": "Explorer le hashtag",
+        "posts_count": "publications",
+        "no_posts": "Aucune publication trouvée avec ce hashtag",
+        "error": "Erreur",
+        "error_loading": "Échec du chargement du contenu du hashtag"
+    },
+    "common": {
+        "loading": "Chargement...",
+        "load_more": "Charger plus",
+        "error": "Erreur",
+        "retry": "Réessayer"
     }
 }

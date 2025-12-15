@@ -27,7 +27,18 @@ const buildPostInclude = (currentUserId) => ({
     user: { select: userSelectFields },
     _count: { select: postCountFields },
     likes: { where: { userId: currentUserId }, select: { userId: true } },
-    reposts: { where: { userId: currentUserId }, select: { userId: true } }
+    reposts: { where: { userId: currentUserId }, select: { userId: true } },
+    media: true,
+    poll: {
+        include: {
+            options: {
+                include: {
+                    _count: { select: { votes: true } }
+                }
+            },
+            votes: currentUserId ? { where: { userId: currentUserId } } : false
+        }
+    }
 });
 
 const buildCommentInclude = (currentUserId) => ({

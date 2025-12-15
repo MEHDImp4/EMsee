@@ -31,9 +31,19 @@ const PostService = {
         }
     },
 
-    createPost: async (content, replyPermission = 'EVERYONE') => {
+    createPost: async (content, replyPermission = 'EVERYONE', media = null, poll = null) => {
         try {
-            const response = await api.post('/posts', { content, replyPermission });
+            const payload = { content, replyPermission };
+            
+            if (media && media.length > 0) {
+                payload.media = media;
+            }
+            
+            if (poll) {
+                payload.poll = poll;
+            }
+            
+            const response = await api.post('/posts', payload);
             return response;
         } catch (error) {
             console.error('Error creating post:', error);
@@ -98,6 +108,15 @@ const PostService = {
         } catch (error) {
             console.error('Error deleting post:', error);
             throw error;
+        }
+    },
+
+    incrementViews: async (postId) => {
+        try {
+            await api.post(`/posts/${postId}/view`);
+        } catch (error) {
+            // Silent fail - views are non-critical
+            console.error('Error incrementing views:', error);
         }
     }
 };

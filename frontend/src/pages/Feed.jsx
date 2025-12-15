@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, BarChart2, Code, Smile, Globe, Users, Lock } from 'lucide-react';
 import PostCard from '../components/PostCard';
+import ImageUpload from '../components/ImageUpload';
+import CodeEditor from '../components/CodeEditor';
+import PollCreator from '../components/PollCreator';
+import EmojiPicker from '../components/EmojiPicker';
 import { useAuth } from '../context/AuthContext';
 import useFeed from '../hooks/useFeed';
 import { BASE_URL } from '../services/api';
@@ -10,6 +14,8 @@ import './css/Feed.css';
 const Feed = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const textareaRef = useRef(null);
+  const imageInputRef = useRef(null);
   const {
     activeTab,
     setActiveTab,
@@ -23,8 +29,74 @@ const Feed = () => {
     setShowPermissionMenu,
     permissionMenuRef,
     handlePostSubmit,
-    handleDeletePost
+    handleDeletePost,
+    mediaFiles,
+    setMediaFiles,
+    codeSnippet,
+    setCodeSnippet,
+    pollData,
+    setPollData,
+    isUploading
   } = useFeed();
+
+  const handleEmojiSelect = (emoji) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = newPostContent;
+    const before = text.substring(0, start);
+    const after = text.substring(end);
+
+    setNewPostContent(before + emoji + after);
+
+    // Set cursor position after emoji
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+      textarea.focus();
+    }, 0);
+  };
+
+  const handleImageClick = () => {
+    imageInputRef.current?.click();
+  };
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    
+    // Validate file sizes
+    const invalidFiles = files.filter(file => file.size > MAX_SIZE);
+    if (invalidFiles.length > 0) {
+      alert(`Fichier(s) trop volumineux! Maximum 10MB par image.\nFichiers rejetés: ${invalidFiles.map(f => f.name).join(', ')}`);
+      return;
+    }
+    
+    const newImages = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
+    
+    const updatedImages = [...mediaFiles, ...newImages].slice(0, 4);
+    setMediaFiles(updatedImages);
+  };
+
+  const handleCodeClick = () => {
+    if (!codeSnippet) {
+      setCodeSnippet({ code: '', language: 'javascript' });
+    } else {
+      setCodeSnippet(null);
+    }
+  };
+
+  const handlePollClick = () => {
+    if (!pollData) {
+      setPollData({ question: '', options: ['', ''] });
+    } else {
+      setPollData(null);
+    }
+  };
 
   return (
     <div className="feed-container">
@@ -43,7 +115,10 @@ const Feed = () => {
             className={`tab-item ${activeTab === 'class' ? 'active' : ''}`}
             onClick={() => setActiveTab('class')}
           >
-            <span>{t('feed.tabs.class', 'Ma Classe')}</span>
+            <span>
+              {t('feed.tabs.class', 'Ma Classe')}
+              {user?.studentClass && ` (${user.studentClass})`}
+            </span>
             {activeTab === 'class' && <div className="tab-indicator" />}
           </button>
         </div>
@@ -60,6 +135,7 @@ const Feed = () => {
         </div>
         <div className="compose-content">
           <textarea
+            ref={textareaRef}
             placeholder={t('feed.placeholder', "Quoi de neuf à l'EMSI ?")}
             className="compose-input"
             rows="3"
@@ -71,6 +147,20 @@ const Feed = () => {
                 handlePostSubmit();
               }
             }}
+          />
+
+          {/* Media Previews */}
+          <ImageUpload images={mediaFiles} onImagesChange={setMediaFiles} />
+          <CodeEditor 
+            code={codeSnippet?.code} 
+            language={codeSnippet?.language}
+            onCodeChange={setCodeSnippet}
+            onClose={() => setCodeSnippet(null)}
+          />
+          <PollCreator 
+            poll={pollData}
+            onPollChange={setPollData}
+            onClose={() => setPollData(null)}
           />
 
           <div className="compose-reply-permission" ref={permissionMenuRef} onClick={() => setShowPermissionMenu(!showPermissionMenu)}>
@@ -113,13 +203,46 @@ const Feed = () => {
 
           <div className="compose-actions">
             <div className="compose-icons">
-              <button className="icon-btn" title="Media"><Image size={20} /></button>
-              <button className="icon-btn" title="Poll"><BarChart2 size={20} /></button>
-              <button className="icon-btn" title="Code"><Code size={20} /></button>
-              <button className="icon-btn" title="Emoji"><Smile size={20} /></button>
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                style={{ display: 'none' }}
+                onChange={handleImageUpload}
+              />
+              <button 
+                className="icon-btn" 
+                type="button"
+                title="Images"
+                onClick={handleImageClick}
+              >
+                <Image size={20} />
+              </button>
+              <button 
+                className="icon-btn" 
+                type="button"
+                title="Code"
+                onClick={handleCodeClick}
+              >
+                <Code size={20} />
+              </button>
+              <button 
+                className="icon-btn" 
+                type="button"
+                title="Sondage"
+                onClick={handlePollClick}
+              >
+                <BarChart2 size={20} />
+              </button>
+              <EmojiPicker onEmojiSelect={handleEmojiSelect} buttonClassName="icon-btn" />
             </div>
-            <button className="post-btn-small" onClick={handlePostSubmit} disabled={!newPostContent.trim()}>
-              {t('sidebar.publish', 'Publier')}
+            <button 
+              className="post-btn-small" 
+              onClick={handlePostSubmit} 
+              disabled={(!newPostContent.trim() && !mediaFiles.length && !codeSnippet && !pollData) || isUploading}
+            >
+              {isUploading ? t('feed.uploading', 'Publication...') : t('sidebar.publish', 'Publier')}
             </button>
           </div>
         </div>

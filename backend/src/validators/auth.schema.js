@@ -13,16 +13,63 @@ const usernameSchema = z.string()
     .max(30, "Le nom d'utilisateur est trop long")
     .regex(/^[a-zA-Z0-9_]+$/, "Le nom d'utilisateur ne doit contenir que des lettres, chiffres et underscores");
 
+// Email domains by role
+const DOMAINS = {
+    student: '@emsi-edu.ma',
+    professor: '@emsi.ma',
+    admin: '@emsi.ma'
+};
+
 const registerSchema = z.object({
     body: z.object({
         username: usernameSchema,
         email: z.string().email('Email invalide'),
         password: passwordSchema,
-        full_name: z.string().optional(),
+        full_name: z.string().min(2, 'Le nom complet doit contenir au moins 2 caractères'),
+        role: z.enum(['student', 'professor', 'admin']),
         filiere: z.string().optional(),
         year: z.string().optional(),
-        studentClass: z.string().optional().transform(val => val?.toUpperCase()),
+        studentClass: z.string().optional(),
         subjects: z.array(z.string()).optional()
+    }).superRefine((data, ctx) => {
+        // Validate email domain based on role
+        const requiredDomain = DOMAINS[data.role];
+        if (requiredDomain && !data.email.endsWith(requiredDomain)) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `L'email doit se terminer par ${requiredDomain} pour le rôle ${data.role}`,
+                path: ['email']
+            });
+        }
+
+        // Validate student-specific fields
+        if (data.role === 'student') {
+            if (!data.filiere) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'La filière est requise pour les étudiants',
+                    path: ['filiere']
+                });
+            }
+            if (!data.year) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "L'année est requise pour les étudiants",
+                    path: ['year']
+                });
+            }
+        }
+
+        // Validate professor-specific fields
+        if (data.role === 'professor') {
+            if (!data.subjects || data.subjects.length === 0) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Au moins une matière est requise pour les professeurs',
+                    path: ['subjects']
+                });
+            }
+        }
     })
 });
 

@@ -51,6 +51,28 @@
             }
         }
     },
+    "explore": {
+        "tabs": {
+            "foryou": "For you",
+            "users": "Users",
+            "hashtags": "Hashtags",
+            "trending": "Trending"
+        },
+        "search_placeholder": "Search EMsee",
+        "searching": "Searching...",
+        "no_results": "No result for \"{{query}}\"",
+        "search_hint": "Use the search bar to find people.",
+        "for_you": "For you",
+        "no_trends": "No trends at the moment",
+        "recent_users": "New users",
+        "category": {
+            "your_activity": "Your activity",
+            "following": "Following",
+            "your_class": "Your class",
+            "trending": "Trending",
+            "popular": "Popular"
+        }
+    },
     "app_name": "ProjetJS",
     "step": "Step",
     "next": "Next",
@@ -71,6 +93,13 @@
         "contact": "Contact",
         "contributors": "Contributors:",
         "made_with_love": "Made with ❤️ for students."
+    },
+    "trending": {
+        "hot_posts": "Hot Posts",
+        "hot_topics": "Hot Topics",
+        "no_posts": "No trending posts at the moment",
+        "no_topics": "No trending topics at the moment",
+        "most_engaged": "Most Engaged Topics"
     },
     "features": {
         "title": "Everything you need",
@@ -228,6 +257,7 @@
         "onboarding_dismiss": "Later",
         "onboarding_get_started": "Let's go",
         "everyone_can_reply": "Everyone can reply",
+        "uploading": "Publishing...",
         "tabs": {
             "foryou": "For you",
             "class": "My Class"
@@ -246,6 +276,7 @@
     "post": {
         "delete": "Delete post",
         "confirm_delete": "Delete this post?",
+        "cannot_comment_own": "You cannot comment on your own post",
         "views": "Views",
         "reply": "Reply",
         "reply_placeholder": "Add your reply",
@@ -308,5 +339,19 @@
         "welcome_title": "Welcome to your messages",
         "welcome_desc": "Connect with other students and professors privately. Select a conversation to start.",
         "start_conv": "New conversation"
+    },
+    "hashtags": {
+        "trending": "Trending",
+        "explore": "Explore hashtag",
+        "posts_count": "posts",
+        "no_posts": "No posts found with this hashtag",
+        "error": "Error",
+        "error_loading": "Failed to load hashtag content"
+    },
+    "common": {
+        "loading": "Loading...",
+        "load_more": "Load more",
+        "error": "Error",
+        "retry": "Retry"
     }
 }

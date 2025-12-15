@@ -1,0 +1,126 @@
+.poll-creator-container {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: var(--bg-card);
+}
+
+.poll-creator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border);
+}
+
+.poll-title {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.close-poll-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.close-poll-btn:hover {
+    background: var(--hover-bg);
+}
+
+.poll-question-input {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    font-size: 1rem;
+}
+
+.poll-question-input:focus {
+    outline: none;
+}
+
+.poll-question-input::placeholder {
+    color: var(--text-muted);
+}
+
+.poll-options {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.poll-option-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.poll-option-input {
+    flex: 1;
+    padding: 10px 12px;
+    background: var(--bg-main);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.poll-option-input:focus {
+    outline: 2px solid var(--primary);
+    border-color: var(--primary);
+}
+
+.poll-option-input::placeholder {
+    color: var(--text-muted);
+}
+
+.remove-option-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.remove-option-btn:hover {
+    background: rgba(244, 33, 46, 0.1);
+    color: #f4212e;
+}
+
+.add-option-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--primary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0 12px 12px;
+}
+
+.add-option-btn:hover {
+    background: rgba(var(--primary-rgb, 29, 155, 240), 0.1);
+}

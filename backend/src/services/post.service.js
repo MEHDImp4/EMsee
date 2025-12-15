@@ -7,18 +7,57 @@ const {
     formatComment,
     checkReplyPermission
 } = require('../controllers/helpers/post.helpers');
+const { extractHashtags } = require('../utils/hashtagExtractor');
 
 const prisma = new PrismaClient();
 
-const createPost = async (userId, content, replyPermission) => {
+const createPost = async (userId, content = '', replyPermission = 'EVERYONE', mediaData = null, pollData = null) => {
+    // Extract hashtags from content
+    const hashtagNames = extractHashtags(content || '');
+    
     const post = await prisma.post.create({
         data: {
-            content,
+            content: content || '',
             userId,
             replyPermission: replyPermission || 'EVERYONE'
         },
         include: { user: { select: userSelectFields } }
     });
+
+    // Create or link hashtags
+    if (hashtagNames.length > 0) {
+        await linkHashtagsToPost(post.id, hashtagNames);
+    }
+
+    // Add media if provided
+    if (mediaData && mediaData.length > 0) {
+        await Promise.all(mediaData.map(media => 
+            prisma.media.create({
+                data: {
+                    postId: post.id,
+                    type: media.type,
+                    url: media.url,
+                    code: media.code,
+                    language: media.language
+                }
+            })
+        ));
+    }
+
+    // Create poll if provided
+    if (pollData) {
+        await prisma.poll.create({
+            data: {
+                postId: post.id,
+                question: pollData.question,
+                endsAt: pollData.endsAt ? new Date(pollData.endsAt) : null,
+                options: {
+                    create: pollData.options.map(opt => ({ text: opt }))
+                }
+            }
+        });
+    }
+
     return post;
 };
 
@@ -221,6 +260,71 @@ const deletePost = async (postId, userId) => {
     return { message: 'Post deleted successfully' };
 };
 
+/**
+ * Link hashtags to a post (create hashtags if they don't exist)
+ */
+const linkHashtagsToPost = async (postId, hashtagNames) => {
+    for (const name of hashtagNames) {
+        // Find or create hashtag
+        let hashtag = await prisma.hashtag.findUnique({ where: { name } });
+        
+        if (!hashtag) {
+            hashtag = await prisma.hashtag.create({ data: { name } });
+        }
+
+        // Create the link (skip if already exists)
+        await prisma.postHashtag.upsert({
+            where: {
+                postId_hashtagId: {
+                    postId,
+                    hashtagId: hashtag.id
+                }
+            },
+            update: {},
+            create: {
+                postId,
+                hashtagId: hashtag.id
+            }
+        });
+    }
+};
+
+const incrementPostViews = async (postId, userId = null) => {
+    // If no userId provided, just increment (for backward compatibility)
+    if (!userId) {
+        await prisma.post.update({
+            where: { id: postId },
+            data: { views: { increment: 1 } }
+        });
+        return;
+    }
+
+    // Check how many times this user has viewed this post
+    const viewCount = await prisma.postView.count({
+        where: {
+            postId,
+            userId
+        }
+    });
+
+    // Only increment if user has less than 4 views
+    if (viewCount < 4) {
+        // Create a view record
+        await prisma.postView.create({
+            data: {
+                postId,
+                userId
+            }
+        });
+
+        // Increment the total view count
+        await prisma.post.update({
+            where: { id: postId },
+            data: { views: { increment: 1 } }
+        });
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -231,5 +335,8 @@ module.exports = {
     createComment,
     getPostComments,
     getUserTimeline,
-    deletePost
+    deletePost,
+    linkHashtagsToPost,
+    incrementPostViews
 };
+

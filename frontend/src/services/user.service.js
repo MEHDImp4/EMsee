@@ -29,6 +29,10 @@ const UserService = {
         return await api.get(`/users/search?q=${encodeURIComponent(query)}`);
     },
 
+    getRecentUsers: async (limit = 10) => {
+        return await api.get(`/users/recent?limit=${limit}`);
+    },
+
     getSuggestions: async () => {
         return await api.get('/users/suggestions');
     },

@@ -6,6 +6,7 @@ import PostService from '../services/post.service';
 import { BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
+import HashtagText from './HashtagText';
 import './css/PostCard.css';
 
 const formatCount = (value = 0) => {
@@ -107,6 +108,13 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
 
   const goToPost = () => {
     if (isDetailView) return;
+    
+    // Increment views when user clicks on post
+    if (post?.id) {
+      PostService.incrementViews(post.id);
+      optimisticUpdate('views', 1);
+    }
+    
     navigate(`/posts/${post.id}`);
   };
 
@@ -183,7 +191,71 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
           </div>
         </header>
 
-        <div className="post-text">{post?.content}</div>
+        <div className="post-text">
+          <HashtagText content={post?.content} />
+        </div>
+
+        {/* Media Gallery */}
+        {post?.media && post.media.length > 0 && (
+          <div className="post-media">
+            {post.media.map((media, index) => {
+              if (media.type === 'IMAGE') {
+                return (
+                  <div key={index} className={`media-gallery grid-${post.media.filter(m => m.type === 'IMAGE').length}`}>
+                    <img 
+                      src={`${BASE_URL}${media.url}`} 
+                      alt="Post media" 
+                      className="media-image"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                );
+              }
+              
+              if (media.type === 'CODE') {
+                return (
+                  <div key={index} className="media-code" onClick={(e) => e.stopPropagation()}>
+                    <div className="code-header">
+                      <span className="code-language">{media.language}</span>
+                    </div>
+                    <pre className="code-block"><code>{media.code}</code></pre>
+                  </div>
+                );
+              }
+              
+              return null;
+            })}
+          </div>
+        )}
+
+        {/* Poll */}
+        {post?.poll && (
+          <div className="post-poll" onClick={(e) => e.stopPropagation()}>
+            <div className="poll-question">{post.poll.question}</div>
+            <div className="poll-options">
+              {post.poll.options?.map((option, index) => {
+                const totalVotes = post.poll.options.reduce((sum, opt) => sum + (opt._count?.votes || 0), 0);
+                const percentage = totalVotes > 0 ? Math.round((option._count?.votes || 0) / totalVotes * 100) : 0;
+                const hasVoted = post.poll.userVote?.optionId === option.id;
+                
+                return (
+                  <div key={option.id} className={`poll-option ${hasVoted ? 'voted' : ''}`}>
+                    <div className="poll-option-bar" style={{ width: `${percentage}%` }} />
+                    <div className="poll-option-content">
+                      <span className="poll-option-text">{option.text}</span>
+                      <span className="poll-option-percentage">{percentage}%</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {post.poll.options && (
+              <div className="poll-info">
+                {post.poll.options.reduce((sum, opt) => sum + (opt._count?.votes || 0), 0)} votes
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="post-actions-bar">
           <button

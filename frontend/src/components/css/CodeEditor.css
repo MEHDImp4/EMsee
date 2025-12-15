@@ -1,0 +1,68 @@
+.code-editor-container {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: var(--bg-card);
+}
+
+.code-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border);
+}
+
+.language-select {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.language-select:focus {
+    outline: 2px solid var(--primary);
+}
+
+.close-code-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.close-code-btn:hover {
+    background: var(--hover-bg);
+}
+
+.code-textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: none;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.code-textarea:focus {
+    outline: none;
+}
+
+.code-textarea::placeholder {
+    color: var(--text-muted);
+}

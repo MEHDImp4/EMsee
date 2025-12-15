@@ -132,35 +132,56 @@ const Profile = () => {
 
       {/* Academic Info Cards */}
       <div className="profile-grid">
-        <div className="info-card">
-          <div className="card-icon-wrapper blue">
-            <GraduationCap size={24} />
+        {user.role === 'professor' ? (
+          // For professors: Show subjects taught
+          <div className="info-card">
+            <div className="card-icon-wrapper blue">
+              <GraduationCap size={24} />
+            </div>
+            <div className="card-content">
+              <span className="card-label">{t('auth.subjects_taught')}</span>
+              <span className="card-value">
+                {user.subjects && user.subjects.length > 0
+                  ? user.subjects.map((subject) => t(`lists.subjects.${subject}`) || subject).join(', ')
+                  : 'N/A'
+                }
+              </span>
+            </div>
           </div>
-          <div className="card-content">
-            <span className="card-label">{t('auth.field_of_study')}</span>
-            <span className="card-value">{user.filiere}</span>
-          </div>
-        </div>
+        ) : (
+          // For students: Show filiere, level, class
+          <>
+            <div className="info-card">
+              <div className="card-icon-wrapper blue">
+                <GraduationCap size={24} />
+              </div>
+              <div className="card-content">
+                <span className="card-label">{t('auth.field_of_study')}</span>
+                <span className="card-value">{user.filiere}</span>
+              </div>
+            </div>
 
-        <div className="info-card">
-          <div className="card-icon-wrapper blue">
-            <GraduationCap size={24} />
-          </div>
-          <div className="card-content">
-            <span className="card-label">{t('profile.level')}</span>
-            <span className="card-value">{user.level}</span>
-          </div>
-        </div>
+            <div className="info-card">
+              <div className="card-icon-wrapper blue">
+                <GraduationCap size={24} />
+              </div>
+              <div className="card-content">
+                <span className="card-label">{t('profile.level')}</span>
+                <span className="card-value">{user.level}</span>
+              </div>
+            </div>
 
-        <div className="info-card">
-          <div className="card-icon-wrapper green">
-            <Users size={24} />
-          </div>
-          <div className="card-content">
-            <span className="card-label">{t('profile.class')}</span>
-            <span className="card-value">{user.class}</span>
-          </div>
-        </div>
+            <div className="info-card">
+              <div className="card-icon-wrapper green">
+                <Users size={24} />
+              </div>
+              <div className="card-content">
+                <span className="card-label">{t('profile.class')}</span>
+                <span className="card-value">{user.class}</span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* User Posts Section */}

@@ -47,6 +47,7 @@ router.use(authenticateToken);
  */
 router.post('/', validateRequest(createPostSchema), postController.createPost);
 router.get('/', postController.getAllPosts);
+router.post('/:id/view', postController.incrementViews);
 
 /**
  * @swagger

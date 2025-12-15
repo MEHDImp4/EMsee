@@ -96,6 +96,36 @@ const searchUsers = async (req, res) => {
     }
 };
 
+const getRecentUsers = async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 10;
+        const currentUserId = req.user?.id;
+
+        const users = await prisma.user.findMany({
+            where: currentUserId ? {
+                id: { not: currentUserId }
+            } : undefined,
+            orderBy: {
+                created_at: 'desc'
+            },
+            take: limit,
+            select: {
+                id: true,
+                username: true,
+                full_name: true,
+                avatar: true,
+                bio: true,
+                role: true
+            }
+        });
+
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching recent users:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 const getSuggestions = async (req, res) => {
     try {
         const currentUserId = req.user.id;
@@ -139,6 +169,7 @@ const getSuggestions = async (req, res) => {
 module.exports = {
     getProfile,
     searchUsers,
+    getRecentUsers,
     getSuggestions,
     followUser
 };

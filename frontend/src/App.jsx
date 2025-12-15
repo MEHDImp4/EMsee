@@ -27,6 +27,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Notifications = lazy(() => import('./pages/Notifications'));
 const PostPage = lazy(() => import('./pages/PostPage'));
 const CommentPage = lazy(() => import('./pages/CommentPage'));
+const HashtagPage = lazy(() => import('./pages/HashtagPage'));
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
                     <Route path="/feed" element={<Feed />} />
                     <Route path="/posts/:id" element={<PostPage />} /> {/* Post detail */}
                     <Route path="/comments/:id" element={<CommentPage />} /> {/* Comment detail */}
+                    <Route path="/hashtags/:name" element={<HashtagPage />} /> {/* Hashtag explore */}
                     <Route path="/messages" element={<Messages />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/profile/:username" element={<Profile />} />
@@ -63,6 +65,7 @@ function App() {
                     <Route path="/settings/language" element={<LanguageSettings />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/hashtags/:name" element={<HashtagPage />} />
                     <Route path="/bookmarks" element={<div className="container" style={{ padding: '2rem' }}><h2>Signets</h2><p>Coming Soon</p></div>} />
                     <Route path="/community" element={<div className="container" style={{ padding: '2rem' }}><h2>Communauté</h2><p>Coming Soon</p></div>} />
                   </Route>

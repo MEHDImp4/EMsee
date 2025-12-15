@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, MoreHorizontal } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Search, MoreHorizontal, TrendingUp } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import UserService from '../services/user.service';
+import HashtagService from '../services/hashtag.service';
 import { BASE_URL } from '../services/api';
 
 const TRENDS = [
@@ -20,6 +21,27 @@ const SearchBox = ({ placeholder }) => (
     </div>
 );
 
+const TrendingHashtagItem = ({ tag, t }) => {
+    const navigate = useNavigate();
+    
+    return (
+        <div 
+            className="trend-item hashtag-trend" 
+            onClick={() => navigate(`/search?q=%23${tag.name}`)}
+            style={{ cursor: 'pointer' }}
+        >
+            <div className="trend-meta">
+                <TrendingUp size={14} style={{ marginRight: '4px' }} />
+                {t('right_sidebar.trending', 'Tendances')}
+            </div>
+            <div className="trend-name">#{tag.name}</div>
+            <div className="trend-count">
+                {tag.totalCount} {t('right_sidebar.posts', 'posts')}
+            </div>
+        </div>
+    );
+};
+
 const TrendItem = ({ meta, name, count, postsLabel }) => (
     <div className="trend-item">
         <div className="trend-meta">{meta}</div>
@@ -29,19 +51,34 @@ const TrendItem = ({ meta, name, count, postsLabel }) => (
     </div>
 );
 
-const TrendsSection = ({ t }) => (
+const TrendsSection = ({ t, trendingHashtags, loadingHashtags }) => (
     <div className="sidebar-card trends-card">
         <h3>{t('right_sidebar.trends_for_you', 'Tendances pour vous')}</h3>
-        {TRENDS.map(({ metaKey, name, count }) => (
-            <TrendItem
-                key={name}
-                meta={`${t(metaKey[0], 'Tendances')} • ${t(metaKey[1], 'Maroc')}`}
-                name={name}
-                count={count}
-                postsLabel={t('right_sidebar.posts', 'posts')}
-            />
-        ))}
-        <div className="show-more">{t('right_sidebar.show_more', 'Voir plus')}</div>
+        
+        {loadingHashtags ? (
+            <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                {t('common.loading', 'Loading...')}
+            </div>
+        ) : trendingHashtags && trendingHashtags.length > 0 ? (
+            <>
+                {trendingHashtags.map(tag => (
+                    <TrendingHashtagItem key={tag.name} tag={tag} t={t} />
+                ))}
+                <Link to="/explore" className="show-more" style={{ textDecoration: 'none' }}>
+                    {t('right_sidebar.show_more', 'Voir plus')}
+                </Link>
+            </>
+        ) : (
+            TRENDS.map(({ metaKey, name, count }) => (
+                <TrendItem
+                    key={name}
+                    meta={`${t(metaKey[0], 'Tendances')} • ${t(metaKey[1], 'Maroc')}`}
+                    name={name}
+                    count={count}
+                    postsLabel={t('right_sidebar.posts', 'posts')}
+                />
+            ))
+        )}
     </div>
 );
 
@@ -93,6 +130,8 @@ const RightSidebar = () => {
     const location = useLocation();
     const [suggestions, setSuggestions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [trendingHashtags, setTrendingHashtags] = useState([]);
+    const [loadingHashtags, setLoadingHashtags] = useState(true);
 
     const isExplorePage = location.pathname === '/explore';
 
@@ -108,6 +147,21 @@ const RightSidebar = () => {
             }
         };
         fetchSuggestions();
+    }, []);
+
+    useEffect(() => {
+        const fetchTrendingHashtags = async () => {
+            try {
+                // Weighted algorithm with 24h half-life over 7 days window
+                const hashtags = await HashtagService.getTrendingHashtags(5, 7, 'weighted', 24);
+                setTrendingHashtags(hashtags || []);
+            } catch (error) {
+                console.error('Failed to load trending hashtags', error);
+            } finally {
+                setLoadingHashtags(false);
+            }
+        };
+        fetchTrendingHashtags();
     }, []);
 
     const handleFollow = async (userId) => {
@@ -128,7 +182,11 @@ const RightSidebar = () => {
             {!isExplorePage && (
                 <>
                     <SearchBox placeholder={t('right_sidebar.search', 'Rechercher')} />
-                    <TrendsSection t={t} />
+                    <TrendsSection 
+                        t={t} 
+                        trendingHashtags={trendingHashtags}
+                        loadingHashtags={loadingHashtags}
+                    />
                 </>
             )}
 

@@ -5,6 +5,7 @@ import './css/CommentCard.css';
 import CommentService from '../services/comment.service';
 import { useModal } from '../context/ModalContext';
 import { BASE_URL } from '../services/api';
+import HashtagText from './HashtagText';
 
 const formatCount = (value = 0) => {
   const abs = Math.abs(value);
@@ -125,7 +126,7 @@ const CommentCard = ({ comment, onReply, disableReply = false }) => {
           {timeLabel && <span className="comment-dot">•</span>}
           {timeLabel && <span className="comment-time">{timeLabel}</span>}
         </div>
-        <div className="comment-text">{comment.content}</div>
+        <div className="comment-text"><HashtagText content={comment.content} /></div>
         <div className="comment-actions">
           <button
             className="comment-action-btn"
