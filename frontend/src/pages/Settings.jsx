@@ -10,6 +10,14 @@ const Settings = () => {
     const { themeMode, setThemeMode } = useTheme();
     const navigate = useNavigate();
 
+    const languageLabel = React.useMemo(() => {
+        const mode = localStorage.getItem('language_mode');
+        if (mode === 'auto') return t('settings.language_auto', 'Auto');
+        if (i18n.language.startsWith('fr')) return 'Français';
+        if (i18n.language.startsWith('es')) return 'Español';
+        return 'English';
+    }, [i18n.language, t]);
+
 
     return (
         <div className="settings-page">
@@ -44,18 +52,28 @@ const Settings = () => {
                 </div>
             </div>
 
-            <div className="settings-section settings-section-card-last" style={{ padding: '0 1.5rem' }}>
-                <button
-                    className="settings-nav-item"
-                    onClick={() => navigate('/settings/language')}
-                >
-                    <span style={{ fontWeight: '500' }}>{t('settings.language', 'Langue')}</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
-                        <span>{i18n.language.startsWith('fr') ? 'Français' : 'English'}</span>
-                        {/* ChevronRight icon could be imported, but for now purely text/layout based or assume import */}
-                        <span style={{ fontSize: '1.2rem' }}>›</span>
-                    </div>
-                </button>
+            <div className="settings-section settings-section-card">
+                <h3 className="settings-section-title">{t('settings.account_security')}</h3>
+                <div className="settings-nav-list">
+                    <button
+                        className="settings-nav-item"
+                        onClick={() => navigate('/settings/language')}
+                    >
+                        <span style={{ fontWeight: '500' }}>{t('settings.language', 'Langue')}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+                            <span>{languageLabel}</span>
+                            <span style={{ fontSize: '1.2rem' }}>›</span>
+                        </div>
+                    </button>
+
+                    <button
+                        className="settings-nav-item"
+                        onClick={() => navigate('/settings/password')}
+                    >
+                        <span style={{ fontWeight: '500' }}>{t('settings.change_password')}</span>
+                        <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>›</span>
+                    </button>
+                </div>
             </div>
         </div>
     );

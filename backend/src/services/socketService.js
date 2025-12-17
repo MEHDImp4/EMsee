@@ -27,6 +27,33 @@ const initializeSocket = (server) => {
     io.on('connection', (socket) => {
         console.log(`User connected: ${socket.user?.id}`);
 
+        // Join user to their personal room for direct messages
+        if (socket.user?.id) {
+            socket.join(`user_${socket.user.id}`);
+            console.log(`User ${socket.user.id} joined room: user_${socket.user.id}`);
+        }
+
+        // Join conversation room
+        socket.on('joinConversation', (conversationId) => {
+            socket.join(`conversation_${conversationId}`);
+            console.log(`User ${socket.user.id} joined conversation: ${conversationId}`);
+        });
+
+        // Leave conversation room
+        socket.on('leaveConversation', (conversationId) => {
+            socket.leave(`conversation_${conversationId}`);
+            console.log(`User ${socket.user.id} left conversation: ${conversationId}`);
+        });
+
+        // User is typing indicator
+        socket.on('typing', ({ conversationId, isTyping }) => {
+            socket.to(`conversation_${conversationId}`).emit('userTyping', {
+                userId: socket.user.id,
+                conversationId,
+                isTyping
+            });
+        });
+
         socket.on('disconnect', () => {
             console.log('User disconnected');
         });

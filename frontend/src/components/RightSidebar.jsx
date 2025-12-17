@@ -27,7 +27,7 @@ const TrendingHashtagItem = ({ tag, t }) => {
     return (
         <div 
             className="trend-item hashtag-trend" 
-            onClick={() => navigate(`/search?q=%23${tag.name}`)}
+            onClick={() => navigate(`/explore?q=%23${tag.name}`)}
             style={{ cursor: 'pointer' }}
         >
             <div className="trend-meta">
@@ -42,14 +42,30 @@ const TrendingHashtagItem = ({ tag, t }) => {
     );
 };
 
-const TrendItem = ({ meta, name, count, postsLabel }) => (
-    <div className="trend-item">
-        <div className="trend-meta">{meta}</div>
-        <div className="trend-name">{name}</div>
-        <div className="trend-count">{count} {postsLabel}</div>
-        <button className="more-btn"><MoreHorizontal size={16} /></button>
-    </div>
-);
+const TrendItem = ({ meta, name, count, postsLabel }) => {
+    const encoded = name?.startsWith('#')
+        ? `%23${name.replace(/^#/, '')}`
+        : encodeURIComponent(name || '');
+
+    return (
+        <Link
+            to={`/explore?q=${encoded}`}
+            className="trend-item"
+            style={{ textDecoration: 'none' }}
+        >
+            <div className="trend-meta">{meta}</div>
+            <div className="trend-name">{name}</div>
+            <div className="trend-count">{count} {postsLabel}</div>
+            <button
+                className="more-btn"
+                onClick={(e) => e.preventDefault()}
+                aria-label="More options"
+            >
+                <MoreHorizontal size={16} />
+            </button>
+        </Link>
+    );
+};
 
 const TrendsSection = ({ t, trendingHashtags, loadingHashtags }) => (
     <div className="sidebar-card trends-card">
@@ -82,46 +98,59 @@ const TrendsSection = ({ t, trendingHashtags, loadingHashtags }) => (
     </div>
 );
 
-const SuggestionItem = ({ user, onFollow, t }) => (
-    <div className="suggestion-item">
-        <Link to={`/profile/${user.username}`} className="suggestion-avatar" style={{ textDecoration: 'none', display: 'block' }}>
-            <div className="avatar-circle" style={{ width: 40, height: 40, overflow: 'hidden' }}>
-                {user.avatar ? (
-                    <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                    (user.full_name || user.username).charAt(0).toUpperCase()
-                )}
-            </div>
-        </Link>
-        <div className="suggestion-info">
-            <Link to={`/profile/${user.username}`} className="suggestion-name" style={{ textDecoration: 'none', color: 'var(--text-main)', display: 'block' }}>
-                {user.full_name || user.username}
-            </Link>
-            <div className="suggestion-handle">@{user.username}</div>
-        </div>
-        <button
-            className={`btn-follow ${user.isFollowing ? 'following' : ''}`}
-            onClick={() => onFollow(user.id)}
-            style={user.isFollowing ? { background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-main)' } : {}}
+const SuggestionItem = ({ user, onFollow, t }) => {
+    const navigate = useNavigate();
+    const toSearch = `/explore?q=%40${user.username}`;
+
+    return (
+        <div
+            className="suggestion-item"
+            onClick={() => navigate(toSearch)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter') navigate(toSearch); }}
+            style={{ cursor: 'pointer' }}
         >
-            {user.isFollowing ? t('profile.following', 'Abonné') : t('right_sidebar.follow', 'Suivre')}
-        </button>
-    </div>
-);
+            <Link to={toSearch} className="suggestion-avatar" style={{ textDecoration: 'none', display: 'block' }}>
+                <div className="avatar-circle" style={{ width: 40, height: 40, overflow: 'hidden' }}>
+                    {user.avatar ? (
+                        <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                        (user.full_name || user.username).charAt(0).toUpperCase()
+                    )}
+                </div>
+            </Link>
+            <div className="suggestion-info">
+                <Link to={toSearch} className="suggestion-name" style={{ textDecoration: 'none', color: 'var(--text-main)', display: 'block' }}>
+                    {user.full_name || user.username}
+                </Link>
+                <div className="suggestion-handle">@{user.username}</div>
+            </div>
+            <button
+                className={`btn-follow ${user.isFollowing ? 'following' : ''}`}
+                onClick={(e) => { e.stopPropagation(); onFollow(user.id); }}
+                style={user.isFollowing ? { background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-main)' } : {}}
+            >
+                {user.isFollowing ? t('profile.following', 'Abonné') : t('right_sidebar.follow', 'Suivre')}
+            </button>
+        </div>
+    );
+};
 
 const SuggestionsSection = ({ suggestions, loading, onFollow, t }) => (
     <div className="sidebar-card suggestions-card">
         <h3>{t('right_sidebar.suggestions', 'Suggestions')}</h3>
-
-        {loading ? (
-            <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading...</div>
-        ) : suggestions.length > 0 ? (
-            suggestions.map((user) => (
-                <SuggestionItem key={user.id} user={user} onFollow={onFollow} t={t} />
-            ))
-        ) : (
-            <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>No suggestions</div>
-        )}
+        <div className="suggestions-list">
+            {loading ? (
+                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading...</div>
+            ) : suggestions.length > 0 ? (
+                suggestions.map((user) => (
+                    <SuggestionItem key={user.id} user={user} onFollow={onFollow} t={t} />
+                ))
+            ) : (
+                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>No suggestions</div>
+            )}
+        </div>
     </div>
 );
 

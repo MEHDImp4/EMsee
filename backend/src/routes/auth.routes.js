@@ -7,12 +7,14 @@ const { register } = require('../controllers/auth/register.controller');
 const { login } = require('../controllers/auth/login.controller');
 const { checkAvailability } = require('../controllers/auth/availability.controller');
 const { updateProfile } = require('../controllers/auth/profile.controller');
+const { changePassword } = require('../controllers/auth/password.controller');
 const { verifyToken } = require('../middlewares/authMiddleware');
 
 const {
     registerSchema,
     loginSchema,
-    updateProfileSchema
+    updateProfileSchema,
+    changePasswordSchema
 } = require('../validators/auth.schema');
 const validateRequest = require('../middlewares/validateRequest');
 
@@ -171,5 +173,40 @@ router.put('/profile', verifyToken, upload.fields([
     { name: 'avatar', maxCount: 1 },
     { name: 'banner', maxCount: 1 }
 ]), validateRequest(updateProfileSchema), updateProfile);
+
+/**
+ * @swagger
+ * /api/auth/change-password:
+ *   post:
+ *     summary: Change user password
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *               - confirmPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *               confirmPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *       400:
+ *         description: Validation error or incorrect current password
+ *       401:
+ *         description: Unauthorized
+ */
+router.post('/change-password', verifyToken, validateRequest(changePasswordSchema), changePassword);
 
 module.exports = router;

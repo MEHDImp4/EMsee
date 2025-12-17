@@ -63,6 +63,8 @@
         "no_results": "Aucun résultat pour \"{{query}}\"",
         "search_hint": "Utilisez la barre de recherche pour trouver des personnes.",
         "for_you": "Pour vous",
+        "trends_for_you": "Tendances pour vous",
+        "coming_soon": "Contenu à venir...",
         "no_trends": "Aucune tendance pour le moment",
         "recent_users": "Nouveaux utilisateurs",
         "category": {
@@ -123,6 +125,7 @@
         "select_account_type": "Sélectionnez le type de compte",
         "welcome_back": "Bon retour !",
         "join_us": "Rejoignez-nous !",
+        "class_name": "Classe (ex: IIR10, GI2)",
         "login_subtitle": "Connectez-vous pour accéder à votre fil d'actualité.",
         "username": "Nom d'utilisateur",
         "confirm_password": "Confirmer le mot de passe",
@@ -226,17 +229,7 @@
         "team_title": "L'Équipe",
         "team_desc": "Un projet réalisé avec passion par des étudiants, pour des étudiants."
     },
-    "explore": {
-        "search_placeholder": "Rechercher sur EMsee",
-        "trends_for_you": "Tendances pour vous",
-        "coming_soon": "Contenu à venir...",
-        "tabs": {
-            "foryou": "Pour vous",
-            "trending": "Tendances",
-            "clubs": "Clubs",
-            "events": "Événements"
-        }
-    },
+    
     "right_sidebar": {
         "search": "Rechercher",
         "trends_for_you": "Tendances pour vous",
@@ -313,6 +306,21 @@
         "appearance": "Apparence",
         "theme_desc": "Choisissez votre thème préféré.",
         "language": "Langue",
+        "language_auto": "Auto (système)",
+        "account_security": "Compte et sécurité",
+        "change_password": "Changer le mot de passe",
+        "password": {
+            "description": "Modifiez votre mot de passe régulièrement pour sécuriser votre compte.",
+            "current": "Mot de passe actuel",
+            "new": "Nouveau mot de passe",
+            "confirm": "Confirmer le nouveau mot de passe",
+            "submit": "Mettre à jour le mot de passe",
+            "success": "Votre mot de passe a été mis à jour.",
+            "errors": {
+                "mismatch": "Les mots de passe ne correspondent pas.",
+                "generic": "Impossible de mettre à jour le mot de passe. Veuillez réessayer."
+            }
+        },
         "themes": {
             "light": "Clair",
             "dark": "Sombre",
@@ -336,9 +344,17 @@
         "cancel": "Annuler"
     },
     "messages": {
+        "title": "Messages",
         "welcome_title": "Bienvenue dans vos messages",
         "welcome_desc": "Connectez-vous avec d'autres étudiants et professeurs en privé. Sélectionnez une conversation pour commencer.",
-        "start_conv": "Nouvelle conversation"
+        "start_conv": "Nouvelle conversation",
+        "new_conversation": "Nouvelle conversation",
+        "search_users": "Rechercher des utilisateurs...",
+        "no_users_found": "Aucun utilisateur trouvé",
+        "search_prompt": "Recherchez un utilisateur pour démarrer une conversation",
+        "no_conversations": "Aucune conversation",
+        "type_message": "Tapez votre message...",
+        "you": "Vous"
     },
     "hashtags": {
         "trending": "Tendances",

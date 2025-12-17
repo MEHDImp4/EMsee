@@ -23,6 +23,7 @@ const Messages = lazy(() => import('./pages/Messages'));
 const Explore = lazy(() => import('./pages/Explore'));
 const Settings = lazy(() => import('./pages/Settings'));
 const LanguageSettings = lazy(() => import('./pages/LanguageSettings'));
+const PasswordSettings = lazy(() => import('./pages/PasswordSettings'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Notifications = lazy(() => import('./pages/Notifications'));
 const PostPage = lazy(() => import('./pages/PostPage'));
@@ -63,6 +64,7 @@ function App() {
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/settings/language" element={<LanguageSettings />} />
+                    <Route path="/settings/password" element={<PasswordSettings />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/hashtags/:name" element={<HashtagPage />} />

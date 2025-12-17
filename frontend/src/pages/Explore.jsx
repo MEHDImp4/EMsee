@@ -37,6 +37,16 @@ const Explore = () => {
     const updateQueryParam = (value) => {
         const next = value || '';
         setSearchQuery(next);
+
+        // Instant tab switch by prefix
+        if (next.startsWith('#')) {
+            setActiveTab('hashtags');
+        } else if (next.startsWith('@')) {
+            setActiveTab('users');
+        } else if (!next) {
+            setActiveTab('foryou');
+        }
+
         const params = new URLSearchParams(searchParams);
         if (next) params.set('q', next); else params.delete('q');
         setSearchParams(params, { replace: true });

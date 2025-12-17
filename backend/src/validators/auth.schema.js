@@ -93,8 +93,25 @@ const updateProfileSchema = z.object({
     })
 });
 
+const changePasswordSchema = z.object({
+    body: z.object({
+        currentPassword: z.string().min(1, 'Le mot de passe actuel est requis'),
+        newPassword: passwordSchema,
+        confirmPassword: z.string().min(1, 'La confirmation est requise')
+    }).superRefine((data, ctx) => {
+        if (data.newPassword !== data.confirmPassword) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'Les mots de passe ne correspondent pas',
+                path: ['confirmPassword']
+            });
+        }
+    })
+});
+
 module.exports = {
     registerSchema,
     loginSchema,
-    updateProfileSchema
+    updateProfileSchema,
+    changePasswordSchema
 };

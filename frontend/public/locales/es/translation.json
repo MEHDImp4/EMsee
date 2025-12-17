@@ -144,6 +144,7 @@
         "select_filiere": "Selecciona tu carrera",
         "select_year": "Selecciona tu año",
         "subjects_taught": "Asignaturas impartidas",
+        "class_name": "Clase (ej: IIR10, GI2)",
         "check_failed": "No se pudo verificar la disponibilidad. Compruebe su conexión."
     },
     "lists": {
@@ -199,17 +200,7 @@
         "team_title": "El Equipo",
         "team_desc": "Un proyecto hecho con pasión por estudiantes, para estudiantes."
     },
-    "explore": {
-        "search_placeholder": "Buscar en EMsee",
-        "trends_for_you": "Tendencias para ti",
-        "coming_soon": "Contenido próximamente...",
-        "tabs": {
-            "foryou": "Para ti",
-            "trending": "Tendencias",
-            "clubs": "Clubes",
-            "events": "Eventos"
-        }
-    },
+    
     "right_sidebar": {
         "search": "Buscar",
         "trends_for_you": "Tendencias para ti",
@@ -286,6 +277,21 @@
         "appearance": "Apariencia",
         "theme_desc": "Elige tu tema preferido.",
         "language": "Idioma",
+        "language_auto": "Auto (sistema)",
+        "account_security": "Cuenta y seguridad",
+        "change_password": "Cambiar la contraseña",
+        "password": {
+            "description": "Actualiza tu contraseña regularmente para proteger tu cuenta.",
+            "current": "Contraseña actual",
+            "new": "Nueva contraseña",
+            "confirm": "Confirmar nueva contraseña",
+            "submit": "Actualizar contraseña",
+            "success": "Tu contraseña ha sido actualizada.",
+            "errors": {
+                "mismatch": "Las contraseñas no coinciden.",
+                "generic": "No se pudo actualizar la contraseña. Inténtalo de nuevo."
+            }
+        },
         "themes": {
             "light": "Claro",
             "dark": "Oscuro",
@@ -313,9 +319,17 @@
         "save": "Guardar cambios"
     },
     "messages": {
+        "title": "Mensajes",
         "welcome_title": "Bienvenido a tus mensajes",
-        "welcome_desc": "Conéctate con otros estudiantes y profesores en privado. Selecciona una conversación para comenzar.",
-        "start_conv": "Nueva conversación"
+        "welcome_desc": "Conéctate con otros estudiantes y profesores de forma privada. Selecciona una conversación para comenzar.",
+        "start_conv": "Nueva conversación",
+        "new_conversation": "Nueva conversación",
+        "search_users": "Buscar usuarios...",
+        "no_users_found": "No se encontraron usuarios",
+        "search_prompt": "Busca un usuario para iniciar una conversación",
+        "no_conversations": "Sin conversaciones",
+        "type_message": "Escribe tu mensaje...",
+        "you": "Tú"
     },
     "explore": {
         "tabs": {
@@ -329,6 +343,8 @@
         "no_results": "No hay resultados para \"{{query}}\"",
         "search_hint": "Usa la barra de búsqueda para encontrar personas.",
         "for_you": "Para ti",
+        "trends_for_you": "Tendencias para ti",
+        "coming_soon": "Contenido próximamente...",
         "no_trends": "No hay tendencias en este momento",
         "recent_users": "Nuevos usuarios",
         "category": {

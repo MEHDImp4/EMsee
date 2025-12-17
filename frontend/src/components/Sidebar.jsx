@@ -4,15 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { Home, Compass, Bell, Bookmark, Users, Settings, LogOut, PenTool, MessageSquare } from 'lucide-react';
 import logo from '../assets/logo.svg';
 import LogoutModal from './LogoutModal';
-import ComposeModal from './ComposeModal';
 import { useAuth } from '../context/AuthContext';
 import { BASE_URL } from '../services/api';
+import { useModal } from '../context/ModalContext';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { openCompose } = useModal();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
-    const [showComposeModal, setShowComposeModal] = useState(false);
 
     // Helper to get initials
     const getInitials = (name) => {
@@ -97,7 +97,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
                 <button
                     className="post-btn-large desktop-only"
-                    onClick={() => setShowComposeModal(true)}
+                    onClick={() => openCompose()}
                 >
                     <span className="post-btn-text">{t('sidebar.publish', 'Publier')}</span>
                     <span className="post-btn-icon"><PenTool size={24} /></span>
@@ -168,11 +168,6 @@ const Sidebar = ({ isOpen, onClose }) => {
                 isOpen={showLogoutModal}
                 onClose={() => setShowLogoutModal(false)}
                 onConfirm={handleLogout}
-            />
-
-            <ComposeModal
-                isOpen={showComposeModal}
-                onClose={() => setShowComposeModal(false)}
             />
         </aside>
     );

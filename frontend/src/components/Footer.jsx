@@ -112,7 +112,7 @@ const Footer = () => {
                     <Divider />
 
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                        {t('footer.contributors')} <span style={{ fontWeight: '600' }}>Diouri Mehdi, Rkha Adam, Belaoud Mehdi, El Kharazi Ibtihal</span>
+                        {t('footer.contributors')} <span style={{ fontWeight: '600' }}>Diouri Mehdi, Rkha Adam, Belaoud Mehdi, El Kharrazi Ibtihal</span>
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>

@@ -63,6 +63,8 @@
         "no_results": "No result for \"{{query}}\"",
         "search_hint": "Use the search bar to find people.",
         "for_you": "For you",
+        "trends_for_you": "Trends for you",
+        "coming_soon": "Content coming soon...",
         "no_trends": "No trends at the moment",
         "recent_users": "New users",
         "category": {
@@ -167,6 +169,7 @@
         "select_filiere": "Select your major",
         "select_year": "Select your year",
         "subjects_taught": "Subjects Taught",
+        "class_name": "Class (ex: IIR10, GI2)",
         "check_failed": "Unable to verify availability. Please check your connection."
     },
     "common": {
@@ -226,17 +229,7 @@
         "team_title": "The Team",
         "team_desc": "A project made with passion by students, for students."
     },
-    "explore": {
-        "search_placeholder": "Search EMsee",
-        "trends_for_you": "Trends for you",
-        "coming_soon": "Content coming soon...",
-        "tabs": {
-            "foryou": "For you",
-            "trending": "Trending",
-            "clubs": "Clubs",
-            "events": "Events"
-        }
-    },
+    
     "right_sidebar": {
         "search": "Search",
         "trends_for_you": "Trends for you",
@@ -313,6 +306,21 @@
         "appearance": "Appearance",
         "theme_desc": "Choose your preferred theme.",
         "language": "Language",
+        "language_auto": "Auto (system)",
+        "account_security": "Account & security",
+        "change_password": "Change password",
+        "password": {
+            "description": "Update your password regularly to secure your account.",
+            "current": "Current password",
+            "new": "New password",
+            "confirm": "Confirm new password",
+            "submit": "Update password",
+            "success": "Your password has been updated.",
+            "errors": {
+                "mismatch": "Passwords do not match.",
+                "generic": "Unable to update your password. Please try again."
+            }
+        },
         "themes": {
             "light": "Light",
             "dark": "Dark",
@@ -336,9 +344,17 @@
         "cancel": "Cancel"
     },
     "messages": {
+        "title": "Messages",
         "welcome_title": "Welcome to your messages",
         "welcome_desc": "Connect with other students and professors privately. Select a conversation to start.",
-        "start_conv": "New conversation"
+        "start_conv": "New conversation",
+        "new_conversation": "New conversation",
+        "search_users": "Search users...",
+        "no_users_found": "No users found",
+        "search_prompt": "Search for a user to start a conversation",
+        "no_conversations": "No conversations",
+        "type_message": "Type your message...",
+        "you": "You"
     },
     "hashtags": {
         "trending": "Trending",

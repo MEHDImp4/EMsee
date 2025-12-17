@@ -1,11 +1,10 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, BarChart2, Code, Smile, Globe, Users, Lock } from 'lucide-react';
+import { Image, BarChart2, Code, Globe, Users, Lock } from 'lucide-react';
 import PostCard from '../components/PostCard';
 import ImageUpload from '../components/ImageUpload';
 import CodeEditor from '../components/CodeEditor';
 import PollCreator from '../components/PollCreator';
-import EmojiPicker from '../components/EmojiPicker';
 import { useAuth } from '../context/AuthContext';
 import useFeed from '../hooks/useFeed';
 import { BASE_URL } from '../services/api';
@@ -235,7 +234,6 @@ const Feed = () => {
               >
                 <BarChart2 size={20} />
               </button>
-              <EmojiPicker onEmojiSelect={handleEmojiSelect} buttonClassName="icon-btn" />
             </div>
             <button 
               className="post-btn-small" 

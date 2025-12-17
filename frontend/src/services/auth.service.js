@@ -27,6 +27,14 @@ const AuthService = {
         return await api.post('/auth/check-availability', payload);
     },
 
+    changePassword: async ({ currentPassword, newPassword, confirmPassword }) => {
+        return await api.post('/auth/change-password', {
+            currentPassword,
+            newPassword,
+            confirmPassword
+        });
+    },
+
     /**
      * Logout user
      */

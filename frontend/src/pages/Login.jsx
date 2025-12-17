@@ -6,6 +6,7 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import useLoginForm from '../hooks/useLoginForm';
+import Toast from '../components/Toast';
 import './css/Login.css';
 
 const Login = () => {
@@ -113,6 +114,14 @@ const Login = () => {
 
                         <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{t('auth.login_btn')}</button>
                     </form>
+
+                    {errors.form && (
+                        <Toast
+                            message={errors.form}
+                            variant="error"
+                            onClose={() => setErrors({ ...errors, form: null })}
+                        />
+                    )}
 
                     <div className="auth-footer">
                         {t('auth.no_account')} <Link to="/register" className="auth-link">{t('auth.create_account')}</Link>

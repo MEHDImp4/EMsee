@@ -3,7 +3,9 @@ import UserService from '../services/user.service';
 import HashtagService from '../services/hashtag.service';
 
 const useExplore = (initialQuery = '') => {
-    const [activeTab, setActiveTab] = useState(initialQuery.startsWith('#') ? 'hashtags' : 'foryou');
+    const [activeTab, setActiveTab] = useState(
+        initialQuery.startsWith('#') ? 'hashtags' : (initialQuery.startsWith('@') ? 'users' : 'foryou')
+    );
     const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
@@ -37,7 +39,8 @@ const useExplore = (initialQuery = '') => {
                 setHashtagMeta(response?.meta || null);
                 setActiveTab('hashtags');
             } else {
-                const results = await UserService.searchUsers(q);
+                const normalized = q.startsWith('@') ? q.replace(/^@/, '') : q;
+                const results = await UserService.searchUsers(normalized);
                 setSearchResults(results || []);
                 setActiveTab('users');
             }

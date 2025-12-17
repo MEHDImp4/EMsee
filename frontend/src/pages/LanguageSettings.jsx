@@ -35,6 +35,7 @@ const LanguageSettings = () => {
     }, []);
 
     const languages = [
+        { code: 'auto', label: t('settings.language_auto', 'Auto (système)'), icon: <Monitor size={18} /> },
         { code: 'fr', label: 'Français', icon: <span style={{ fontSize: '1.2rem' }}>🇫🇷</span> },
         { code: 'en', label: 'English', icon: <span style={{ fontSize: '1.2rem' }}>🇺🇸</span> },
         { code: 'es', label: 'Español', icon: <span style={{ fontSize: '1.2rem' }}>🇪🇸</span> }
