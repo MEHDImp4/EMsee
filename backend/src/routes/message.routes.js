@@ -8,6 +8,7 @@ const {
   sendMessageSchema,
   getMessagesSchema
 } = require('../validators/message.schema');
+const upload = require('../config/multer');
 
 /**
  * @swagger
@@ -154,6 +155,7 @@ router.get(
 router.post(
   '/conversations/:id/messages',
   verifyToken,
+  upload.single('image'),
   validateRequest(sendMessageSchema),
   messageController.sendMessage
 );

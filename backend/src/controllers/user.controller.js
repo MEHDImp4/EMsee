@@ -82,7 +82,13 @@ const searchUsers = async (req, res) => {
             where: {
                 OR: [
                     { username: { contains: q } },
-                    { full_name: { contains: q } }
+                    { full_name: { contains: q } },
+                    { username: { contains: q.toLowerCase() } },
+                    { full_name: { contains: q.toLowerCase() } },
+                    { username: { contains: q.toUpperCase() } },
+                    { full_name: { contains: q.toUpperCase() } },
+                    { username: { contains: q.charAt(0).toUpperCase() + q.slice(1).toLowerCase() } },
+                    { full_name: { contains: q.charAt(0).toUpperCase() + q.slice(1).toLowerCase() } }
                 ]
             },
             select: userSearchSelectFields,

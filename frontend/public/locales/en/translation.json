@@ -174,7 +174,11 @@
     },
     "common": {
         "back": "Back",
-        "save": "Save Changes"
+        "save": "Save Changes",
+        "loading": "Loading...",
+        "load_more": "Load more",
+        "error": "Error",
+        "retry": "Retry"
     },
     "lists": {
         "subjects": {
@@ -229,7 +233,6 @@
         "team_title": "The Team",
         "team_desc": "A project made with passion by students, for students."
     },
-    
     "right_sidebar": {
         "search": "Search",
         "trends_for_you": "Trends for you",
@@ -266,6 +269,23 @@
         "followers_can_reply": "Followers only",
         "no_one_can_reply": "No one can reply"
     },
+    "notifications": {
+        "title": "Notifications",
+        "all": "All",
+        "verified": "Verified",
+        "mentions": "Mentions",
+        "empty": "No notifications yet",
+        "liked_post": "liked your post",
+        "reposted_post": "reposted your post",
+        "commented_post": "commented on your post",
+        "mentioned_you": "mentioned you",
+        "system_alert": "System Alert",
+        "tabs": {
+            "all": "All",
+            "verified": "Verified",
+            "mentions": "Mentions"
+        }
+    },
     "post": {
         "delete": "Delete post",
         "confirm_delete": "Delete this post?",
@@ -281,13 +301,6 @@
         "hide_replies": "Hide",
         "thread_reply": "Reply",
         "report": "Report"
-    },
-    "notifications": {
-        "tabs": {
-            "all": "All",
-            "verified": "Verified",
-            "mentions": "Mentions"
-        }
     },
     "profile": {
         "edit": "Edit",
@@ -363,11 +376,5 @@
         "no_posts": "No posts found with this hashtag",
         "error": "Error",
         "error_loading": "Failed to load hashtag content"
-    },
-    "common": {
-        "loading": "Loading...",
-        "load_more": "Load more",
-        "error": "Error",
-        "retry": "Retry"
     }
 }

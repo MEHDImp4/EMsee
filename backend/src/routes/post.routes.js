@@ -81,6 +81,35 @@ router.post('/:id/like', postController.likePost);
 
 /**
  * @swagger
+ * /api/posts/{id}/vote:
+ *   post:
+ *     summary: Vote on a poll
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - optionId
+ *             properties:
+ *               optionId:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Vote recorded
+ */
+router.post('/:id/vote', postController.votePoll);
+
+/**
+ * @swagger
  * /api/posts/{id}/repost:
  *   post:
  *     summary: Repost a post

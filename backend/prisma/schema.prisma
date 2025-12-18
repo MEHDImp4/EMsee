@@ -38,10 +38,42 @@ model User {
   postViews      PostView[]
   followedBy     Follow[]        @relation("following")
   following      Follow[]        @relation("follower")
-  sentMessages      Message[]             @relation("sender")
+  messages        Message[]             @relation("sender")
+  notifications   Notification[]        @relation("recipient")
+  sentNotifications Notification[]      @relation("actor")
   participants      ConversationParticipant[]
 
   @@map("users")
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  recipientId Int
+  actorId     Int?
+  type        NotificationType
+  postId      Int?
+  commentId   Int?
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  recipient   User     @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor       User?    @relation("actor", fields: [actorId], references: [id], onDelete: Cascade)
+  post        Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment     Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@index([recipientId])
+  @@index([actorId])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  MENTION
+  LIKE
+  REPOST
+  COMMENT
+  FOLLOW
+  SYSTEM
 }
 
 model Post {
@@ -57,6 +89,7 @@ model Post {
   poll            Poll?
   views           Int             @default(0)
   postViews       PostView[]
+  notifications   Notification[]
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   replyPermission ReplyPermission @default(EVERYONE)
@@ -84,6 +117,7 @@ model Comment {
   reposts         CommentRepost[]
   saves           CommentSave[]
   hashtags        CommentHashtag[]
+  notifications   Notification[]
   createdAt       DateTime        @default(now())
 
   @@map("comments")
@@ -301,8 +335,11 @@ model Message {
   id             Int          @id @default(autoincrement())
   conversationId Int
   senderId       Int
-  content        String       @db.Text
+  content        String?      @db.Text // Optional now if sending only media
   read           Boolean      @default(false)
+  readAt         DateTime?
+  mediaUrl       String?
+  mediaType      String?      // 'image', 'audio', 'video'
   createdAt      DateTime     @default(now())
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender         User         @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)

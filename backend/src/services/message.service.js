@@ -222,7 +222,7 @@ class MessageService {
   /**
    * Send a message in a conversation
    */
-  async sendMessage(conversationId, senderId, content) {
+  async sendMessage(conversationId, senderId, content, mediaUrl = null, mediaType = null) {
     // Verify sender is participant
     const participant = await prisma.conversationParticipant.findFirst({
       where: {
@@ -239,7 +239,9 @@ class MessageService {
       data: {
         conversationId,
         senderId,
-        content
+        content,
+        mediaUrl,
+        mediaType
       },
       include: {
         sender: {

@@ -2,11 +2,12 @@
 import React from 'react';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import PasswordRequirement from './PasswordRequirement';
 
 const RegisterStep4 = ({ form, setField, validation, showErrors, errors }) => {
     const { t } = useTranslation();
     const { password, confirmPassword, showPassword } = form;
-    const { isPasswordValid, doPasswordsMatch } = validation;
+    const { isPasswordValid, doPasswordsMatch, passwordCriteria } = validation;
 
     const getBorderColor = (hasError, isValid) => {
         if (hasError || isValid === false) return 'var(--danger)';
@@ -54,9 +55,17 @@ const RegisterStep4 = ({ form, setField, validation, showErrors, errors }) => {
                 {showErrors && !password && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {isPasswordValid === false && (
                     <p id="password-error" className="error-message" role="alert">
-                        {errors?.passwordError || t('auth.password_requirements')}
+                        {errors?.passwordError}
                     </p>
                 )}
+
+                {/* Password Strength Checklist */}
+                <div className="password-checklist" style={{ marginTop: '0.5rem', padding: '0.5rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                    <PasswordRequirement met={passwordCriteria?.hasLength} text={t('auth.req_length', 'Minimum 6 caractères')} />
+                    <PasswordRequirement met={passwordCriteria?.hasUpper} text={t('auth.req_upper', 'Une majuscule')} />
+                    <PasswordRequirement met={passwordCriteria?.hasLower} text={t('auth.req_lower', 'Une minuscule')} />
+                    <PasswordRequirement met={passwordCriteria?.hasDigit} text={t('auth.req_digit', 'Un chiffre')} />
+                </div>
             </div>
 
             <div className="form-group">

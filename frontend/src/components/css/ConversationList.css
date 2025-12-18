@@ -25,6 +25,8 @@
 
 .conversation-item.selected {
   background-color: var(--bg-selected, rgba(29, 155, 240, 0.1));
+  border-left: 3px solid var(--primary);
+  padding-left: calc(1rem - 3px); /* Compensate for border width to keep alignment */
 }
 
 .conversation-avatar {

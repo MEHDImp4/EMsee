@@ -6,6 +6,7 @@ const path = require('path');
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const userRoutes = require('./routes/user.routes');
+const notificationRoutes = require('./routes/notification.routes');
 const commentRoutes = require('./routes/comment.routes');
 const hashtagRoutes = require('./routes/hashtag.routes');
 const foryouRoutes = require('./routes/foryou.routes');
@@ -53,6 +54,7 @@ const errorMiddleware = require('./middlewares/errorMiddleware');
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/hashtags', hashtagRoutes);
 app.use('/api/for-you', foryouRoutes);
@@ -73,7 +75,6 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-// Serve static uploads
-app.use('/uploads', express.static('uploads'));
+
 
 module.exports = { app, server };

@@ -10,9 +10,7 @@ const createConversationSchema = z.object({
 
 const sendMessageSchema = z.object({
   body: z.object({
-    content: z.string()
-      .min(1, 'Message content cannot be empty')
-      .max(5000, 'Message content cannot exceed 5000 characters')
+    content: z.string().optional()
   })
 });
 

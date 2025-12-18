@@ -3,6 +3,7 @@ import { X, Search, Loader } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import UserService from '../services/user.service';
 import { createConversation } from '../services/message.service';
+import { getImageUrl } from '../utils/imageUtils';
 import '../components/css/NewConversationModal.css';
 
 const NewConversationModal = ({ onClose, onConversationCreated }) => {
@@ -14,7 +15,7 @@ const NewConversationModal = ({ onClose, onConversationCreated }) => {
 
   const handleSearch = async (query) => {
     setSearchQuery(query);
-    
+
     if (query.trim().length < 2) {
       setSearchResults([]);
       return;
@@ -23,7 +24,7 @@ const NewConversationModal = ({ onClose, onConversationCreated }) => {
     try {
       setLoading(true);
       const response = await UserService.searchUsers(query);
-      setSearchResults(response.data || []);
+      setSearchResults(response || []);
     } catch (error) {
       console.error('Error searching users:', error);
     } finally {
@@ -81,11 +82,11 @@ const NewConversationModal = ({ onClose, onConversationCreated }) => {
                 onClick={() => !creating && handleSelectUser(user)}
               >
                 <img
-                  src={user.avatar || '/default-avatar.png'}
+                  src={getImageUrl(user.avatar) || '/default-avatar.svg'}
                   alt={user.full_name}
                   className="user-avatar"
                   onError={(e) => {
-                    e.target.src = '/default-avatar.png';
+                    e.target.src = '/default-avatar.svg';
                   }}
                 />
                 <div className="user-info">

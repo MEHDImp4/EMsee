@@ -2,11 +2,14 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MessageCircle, Repeat2, Heart, BarChart3, Bookmark, Share2, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import PostService from '../services/post.service';
 import { BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import HashtagText from './HashtagText';
+import SharePostModal from './SharePostModal'; // Import new modal
 import './css/PostCard.css';
 
 const formatCount = (value = 0) => {
@@ -42,6 +45,7 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isReposted, setIsReposted] = useState(initialIsReposted);
   const [isBusy, setIsBusy] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false); // State for share modal
 
   const initialLikes = post?._count?.likes ?? 0;
   const initialComments = post?._count?.comments ?? 0;
@@ -108,13 +112,13 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
 
   const goToPost = () => {
     if (isDetailView) return;
-    
+
     // Increment views when user clicks on post
     if (post?.id) {
       PostService.incrementViews(post.id);
       optimisticUpdate('views', 1);
     }
-    
+
     navigate(`/posts/${post.id}`);
   };
 
@@ -139,6 +143,51 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
       console.error('Failed to delete post', error);
     }
   };
+
+  const handleVote = async (optionId) => {
+    if (isBusy || post.poll.userVote) return; // Already voted or busy
+
+    // Optimistic Update
+    const newOptions = post.poll.options.map(opt => {
+      if (opt.id === optionId) {
+        return {
+          ...opt,
+          _count: { votes: (opt._count?.votes || 0) + 1 }
+        };
+      }
+      return opt;
+    });
+
+    // Create a local voted state for optimistic UI
+    // In a real app we might need a complex local state or rely on re-fetching.
+    // Here we will try to just prevent further clicks.
+    setIsBusy(true);
+
+    try {
+      await PostService.votePoll(post.id, optionId);
+      // Ideally the parent component should refresh or we use the socket event.
+      // But for immediate feedback we rely on a full page reload or the socket.
+      // For now, let's just keep the optimistic visual feedback via local state if we had it, 
+      // but 'post' prop is immutable here. 
+      // We need local state for poll data to update it optimistically effectively.
+    } catch (error) {
+      console.error('Failed to vote', error);
+      setIsBusy(false);
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
+  // We need local state for poll to update it optimistically
+  // BUT the simplest way for now without major refactor is to rely on the socket update we just added,
+  // OR just force a page reload? No, that's bad.
+  // Let's rely on the fact that `PostCard` receives `post` from parent.
+  // The parent (useFeed) listens to `new_post`, but maybe not `post_updated`?
+  // Let's check if we can make the poll UI interactive locally.
+
+  // Actually, to make this work well, we need local state for the poll or context updates.
+  // A simple hack: just call the API. The socket event 'post_updated' (which we emitted in backend) 
+  // needs to be listened to in 'useFeed.js' to update the list.
 
   return (
     <article className={`post-card ${isDetailView ? 'post-card-detail' : ''}`} onClick={goToPost} role="article">
@@ -202,27 +251,33 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
               if (media.type === 'IMAGE') {
                 return (
                   <div key={index} className={`media-gallery grid-${post.media.filter(m => m.type === 'IMAGE').length}`}>
-                    <img 
-                      src={`${BASE_URL}${media.url}`} 
-                      alt="Post media" 
+                    <img
+                      src={`${BASE_URL}${media.url}`}
+                      alt="Post media"
                       className="media-image"
                       onClick={(e) => e.stopPropagation()}
                     />
                   </div>
                 );
               }
-              
+
               if (media.type === 'CODE') {
                 return (
                   <div key={index} className="media-code" onClick={(e) => e.stopPropagation()}>
                     <div className="code-header">
                       <span className="code-language">{media.language}</span>
                     </div>
-                    <pre className="code-block"><code>{media.code}</code></pre>
+                    <SyntaxHighlighter
+                      language={media.language}
+                      style={vscDarkPlus}
+                      customStyle={{ margin: 0, borderRadius: '0 0 12px 12px' }}
+                    >
+                      {media.code}
+                    </SyntaxHighlighter>
                   </div>
                 );
               }
-              
+
               return null;
             })}
           </div>
@@ -237,15 +292,20 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
                 const totalVotes = post.poll.options.reduce((sum, opt) => sum + (opt._count?.votes || 0), 0);
                 const percentage = totalVotes > 0 ? Math.round((option._count?.votes || 0) / totalVotes * 100) : 0;
                 const hasVoted = post.poll.userVote?.optionId === option.id;
-                
+
                 return (
-                  <div key={option.id} className={`poll-option ${hasVoted ? 'voted' : ''}`}>
+                  <button
+                    key={option.id}
+                    className={`poll-option ${hasVoted ? 'voted' : ''}`}
+                    onClick={() => handleVote(option.id)}
+                    disabled={!!post.poll.userVote || isBusy}
+                  >
                     <div className="poll-option-bar" style={{ width: `${percentage}%` }} />
                     <div className="poll-option-content">
                       <span className="poll-option-text">{option.text}</span>
                       <span className="poll-option-percentage">{percentage}%</span>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -295,12 +355,19 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
             <button className="ghost-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Bookmark">
               <Bookmark size={17} />
             </button>
-            <button className="ghost-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Share">
+            <button className="ghost-icon-btn" onClick={(e) => { e.stopPropagation(); setShowShareModal(true); }} aria-label="Share">
               <Share2 size={17} />
             </button>
           </div>
         </div>
       </div>
+
+      {showShareModal && (
+        <SharePostModal
+          post={post}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </article>
   );
 };

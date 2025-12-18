@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import * as MessageService from '../services/message.service';
+import api from '../services/api';
 import { useSocket } from '../context/SocketContext';
 
 export const useConversations = () => {
@@ -45,9 +46,9 @@ export const useConversations = () => {
           }
           return conv;
         });
-        
+
         // Sort by updatedAt
-        return updated.sort((a, b) => 
+        return updated.sort((a, b) =>
           new Date(b.updatedAt) - new Date(a.updatedAt)
         );
       });
@@ -74,7 +75,7 @@ export const useConversationMessages = (conversationId) => {
 
   const fetchMessages = useCallback(async (page = 1) => {
     if (!conversationId) return;
-    
+
     try {
       setLoading(true);
       const response = await MessageService.getMessages(conversationId, page);
@@ -92,7 +93,7 @@ export const useConversationMessages = (conversationId) => {
   useEffect(() => {
     if (conversationId) {
       fetchMessages();
-      
+
       // Join conversation room
       if (socket) {
         socket.emit('joinConversation', conversationId);
@@ -113,10 +114,10 @@ export const useConversationMessages = (conversationId) => {
     const handleNewMessage = ({ conversationId: msgConvId, message }) => {
       if (msgConvId === conversationId) {
         setMessages(prev => [...prev, message]);
-        
+
         // Mark as read
         MessageService.markAsRead(conversationId).catch(console.error);
-        
+
         // Scroll to bottom
         setTimeout(() => {
           messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -124,28 +125,63 @@ export const useConversationMessages = (conversationId) => {
       }
     };
 
+    const handleMessagesRead = ({ conversationId: readConvId, readByUserId }) => {
+      if (readConvId === conversationId) {
+        setMessages(prev => prev.map(msg => {
+          // If I am the sender, mark my messages as read
+          if (msg.senderId !== readByUserId) { // Wait, logic: readByUserId is the one who read them. So if I sent them (msg.senderId !== readByUserId), they are read.
+            return { ...msg, read: true, readAt: new Date() };
+          }
+          return msg;
+        }));
+      }
+    };
+
     socket.on('newMessage', handleNewMessage);
+    socket.on('messagesRead', handleMessagesRead);
 
     return () => {
       socket.off('newMessage', handleNewMessage);
+      socket.off('messagesRead', handleMessagesRead);
     };
   }, [socket, conversationId]);
 
-  const sendMessage = useCallback(async (content) => {
-    if (!content.trim() || !conversationId) return;
+  const sendMessage = useCallback(async (contentOrFormData) => {
+    if (!contentOrFormData || (typeof contentOrFormData === 'string' && !contentOrFormData.trim()) || !conversationId) {
+      return;
+    }
 
+    setSending(true);
     try {
-      setSending(true);
-      const response = await MessageService.sendMessage(conversationId, content);
+      // Check if input is FormData (has file) or just string
+      const isFormData = contentOrFormData instanceof FormData;
+      const body = isFormData ? contentOrFormData : { content: contentOrFormData };
+
+      // api.post handles Auth header, but we need to let browser set boundary for multipart
+      // if it's FormData, we explicitly set Content-Type to 'multipart/form-data'
+      // otherwise, api.post will default to 'application/json' for object body
+      const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined;
+
+      const response = await api.post(
+        `/messages/conversations/${conversationId}/messages`,
+        body,
+        config
+      );
+
+      // Optimistically update messages list
       setMessages(prev => [...prev, response.data]);
-      
+
       // Scroll to bottom
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
-      
+
+      // Socket emission is handled by backend now for new message
+      // But we can optimistically update or just wait for socket event
+      // The backend emits 'newMessage', which we listen to.
       return response.data;
     } catch (err) {
+      setError(err.message || 'Failed to send message');
       console.error('Error sending message:', err);
       throw err;
     } finally {

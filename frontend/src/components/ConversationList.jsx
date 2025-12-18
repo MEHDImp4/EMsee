@@ -2,6 +2,7 @@ import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { fr, es } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
+import { getImageUrl } from '../utils/imageUtils';
 import '../components/css/ConversationList.css';
 
 const ConversationList = ({ conversations, selectedConversation, onSelectConversation, currentUserId }) => {
@@ -34,17 +35,17 @@ const ConversationList = ({ conversations, selectedConversation, onSelectConvers
             >
               <div className="conversation-avatar">
                 <img
-                  src={otherUser?.avatar || '/default-avatar.png'}
+                  src={getImageUrl(otherUser?.avatar) || '/default-avatar.svg'}
                   alt={otherUser?.full_name}
                   onError={(e) => {
-                    e.target.src = '/default-avatar.png';
+                    e.target.src = '/default-avatar.svg';
                   }}
                 />
                 {conversation.unreadCount > 0 && (
                   <div className="unread-badge">{conversation.unreadCount}</div>
                 )}
               </div>
-              
+
               <div className="conversation-info">
                 <div className="conversation-header">
                   <h4 className="conversation-name">{otherUser?.full_name}</h4>
@@ -55,15 +56,43 @@ const ConversationList = ({ conversations, selectedConversation, onSelectConvers
                     )}
                   </span>
                 </div>
-                
+
                 <div className="conversation-preview">
                   <span className="username">@{otherUser?.username}</span>
                   {conversation.lastMessage && (
                     <p className="last-message">
-                      {conversation.lastMessage.sender.id === currentUserId && 
+                      {conversation.lastMessage.sender.id === currentUserId &&
                         `${t('messages.you', 'Vous')}: `}
-                      {conversation.lastMessage.content.substring(0, 50)}
-                      {conversation.lastMessage.content.length > 50 && '...'}
+                      {(() => {
+                        const content = conversation.lastMessage.content;
+
+                        // If content exists, display it (or special 'Shared Post' text)
+                        if (content) {
+                          // Check if it's a shared post
+                          if (content.match(/\/posts\/\d+/) && (content.includes('http') || content.toLowerCase().includes('check out'))) {
+                            return (
+                              <span style={{ fontStyle: 'italic', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                🔗 {t('messages.shared_post', 'A partagé un post')}
+                              </span>
+                            );
+                          }
+
+                          // Normal text
+                          return (
+                            <>
+                              {content.substring(0, 50)}
+                              {content.length > 50 && '...'}
+                            </>
+                          );
+                        }
+
+                        // Fallback for media-only messages
+                        return (
+                          <span style={{ fontStyle: 'italic', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            📷 {t('messages.sent_image', 'Image')}
+                          </span>
+                        );
+                      })()}
                     </p>
                   )}
                 </div>

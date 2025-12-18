@@ -25,7 +25,7 @@ const Settings = lazy(() => import('./pages/Settings'));
 const LanguageSettings = lazy(() => import('./pages/LanguageSettings'));
 const PasswordSettings = lazy(() => import('./pages/PasswordSettings'));
 const Profile = lazy(() => import('./pages/Profile'));
-const Notifications = lazy(() => import('./pages/Notifications'));
+const Notifications = lazy(() => import('./pages/NotificationsPage'));
 const PostPage = lazy(() => import('./pages/PostPage'));
 const CommentPage = lazy(() => import('./pages/CommentPage'));
 const HashtagPage = lazy(() => import('./pages/HashtagPage'));

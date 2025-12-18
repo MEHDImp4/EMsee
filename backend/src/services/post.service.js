@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 const createPost = async (userId, content = '', replyPermission = 'EVERYONE', mediaData = null, pollData = null) => {
     // Extract hashtags from content
     const hashtagNames = extractHashtags(content || '');
-    
+
     const post = await prisma.post.create({
         data: {
             content: content || '',
@@ -31,7 +31,7 @@ const createPost = async (userId, content = '', replyPermission = 'EVERYONE', me
 
     // Add media if provided
     if (mediaData && mediaData.length > 0) {
-        await Promise.all(mediaData.map(media => 
+        await Promise.all(mediaData.map(media =>
             prisma.media.create({
                 data: {
                     postId: post.id,
@@ -58,7 +58,18 @@ const createPost = async (userId, content = '', replyPermission = 'EVERYONE', me
         });
     }
 
-    return post;
+    // Process mentions
+    if (content) {
+        processMentions(post.id, userId, content).catch(err => console.error('Error processing mentions:', err));
+    }
+
+    // Refetch the full post with relations to return complete data
+    const fullPost = await prisma.post.findUnique({
+        where: { id: post.id },
+        include: buildPostInclude(userId)
+    });
+
+    return formatPost(fullPost);
 };
 
 const getAllPosts = async (currentUserId, page = 1, limit = 20) => {
@@ -128,6 +139,20 @@ const toggleLikePost = async (postId, userId) => {
     }
 
     await prisma.like.create({ data: { postId, userId } });
+
+    // Notify post owner
+    const post = await prisma.post.findUnique({ where: { id: postId } });
+    if (post && post.userId !== userId) {
+        await prisma.notification.create({
+            data: {
+                recipientId: post.userId,
+                actorId: userId,
+                type: 'LIKE',
+                postId: postId
+            }
+        });
+    }
+
     return { liked: true };
 };
 
@@ -141,6 +166,20 @@ const toggleRepostPost = async (postId, userId) => {
     }
 
     await prisma.repost.create({ data: { postId, userId } });
+
+    // Notify post owner
+    const post = await prisma.post.findUnique({ where: { id: postId } });
+    if (post && post.userId !== userId) {
+        await prisma.notification.create({
+            data: {
+                recipientId: post.userId,
+                actorId: userId,
+                type: 'REPOST',
+                postId: postId
+            }
+        });
+    }
+
     return { reposted: true };
 };
 
@@ -162,6 +201,19 @@ const createComment = async (postId, userId, content) => {
         data: { content, postId, userId },
         include: { user: { select: userSelectFields } }
     });
+
+    // Notify post owner
+    if (post.userId !== userId) {
+        await prisma.notification.create({
+            data: {
+                recipientId: post.userId,
+                actorId: userId,
+                type: 'COMMENT',
+                postId: postId,
+                commentId: comment.id
+            }
+        });
+    }
 
     return comment;
 };
@@ -267,7 +319,7 @@ const linkHashtagsToPost = async (postId, hashtagNames) => {
     for (const name of hashtagNames) {
         // Find or create hashtag
         let hashtag = await prisma.hashtag.findUnique({ where: { name } });
-        
+
         if (!hashtag) {
             hashtag = await prisma.hashtag.create({ data: { name } });
         }
@@ -287,6 +339,38 @@ const linkHashtagsToPost = async (postId, hashtagNames) => {
             }
         });
     }
+};
+
+const votePoll = async (postId, userId, optionId) => {
+    // Check if poll exists
+    const poll = await prisma.poll.findUnique({
+        where: { postId }
+    });
+    if (!poll) throw { status: 404, message: 'Poll not found' };
+
+    // Check if user already voted
+    const existingVote = await prisma.pollVote.findFirst({
+        where: {
+            pollId: poll.id,
+            userId
+        }
+    });
+
+    if (existingVote) throw { status: 400, message: 'Already voted' };
+
+    // Record vote
+    await prisma.pollVote.create({
+        data: {
+            pollId: poll.id,
+            optionId: parseInt(optionId),
+            userId
+        }
+    });
+
+    // We don't need to manually increment a counter if we count votes dynamically,
+    // but often it's good to return the updated poll state.
+    // For now, return success.
+    return { message: 'Vote recorded' };
 };
 
 const incrementPostViews = async (postId, userId = null) => {
@@ -325,6 +409,35 @@ const incrementPostViews = async (postId, userId = null) => {
     }
 };
 
+const processMentions = async (postId, actorId, content) => {
+    const mentionRegex = /@(\w+)/g;
+    const matches = [...content.matchAll(mentionRegex)];
+    const usernames = [...new Set(matches.map(m => m[1]))]; // Unique usernames
+
+    if (usernames.length === 0) return;
+
+    const users = await prisma.user.findMany({
+        where: { username: { in: usernames } },
+        select: { id: true, username: true }
+    });
+
+    const notifications = users
+        .filter(user => user.id !== actorId) // Don't notify self
+        .map(user => ({
+            recipientId: user.id,
+            actorId,
+            type: 'MENTION',
+            postId,
+            read: false
+        }));
+
+    if (notifications.length > 0) {
+        await prisma.notification.createMany({
+            data: notifications
+        });
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -337,6 +450,8 @@ module.exports = {
     getUserTimeline,
     deletePost,
     linkHashtagsToPost,
-    incrementPostViews
+    linkHashtagsToPost,
+    incrementPostViews,
+    votePoll
 };
 

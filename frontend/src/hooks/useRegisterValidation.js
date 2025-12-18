@@ -4,7 +4,13 @@ const initialValidation = {
     isEmailValid: null,
     isUsernameValid: null,
     isPasswordValid: null,
-    doPasswordsMatch: null
+    doPasswordsMatch: null,
+    passwordCriteria: {
+        hasLength: false,
+        hasUpper: false,
+        hasLower: false,
+        hasDigit: false
+    }
 };
 
 const initialErrors = {
@@ -53,14 +59,29 @@ const useRegisterValidation = (form) => {
         }
         const hasLength = value.length >= 6;
         const hasUpper = /[A-Z]/.test(value);
-        const isValid = hasLength && hasUpper;
+        const hasLower = /[a-z]/.test(value);
+        const hasDigit = /[0-9]/.test(value);
+        const isValid = hasLength && hasUpper && hasLower && hasDigit;
 
-        setValidation(prev => ({ ...prev, isPasswordValid: isValid }));
+        setValidation(prev => ({
+            ...prev,
+            isPasswordValid: isValid,
+            passwordCriteria: {
+                hasLength,
+                hasUpper,
+                hasLower,
+                hasDigit
+            }
+        }));
 
         if (!hasLength) {
             setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe est petit (minimum 6 caractères)' }));
         } else if (!hasUpper) {
             setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe doit contenir une majuscule' }));
+        } else if (!hasLower) {
+            setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe doit contenir une minuscule' }));
+        } else if (!hasDigit) {
+            setErrors(prev => ({ ...prev, passwordError: 'Le mot de passe doit contenir un chiffre' }));
         } else {
             setErrors(prev => ({ ...prev, passwordError: '' }));
         }

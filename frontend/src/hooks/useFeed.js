@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PostService from '../services/post.service';
 import { uploadImages } from '../services/media.service';
+import { useSocket } from '../context/SocketContext';
 
 const useFeed = () => {
     const [activeTab, setActiveTab] = useState('foryou');
@@ -10,12 +11,13 @@ const useFeed = () => {
     const [replyPermission, setReplyPermission] = useState('EVERYONE');
     const [showPermissionMenu, setShowPermissionMenu] = useState(false);
     const permissionMenuRef = useRef(null);
-    
+
     // Media states
     const [mediaFiles, setMediaFiles] = useState([]);
     const [codeSnippet, setCodeSnippet] = useState(null);
     const [pollData, setPollData] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
+    const { socket } = useSocket();
 
 
 
@@ -55,13 +57,44 @@ const useFeed = () => {
         fetchPosts();
     }, [activeTab]);
 
+    // Real-time updates
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on('new_post', (post) => {
+            // Prevent duplicates (in case optimistic update already added it)
+            setPosts((prevPosts) => {
+                if (prevPosts.some(p => p.id === post.id)) return prevPosts;
+                return [post, ...prevPosts];
+            });
+        });
+
+        return () => {
+            socket.off('new_post');
+        };
+    }, [socket]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on('post_updated', (updatedPost) => {
+            setPosts((prevPosts) =>
+                prevPosts.map(p => p.id === updatedPost.id ? updatedPost : p)
+            );
+        });
+
+        return () => {
+            socket.off('post_updated');
+        };
+    }, [socket]);
+
     const handlePostSubmit = async () => {
         if (!newPostContent.trim() && !mediaFiles.length && !codeSnippet && !pollData) return;
 
         setIsUploading(true);
         try {
             let uploadedImageUrls = [];
-            
+
             // Upload images if present
             if (mediaFiles.length > 0) {
                 const files = mediaFiles.map(img => img.file);
@@ -70,7 +103,7 @@ const useFeed = () => {
 
             // Build media array for backend
             const media = [];
-            
+
             // Add uploaded images
             if (uploadedImageUrls.length > 0) {
                 uploadedImageUrls.forEach(url => {
@@ -94,7 +127,7 @@ const useFeed = () => {
                 media.length > 0 ? media : undefined,
                 pollData
             );
-            
+
             const optimizedPost = {
                 ...newPost,
                 _count: { likes: 0, comments: 0, reposts: 0 },
@@ -102,7 +135,7 @@ const useFeed = () => {
                 isReposted: false
             };
             setPosts((prev) => [optimizedPost, ...prev]);
-            
+
             // Reset form
             setNewPostContent('');
             setReplyPermission('EVERYONE');

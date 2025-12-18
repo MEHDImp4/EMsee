@@ -11,6 +11,13 @@ const createPost = asyncHandler(async (req, res) => {
 
     const post = await postService.createPost(userId, content, replyPermission, media, poll);
 
+    // Emit real-time event
+    try {
+        getIo().emit('new_post', post);
+    } catch (error) {
+        console.error('Socket emission failed:', error);
+    }
+
     res.status(201).json(post);
 });
 
@@ -49,12 +56,12 @@ const likePost = async (req, res) => {
         const userId = req.user.id;
 
         const result = await postService.toggleLikePost(postId, userId);
-        
+
         // Increment view count (async, don't wait)
-        postService.incrementPostViews(postId, userId).catch(err => 
+        postService.incrementPostViews(postId, userId).catch(err =>
             console.error('Error incrementing views:', err)
         );
-        
+
         return res.json(result);
     } catch (error) {
         console.error('Error liking post:', error);
@@ -86,7 +93,7 @@ const commentPost = async (req, res) => {
         const comment = await postService.createComment(postId, userId, content);
 
         // Increment view count (async, don't wait)
-        postService.incrementPostViews(postId, userId).catch(err => 
+        postService.incrementPostViews(postId, userId).catch(err =>
             console.error('Error incrementing views:', err)
         );
 
@@ -135,7 +142,7 @@ const getPostById = async (req, res) => {
 
         // Increment view count (async, don't wait)
         if (currentUserId) {
-            postService.incrementPostViews(postId, currentUserId).catch(err => 
+            postService.incrementPostViews(postId, currentUserId).catch(err =>
                 console.error('Error incrementing views:', err)
             );
         }
@@ -195,6 +202,35 @@ const incrementViews = async (req, res) => {
     }
 };
 
+const votePoll = async (req, res) => {
+    try {
+        const postId = parseInt(req.params.id);
+        const { optionId } = req.body;
+        const userId = req.user.id;
+
+        await postService.votePoll(postId, userId, optionId);
+
+        // Return updated poll data (re-using getPostById logic simplified, or just success).
+        // Best to return the updated post structure to update UI.
+        const updatedPost = await postService.getPostById(postId, userId);
+
+        // Emit update via socket
+        try {
+            getIo().emit('post_updated', updatedPost); // Check if frontend listens to this or 'new_post' or separate event
+        } catch (err) {
+            console.error(err);
+        }
+
+        res.json(updatedPost);
+    } catch (error) {
+        if (error.status) {
+            return res.status(error.status).json({ error: error.message });
+        }
+        console.error('Error voting:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -205,6 +241,8 @@ module.exports = {
     getUserPosts,
     deletePost,
     getPostById,
+    getPostById,
     getClassPosts,
-    incrementViews
+    incrementViews,
+    votePoll
 };

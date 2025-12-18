@@ -98,13 +98,22 @@ exports.sendMessage = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const conversationId = parseInt(req.params.id);
   const { content } = req.body;
+  const file = req.file;
 
-  const message = await messageService.sendMessage(conversationId, userId, content);
+  let mediaUrl = null;
+  let mediaType = null;
+
+  if (file) {
+    mediaUrl = `/uploads/images/${file.filename}`;
+    mediaType = file.mimetype.startsWith('image/') ? 'image' : 'file';
+  }
+
+  const message = await messageService.sendMessage(conversationId, userId, content, mediaUrl, mediaType);
 
   // Emit socket event to conversation participants
   const io = getIo();
   const conversation = await messageService.getConversationById(conversationId, userId);
-  
+
   conversation.participants.forEach(participant => {
     if (participant.userId !== userId) {
       io.to(`user_${participant.userId}`).emit('newMessage', {
@@ -130,6 +139,19 @@ exports.markAsRead = asyncHandler(async (req, res) => {
   const conversationId = parseInt(req.params.id);
 
   await messageService.markConversationAsRead(conversationId, userId);
+
+  // Emit read event
+  const io = getIo();
+  // Notify other participants that this user read the conversation
+  const conversation = await messageService.getConversationById(conversationId, userId);
+  conversation.participants.forEach(participant => {
+    if (participant.userId !== userId) {
+      io.to(`user_${participant.userId}`).emit('messagesRead', {
+        conversationId,
+        readByUserId: userId
+      });
+    }
+  });
 
   res.status(200).json({
     success: true,

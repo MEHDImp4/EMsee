@@ -174,7 +174,11 @@
     },
     "common": {
         "back": "Retour",
-        "save": "Enregistrer"
+        "save": "Enregistrer",
+        "loading": "Chargement...",
+        "load_more": "Charger plus",
+        "error": "Erreur",
+        "retry": "Réessayer"
     },
     "lists": {
         "subjects": {
@@ -229,7 +233,6 @@
         "team_title": "L'Équipe",
         "team_desc": "Un projet réalisé avec passion par des étudiants, pour des étudiants."
     },
-    
     "right_sidebar": {
         "search": "Rechercher",
         "trends_for_you": "Tendances pour vous",
@@ -266,6 +269,23 @@
         "followers_can_reply": "Abonnés uniquement",
         "no_one_can_reply": "Personne ne peut répondre"
     },
+    "notifications": {
+        "title": "Notifications",
+        "all": "Tout",
+        "verified": "Vérifié",
+        "mentions": "Mentions",
+        "empty": "Pas encore de notifications",
+        "liked_post": "a aimé votre post",
+        "reposted_post": "a reposté votre post",
+        "commented_post": "a commenté votre post",
+        "mentioned_you": "vous a mentionné",
+        "system_alert": "Alerte système",
+        "tabs": {
+            "all": "Tous",
+            "verified": "Vérifié",
+            "mentions": "Mentions"
+        }
+    },
     "post": {
         "cannot_comment_own": "Vous ne pouvez pas commenter votre propre post",
         "delete": "Supprimer le post",
@@ -281,13 +301,6 @@
         "hide_replies": "Masquer",
         "thread_reply": "Répondre",
         "report": "Signaler"
-    },
-    "notifications": {
-        "tabs": {
-            "all": "Tous",
-            "verified": "Vérifié",
-            "mentions": "Mentions"
-        }
     },
     "profile": {
         "edit": "Modifier",
@@ -363,11 +376,5 @@
         "no_posts": "Aucune publication trouvée avec ce hashtag",
         "error": "Erreur",
         "error_loading": "Échec du chargement du contenu du hashtag"
-    },
-    "common": {
-        "loading": "Chargement...",
-        "load_more": "Charger plus",
-        "error": "Erreur",
-        "retry": "Réessayer"
     }
 }

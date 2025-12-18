@@ -34,15 +34,15 @@ const PostService = {
     createPost: async (content, replyPermission = 'EVERYONE', media = null, poll = null) => {
         try {
             const payload = { content, replyPermission };
-            
+
             if (media && media.length > 0) {
                 payload.media = media;
             }
-            
+
             if (poll) {
                 payload.poll = poll;
             }
-            
+
             const response = await api.post('/posts', payload);
             return response;
         } catch (error) {
@@ -107,6 +107,16 @@ const PostService = {
             return response;
         } catch (error) {
             console.error('Error deleting post:', error);
+            throw error;
+        }
+    },
+
+    votePoll: async (postId, optionId) => {
+        try {
+            const response = await api.post(`/posts/${postId}/vote`, { optionId });
+            return response;
+        } catch (error) {
+            console.error('Error voting on poll:', error);
             throw error;
         }
     },

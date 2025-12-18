@@ -1,42 +1,52 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './css/HashtagText.css';
 
 /**
- * Component to render text with clickable hashtags
- * Converts hashtags (#word) into clickable links
+ * Component to render text with clickable hashtags and mentions
+ * Converts hashtags (#word) and mentions (@user) into clickable links
  */
 const HashtagText = ({ content }) => {
     const navigate = useNavigate();
 
     if (!content) return null;
 
-    // Split content by hashtags while preserving them
-    const parts = content.split(/(#[\w\u00C0-\u017F]+)/g);
-
-    const handleHashtagClick = (e, hashtag) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // Navigate to explore with the hashtag prefilled in query param
-        navigate(`/explore?q=${encodeURIComponent(hashtag)}`);
-    };
+    // Split content by hashtags and mentions while preserving them
+    // Captures #hashtag or @username
+    const parts = content.split(/((?:#[a-zA-Z0-9_\u00C0-\u017F]+)|(?:@[a-zA-Z0-9_\u00C0-\u017F]+))/g);
 
     return (
         <span className="hashtag-text">
             {parts.map((part, index) => {
-                // Check if this part is a hashtag
-                if (part.match(/^#[\w\u00C0-\u017F]+$/)) {
+                if (part.startsWith('#')) {
+                    const hashtag = part.slice(1);
                     return (
-                        <a
+                        <Link
                             key={index}
-                            href={`/hashtags/${part.slice(1)}`}
+                            to={`/hashtag/${hashtag}`}
                             className="hashtag-link"
-                            onClick={(e) => handleHashtagClick(e, part)}
+                            onClick={(e) => e.stopPropagation()}
                         >
                             {part}
-                        </a>
+                        </Link>
                     );
                 }
+
+                if (part.startsWith('@')) {
+                    const username = part.slice(1);
+                    return (
+                        <Link
+                            key={index}
+                            to={`/profile/${username}`}
+                            className="mention-link"
+                            style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {part}
+                        </Link>
+                    );
+                }
+
                 return <span key={index}>{part}</span>;
             })}
         </span>

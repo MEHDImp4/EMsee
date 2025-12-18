@@ -103,6 +103,7 @@
   white-space: pre-wrap;
   font-size: 0.9375rem;
   line-height: 1.4;
+  overflow: hidden;
 }
 
 .message-own .message-bubble {
@@ -117,59 +118,59 @@
   border-bottom-left-radius: 0.25rem;
 }
 
-.message-time {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  padding: 0 0.5rem;
+.message-bubble.has-media {
+    padding: 0;
+    background-color: transparent;
 }
 
-.typing-indicator {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  max-width: 70px;
+
+/* If has media, we might want background only if there's text, or always? */
+/* Actually, let's keep background but remove padding so image touches edges */
+.message-bubble.has-media {
+    padding: 4px; /* Small padding for "polaroid" look or 0 for flush? Let's go with 0 top/horizontal */
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.typing-dots {
-  display: flex;
-  gap: 4px;
-  padding: 0.75rem 1rem;
-  background-color: var(--bg-card);
-  border-radius: 1rem;
+.message-own .message-bubble.has-media {
+    background-color: var(--primary);
 }
 
-.typing-dots span {
-  width: 8px;
-  height: 8px;
-  background-color: var(--text-muted);
-  border-radius: 50%;
-  animation: typing 1.4s infinite;
+.message-other .message-bubble.has-media {
+    background-color: var(--bg-card);
 }
 
-.typing-dots span:nth-child(2) {
-  animation-delay: 0.2s;
+.message-image {
+    max-width: 300px;
+    width: 100%;
+    border-radius: 1rem; /* Match bubble radius */
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    display: block;
 }
 
-.typing-dots span:nth-child(3) {
-  animation-delay: 0.4s;
+/* Add padding back to text if it exists */
+.message-bubble.has-media p {
+    padding: 0.5rem 1rem 0.75rem;
+    margin: 0;
 }
 
-@keyframes typing {
-  0%, 60%, 100% {
-    transform: translateY(0);
-    opacity: 0.5;
-  }
-  30% {
-    transform: translateY(-10px);
-    opacity: 1;
-  }
+/* Ensure corners are sharp where they join the image if needed, or just round everything */
+/* Let's keep it simple: rounded image inside rounded bubble */
+
+.message-image:hover {
+    filter: brightness(0.9);
 }
+
+/* ... typing dots ... */
 
 .chat-input-container {
   display: flex;
-  align-items: flex-end;
-  gap: 0.5rem;
-  padding: 1rem;
+  align-items: center; /* Center vertically for better "straight" look */
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--border);
   background-color: var(--bg-main);
 }
@@ -179,14 +180,18 @@
   padding: 0.75rem 1rem;
   border: 1px solid var(--border);
   border-radius: 1.5rem;
-  font-size: 0.9375rem;
-  line-height: 1.4;
+  font-size: 0.95rem;
+  line-height: 1.5;
   resize: none;
   max-height: 120px;
+  min-height: 44px; /* Match button height visually */
   overflow-y: auto;
   font-family: inherit;
   background-color: var(--bg-card);
   color: var(--text-main);
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center; /* Helpful if it was a div, but for textarea padding matters */
 }
 
 .chat-input:focus {
