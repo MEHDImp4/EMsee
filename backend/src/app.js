@@ -54,7 +54,18 @@ app.use('/api', limiter);
 app.set('trust proxy', 1); // Trust first proxy (necessary for simple deployments behind Nginx/Docker)
 
 // CORS Configuration
-const allowedOrigins = process.env.CLIENT_URL ? [process.env.CLIENT_URL] : ['http://localhost:5173', 'http://localhost:3000'];
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'http://localhost:3000',
+    'http://localhost',
+    'https://emsee.smp4.xyz'
+];
+
+if (process.env.CLIENT_URL) {
+    allowedOrigins.push(...process.env.CLIENT_URL.split(',').map(url => url.trim()));
+}
+
 app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
