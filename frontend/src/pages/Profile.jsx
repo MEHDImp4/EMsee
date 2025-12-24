@@ -32,14 +32,14 @@ const Profile = () => {
   } = useProfilePage({ targetUsername, authUser });
 
   if (!authUser && !targetUsername) return null;
-  if (loadingProfile && !profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>Loading Profile...</div>;
-  if (!profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>User not found</div>;
+  if (loadingProfile && !profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>{t('profile.loading_profile', 'Loading Profile...')}</div>;
+  if (!profileData) return <div style={{ padding: '20px', textAlign: 'center' }}>{t('profile.user_not_found', 'User not found')}</div>;
 
   const user = userView ? {
     ...userView,
-    level: userView.level ? t(`lists.years.${userView.level}`) : 'N/A',
-    filiere: userView.filiere ? t(`lists.filieres.${userView.filiere}`) : 'N/A',
-    class: userView.class || 'N/A',
+    level: userView.level ? t(`lists.years.${userView.level}`) : t('common.na', 'N/A'),
+    filiere: userView.filiere ? t(`lists.filieres.${userView.filiere}`) : t('common.na', 'N/A'),
+    class: userView.class || t('common.na', 'N/A'),
     joinDate: userView.joinDate ? new Date(userView.joinDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) : ''
   } : null;
 
@@ -102,9 +102,9 @@ const Profile = () => {
 
         <div className="profile-meta-row">
           <div className="meta-item">
-            <MapPin size={16} />
-            <span>{user.location || 'Rabat, Maroc'}</span>
-          </div>
+              <MapPin size={16} />
+              <span>{user.location || t('profile.default_location', 'Rabat, Morocco')}</span>
+            </div>
           <div className="meta-item">
             <Mail size={16} />
             <span>{user.email}</span>
@@ -212,7 +212,7 @@ const Profile = () => {
 
         <div className="posts-list">
           {loadingPosts ? (
-            <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>
+            <div style={{ padding: '20px', textAlign: 'center' }}>{t('common.loading', 'Loading...')}</div>
           ) : userPosts?.length > 0 ? (
             userPosts.map((post, index) => (
               <PostCard key={`${post.id}-${index}`} post={post} onDelete={handleDeletePost} />

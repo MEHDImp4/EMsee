@@ -5,6 +5,7 @@ import { uploadImages } from '../services/media.service';
 import EditCommunityModal from '../components/EditCommunityModal';
 import ManageMembersModal from '../components/ManageMembersModal';
 import CommunityService from '../services/community.service';
+import { useTranslation } from 'react-i18next';
 import UserAvatar from '../components/UserAvatar';
 import PageLoader from '../components/loaders/PageLoader';
 import { useAuth } from '../context/AuthContext';
@@ -29,6 +30,7 @@ const CommunityChat = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
     const [community, setCommunity] = useState(null);
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -78,7 +80,7 @@ const CommunityChat = () => {
             await CommunityService.joinCommunity(id);
             fetchDetails();
         } catch (error) {
-            alert(error.response?.data?.message || 'Failed to join');
+            alert(error.response?.data?.message || t('community.errors.failed_join', 'Failed to join'));
         }
     };
 
@@ -154,38 +156,38 @@ const CommunityChat = () => {
             }
         } catch (error) {
             console.error('Failed to send', error);
-            alert(error.response?.data?.message || 'Failed to send');
+            alert(error.response?.data?.message || t('community.errors.failed_send', 'Failed to send'));
         } finally {
             setUploading(false);
         }
     };
 
     const handleDeleteCommunity = async () => {
-        if (window.confirm('Êtes-vous sûr de vouloir supprimer cette communauté ? Cette action est irréversible.')) {
-            if (window.confirm('Confirmation finale : Supprimer définitivement ?')) {
+        if (window.confirm(t('community.confirm_delete_warning', 'Are you sure you want to delete this community? This action is irreversible.'))) {
+            if (window.confirm(t('community.confirm_delete_final', 'Final confirmation: Delete permanently?'))) {
                 try {
                     await CommunityService.deleteCommunity(id);
                     navigate('/community');
                 } catch (error) {
-                    alert('Erreur lors de la suppression');
+                    alert(t('community.errors.delete_failed', 'Error deleting community'));
                 }
             }
         }
     };
 
     const handleLeave = async () => {
-        if (window.confirm('Voulez-vous vraiment quitter ce groupe ?')) {
+        if (window.confirm(t('community.confirm_leave', 'Do you really want to leave this group?'))) {
             try {
                 await CommunityService.leaveCommunity(id);
                 navigate('/community');
             } catch (error) {
-                alert('Erreur');
+                alert(t('community.errors.leave_failed', 'Error'));
             }
         }
     };
 
     if (loading) return <PageLoader />;
-    if (!community) return <div>Community not found</div>;
+    if (!community) return <div>{t('community.not_found', 'Community not found')}</div>;
 
     const isMember = community.membership?.status === 'ACTIVE';
     const isPending = community.membership?.status === 'PENDING';
@@ -224,7 +226,7 @@ const CommunityChat = () => {
                     <div style={{ flex: 1 }}>
                         <h4 style={{ margin: 0 }}>{community.name}</h4>
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                            {community._count?.members || 1} membres
+                            {community._count?.members || 1} {t('community.members', 'members')}
                         </span>
                     </div>
 
@@ -252,21 +254,21 @@ const CommunityChat = () => {
                                 {community.membership?.role === 'OWNER' && (
                                     <>
                                         <button onClick={() => { setIsEditModalOpen(true); setShowMenu(false); }} style={menuItemStyle}>
-                                            <Settings size={16} /> Modifier la communauté
+                                            <Settings size={16} /> {t('community.edit', 'Edit community')}
                                         </button>
                                         <button onClick={() => { setIsMembersModalOpen(true); setShowMenu(false); }} style={menuItemStyle}>
-                                            <Users size={16} /> Gérer les membres
+                                            <Users size={16} /> {t('community.manage_members', 'Manage members')}
                                         </button>
                                         <div style={{ height: 1, background: 'var(--border)', margin: '4px 0' }} />
                                         <button onClick={handleDeleteCommunity} style={{ ...menuItemStyle, color: 'var(--danger)' }}>
-                                            <Trash size={16} /> Supprimer la communauté
+                                            <Trash size={16} /> {t('community.delete', 'Delete community')}
                                         </button>
                                     </>
                                 )}
 
                                 {community.membership?.role !== 'OWNER' && (
                                     <button onClick={handleLeave} style={{ ...menuItemStyle, color: 'var(--danger)' }}>
-                                        <LogOut size={16} /> Quitter le groupe
+                                        <LogOut size={16} /> {t('community.leave_group', 'Leave group')}
                                     </button>
                                 )}
                             </div>
@@ -299,10 +301,10 @@ const CommunityChat = () => {
                         <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{community.description}</p>
 
                         {isPending ? (
-                            <button disabled className="submit-btn" style={{ opacity: 0.7 }}>Demande envoyée</button>
+                            <button disabled className="submit-btn" style={{ opacity: 0.7 }}>{t('community.request_sent', 'Request sent')}</button>
                         ) : (
                             <button onClick={handleJoin} className="submit-btn">
-                                Rejoindre le groupe
+                                {t('community.join_group', 'Join group')}
                             </button>
                         )}
                     </div>
@@ -310,7 +312,7 @@ const CommunityChat = () => {
                     <>
                         {messages.length === 0 ? (
                             <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
-                                <p>Début de la conversation</p>
+                                <p>{t('community.start_conversation', 'Start of conversation')}</p>
                             </div>
                         ) : (
                             messages.map(msg => {
@@ -379,7 +381,7 @@ const CommunityChat = () => {
                                                         opacity: activeReactionMessage === msg.id ? 1 : 0.5,
                                                         padding: 4
                                                     }}
-                                                    title="Add reaction"
+                                                    title={t('community.add_reaction', 'Add reaction')}
                                                 >
                                                     <Smile size={18} />
                                                 </button>
@@ -536,7 +538,7 @@ const CommunityChat = () => {
                                     type="button"
                                     className="ghost-icon-btn"
                                     onClick={() => setNewMessage(prev => prev + '@everyone ')}
-                                    title="Mentionner tout le monde"
+                                    title={t('community.mention_everyone', 'Mention everyone')}
                                 >
                                     <AtSign size={20} />
                                 </button>
@@ -546,7 +548,7 @@ const CommunityChat = () => {
                                 type="text"
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
-                                placeholder="Message..."
+                                placeholder={t('community.input_placeholder', 'Message...')}
                                 disabled={uploading}
                                 style={{
                                     flex: 1,
@@ -579,7 +581,7 @@ const CommunityChat = () => {
                         </form>
                     ) : (
                         <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                            Seuls les administrateurs peuvent écrire ici.
+                            {t('community.admins_only', 'Only admins can write here.')}
                         </div>
                     )}
                 </div>

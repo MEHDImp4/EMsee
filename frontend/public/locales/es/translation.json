@@ -207,6 +207,7 @@
         "show_more": "Mostrar más",
         "suggestions": "Sugerencias",
         "follow": "Seguir",
+        "no_suggestions": "Sin sugerencias",
         "posts": "posts",
         "trending": "Tendencias",
         "education": "Educación",
@@ -238,6 +239,8 @@
         "no_one_can_reply": "Nadie puede responder"
     },
     "post": {
+        "title": "Publicación",
+        "not_found": "Publicación no encontrada",
         "cannot_comment_own": "No puedes comentar en tu propia publicación",
         "delete": "Eliminar publicación",
         "confirm_delete": "¿Eliminar esta publicación?",
@@ -259,6 +262,15 @@
             "verified": "Verificados",
             "mentions": "Menciones"
         }
+        ,
+        "socket_checking": "Comprobando...",
+        "no_socket": "Sin socket",
+        "connected": "Conectado",
+        "disconnected": "Desconectado",
+        "label_status": "Estado:",
+        "label_port": "Puerto:",
+        "label_id": "ID:",
+        "no_notifications": "Sin notificaciones (Usuario {{id}})"
     },
     "profile": {
         "edit": "Editar",
@@ -371,17 +383,119 @@
     "hashtags": {
         "trending": "Tendencias",
         "explore": "Explorar hashtag",
+        "top_hashtags": "Hashtags principales",
+        "posts": "publicaciones",
         "posts_count": "publicaciones",
         "no_posts": "No se encontraron publicaciones con este hashtag",
         "error": "Error",
         "error_loading": "Error al cargar el contenido del hashtag"
     },
+    "post_preview": {
+        "loading_preview": "Cargando vista previa...",
+        "check_out_post": "Mira esta publicación",
+        "preview_unavailable": "(Vista previa no disponible)"
+    },
+    "media_picker": {
+        "title_images": "Agregar imágenes",
+        "title_code": "Agregar código",
+        "title_poll": "Crear encuesta",
+        "add": "Agregar",
+        "code_placeholder": "Pega tu código aquí...",
+        "poll_question": "Pregunta de la encuesta",
+        "poll_option": "Opción {{num}}",
+        "add_poll_option": "+ Agregar una opción",
+        "languages": {
+            "javascript": "JavaScript",
+            "python": "Python",
+            "java": "Java",
+            "cpp": "C++",
+            "php": "PHP",
+            "html": "HTML",
+            "css": "CSS",
+            "sql": "SQL"
+        }
+    },
+    "manage_members": {
+        "title": "Gestionar miembros",
+        "search_placeholder": "Buscar miembro...",
+        "loading": "Cargando...",
+        "no_members": "No se encontraron miembros",
+        "promote_admin": "Promover a Admin",
+        "kick_member": "Eliminar del grupo"
+    },
+    "compose": {
+        "permission": {
+            "everyone": "Todos pueden responder",
+            "followers": "Solo seguidores",
+            "none": "Nadie",
+            "everyone_short": "Todos",
+            "followers_short": "Seguidores",
+            "none_short": "Nadie"
+        },
+        "poll": {
+            "question_placeholder": "Haz una pregunta...",
+            "option_placeholder": "Opción {{num}}",
+            "add_option": "Agregar opción",
+            "remove_poll": "Eliminar encuesta"
+        },
+        "code": {
+            "remove_code": "Eliminar código"
+        }
+    },
+    "community": {
+        "create": {
+            "title": "Crear una comunidad",
+            "name_label": "Nombre",
+            "name_placeholder": "ej: Fans de Tech",
+            "description_label": "Descripción",
+            "description_placeholder": "¿De qué trata este grupo?",
+            "privacy_label": "Privacidad",
+            "who_can_post": "¿Quién puede publicar?",
+            "write_everyone": "Todos",
+            "write_admins": "Solo administradores (Canal de anuncios)",
+            "creating": "Creando...",
+            "create_button": "Crear grupo"
+        },
+        "edit": {
+            "title": "Editar comunidad",
+            "name_label": "Nombre",
+            "description_label": "Descripción",
+            "privacy_label": "Privacidad",
+            "saving": "Guardando...",
+            "save": "Guardar"
+        },
+        "privacy": {
+            "public": "Público",
+            "public_desc": "Todos pueden unirse",
+            "private": "Privado",
+            "private_desc": "Por invitación o solicitud"
+        }
+    },
     "common": {
         "back": "Atrás",
         "save": "Guardar cambios",
+        "saving": "Guardando...",
+        "na": "N/A",
         "loading": "Cargando...",
         "load_more": "Cargar más",
         "error": "Error",
         "retry": "Reintentar"
+    }
+
+    ,"community": {
+        "tabs": {
+            "my": "Mis grupos",
+            "discover": "Descubrir"
+        },
+        "empty_my": "No te has unido a ningún grupo",
+        "empty_discover": "No se encontraron grupos públicos",
+        "empty_my_desc": "¡Únete a comunidades o crea una nueva!",
+        "empty_discover_desc": "Sé el primero en crear un grupo público!",
+        "no_description": "Sin descripción",
+        "members": "miembros",
+        "view_button": "Ver"
+    },
+    "errors": {
+        "something_went_wrong": "Ocurrió un error."
     }
 }

@@ -1,45 +1,48 @@
 :root {
-  /* Ocean Sunset Vibes Palette */
-  --primary: #3E8893; /* Teal */
-  --primary-hover: #2A5F66;
-  --secondary: #6B8A99; /* Muted Navy Blue */
-  --danger: #E06C66; /* Salmon */
+  /* Core Palette - Accessible & Harmonious */
+  --primary: #2A9D8F; /* Jungle Green - Vibrant and accessible on dark */
+  --primary-hover: #21867a;
+  --secondary: #64748B; /* Slate 500 - Neutral accessible grey */
+  --danger: #EF4444; /* Red 500 - Accessible alert color */
+  --success: #10B981; /* Emerald 500 */
   --radius: 1rem;
-  
-  /* Accents */
-  --accent-red: #E06C66; /* Salmon */
-  --accent-green: #4DA167; /* Sea Foam */
-  --accent-blue: #5AA6B0; /* Lighter Teal */
-  --accent-purple: #8D6B99; /* Muted Purple */
-  
-  /* Light Mode */
+   
+  /* Light Mode - Crisp & Readable */
   --bg-main: #FFFFFF; 
-  --bg-sidebar: #F0F6F9; /* Very light tint of the light blue */
+  --bg-sidebar: #F8FAFC; /* Slate 50 */
   --bg-card: #FFFFFF;
-  --text-main: #1D3140; /* Dark Navy from palette */
-  --text-muted: #6B8A99; 
-  --border: #C5D9E2; /* Light Blue-Grey from palette */
-  --hover: #3E889320; 
+  --text-main: #0F172A; /* Slate 900 - Nearly black for max contrast */
+  --text-muted: #475569; /* Slate 600 - Darker than before for WCAG AA */
+  --border: #E2E8F0; /* Slate 200 - Visible border */
+  --hover: rgba(42, 157, 143, 0.08); 
+  
+  /* Input/Form Specifics */
+  --input-bg: #F1F5F9;
+  --input-border: #CBD5E1;
 }
 
 [data-theme="dark"] {
-  /* Dark Mode - Ocean Sunset Theme */
+  /* Dark Mode - Ocean Navy (Restored) */
   --bg-main: #1D3140; /* Dark Navy Main BG */
-  --bg-sidebar: #15232E; /* Darker Navy */
-  --bg-card: #264052; /* Lighter Navy Card */
-  --text-main: #F0F6F9; /* Off-white / Very light blue */
-  --text-muted: #94AAB5; 
-  --border: #3E5463; 
-  --hover: #264052; 
+  --bg-sidebar: #15232E; /* Darker Navy Anchor */
+  --bg-card: #264052; /* Lighter Navy Surface */
   
-  /* Accents */
-  --primary: #3E8893; 
+  /* Typography - Accessible Off-white */
+  --text-main: #F1F5F9; /* Slate 100 - Crisp off-white */
+  --text-muted: #94A3B8; /* Slate 400 - Readable secondary */
+  
+  /* UI Elements */
+  --border: #334e60; /* Navy Border */
+  --hover: rgba(56, 189, 248, 0.1); /* Sky blue tint interaction */
+  
+  --input-bg: #15232E;
+  --input-border: #334e60;
+  
+  /* Accents / Interactions */
+  --primary: #3E8893; /* Original Teal */
   --primary-hover: #5AA6B0;
-  --danger: #E06C66;
   
-  /* Accents Dark Mode */
-  --accent-red: #E06C66; 
-  --accent-green: #4DA167; 
-  --accent-blue: #5AA6B0; 
-  --accent-purple: #8D6B99;
+  /* Status Colors (Daltonism support via contrast) */
+  --danger: #F87171; /* Red 400 - Visible on Navy */
+  --success: #34D399; /* Emerald 400 - Visible on Navy */
 }

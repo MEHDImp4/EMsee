@@ -5,12 +5,14 @@ import { getImageUrl } from '../utils/imageUtils';
 import { BASE_URL } from '../services/api';
 import UserAvatar from './UserAvatar';
 import './css/PostPreviewBubble.css';
+import { useTranslation } from 'react-i18next';
 
 const PostPreviewBubble = ({ postId, fallbackContent }) => {
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     useEffect(() => {
         let isMounted = true;
@@ -42,17 +44,17 @@ const PostPreviewBubble = ({ postId, fallbackContent }) => {
         navigate(`/posts/${postId}`);
     };
 
-    if (loading) return <div className="post-preview-loading">Loading preview...</div>;
+    if (loading) return <div className="post-preview-loading">{t('post_preview.loading_preview', 'Loading preview...')}</div>;
 
     if (error || !post) {
         // Simple helper to linkify text if needed, or just allow clicking the bubble to go to the post if we have ID
         return (
             <div className="post-preview-bubble error-state" onClick={handleClick}>
                 <p className="post-preview-fallback" style={{ margin: 0 }}>
-                    {fallbackContent || "Check out this post"}
+                    {fallbackContent || t('post_preview.check_out_post', 'Check out this post')}
                 </p>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                    (Preview unavailable)
+                    {t('post_preview.preview_unavailable', '(Preview unavailable)')}
                 </div>
             </div>
         );

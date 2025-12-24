@@ -9,9 +9,10 @@ import { BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import HashtagText from './HashtagText';
-import SharePostModal from './SharePostModal'; // Import new modal
+import SharePostModal from './SharePostModal';
 import './css/PostCard.css';
 import { getInitials } from '../utils/avatarUtils';
+import UserBadge from './UserBadge';
 
 const formatCount = (value = 0) => {
   const abs = Math.abs(value);
@@ -232,6 +233,8 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
                   })()}
                 </span>
               )}
+              {/* Add UserBadge here */}
+              <UserBadge user={post?.user} />
             </div>
             <div className="post-meta-row">
               {handle && <span className="post-handle">{handle}</span>}

@@ -24,9 +24,8 @@ const LANG_OPTIONS = ['en', 'fr', 'es', 'auto'];
 const THEME_OPTIONS = ['light', 'dark', 'auto'];
 
 const LogoRow = () => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <img src={logo} alt="EMsee Logo" style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'contain' }} />
-        <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>EMsee</span>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <img src={logo} alt="EMsee Logo" style={{ height: '60px', objectFit: 'contain' }} />
     </div>
 );
 

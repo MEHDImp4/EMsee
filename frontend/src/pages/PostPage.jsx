@@ -24,8 +24,8 @@ const PostPage = () => {
 
     const isOwnPost = post?.user?.id === user?.id;
 
-    if (loading) return <div className="loading-spinner">Loading...</div>;
-    if (!post) return <div className="not-found">Post not found</div>;
+    if (loading) return <div className="loading-spinner">{t('common.loading', 'Loading...')}</div>;
+    if (!post) return <div className="not-found">{t('post.not_found', 'Post not found')}</div>;
 
     return (
         <div className="feed-container">
@@ -37,7 +37,7 @@ const PostPage = () => {
                     >
                         <ArrowLeft size={20} />
                     </button>
-                    <h2 style={{ fontSize: '1.2rem', margin: 0 }}>Post</h2>
+                    <h2 style={{ fontSize: '1.2rem', margin: 0 }}>{t('post.title', 'Post')}</h2>
                 </div>
             </div>
 

@@ -155,7 +155,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                         disabled={!text.trim() || isSubmitting}
                         onClick={handleSubmit}
                     >
-                        {isSubmitting ? '...' : (replyTo ? t('post.reply', 'Répondre') : t('sidebar.publish', 'Publier'))}
+                        {isSubmitting ? '...' : (replyTo ? t('post.reply', 'Reply') : t('sidebar.publish', 'Publish'))}
                     </button>
                 </div>
 
@@ -180,7 +180,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
 
                         <textarea
                             className="compose-modal-input"
-                            placeholder={replyTo ? t('post.reply_placeholder', 'Post your reply') : t('feed.placeholder', "Quoi de neuf à l'EMSI ?")}
+                            placeholder={replyTo ? t('post.reply_placeholder', 'Post your reply') : t('feed.placeholder', "What's happening at EMSI?")}
                             autoFocus
                             value={text}
                             onChange={(e) => setText(e.target.value)}
@@ -203,9 +203,9 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                                     {replyPermission === 'NO_ONE' && <Lock size={16} />}
 
                                     <span>
-                                        {replyPermission === 'EVERYONE' && t('feed.everyone_can_reply', 'Tout le monde peut répondre')}
-                                        {replyPermission === 'FOLLOWERS' && t('feed.followers_can_reply', 'Abonnés uniquement')}
-                                        {replyPermission === 'NO_ONE' && t('feed.no_one_can_reply', 'Personne ne peut répondre')}
+                                        {replyPermission === 'EVERYONE' && t('compose.permission.everyone', 'Everyone can reply')}
+                                        {replyPermission === 'FOLLOWERS' && t('compose.permission.followers', 'Followers only')}
+                                        {replyPermission === 'NO_ONE' && t('compose.permission.none', 'No one')}
                                     </span>
                                 </div>
 
@@ -216,21 +216,21 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                                             onClick={() => { setReplyPermission('EVERYONE'); setShowPermissionMenu(false); }}
                                         >
                                             <Globe size={16} />
-                                            <span>Tout le monde</span>
+                                            <span>{t('compose.permission.everyone_short', 'Everyone')}</span>
                                         </div>
                                         <div
                                             className="permission-item"
                                             onClick={() => { setReplyPermission('FOLLOWERS'); setShowPermissionMenu(false); }}
                                         >
                                             <Users size={16} />
-                                            <span>Abonnés uniquement</span>
+                                            <span>{t('compose.permission.followers_short', 'Followers')}</span>
                                         </div>
                                         <div
                                             className="permission-item"
                                             onClick={() => { setReplyPermission('NO_ONE'); setShowPermissionMenu(false); }}
                                         >
                                             <Lock size={16} />
-                                            <span>Personne</span>
+                                            <span>{t('compose.permission.none_short', 'No one')}</span>
                                         </div>
                                     </div>
                                 )}
@@ -257,7 +257,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                             <div className="compose-poll-creator" style={{ marginTop: '1rem', padding: '1rem', border: '1px solid var(--border)', borderRadius: '0.5rem' }}>
                                 <input
                                     type="text"
-                                    placeholder="Ask a question..."
+                                    placeholder={t('compose.poll.question_placeholder', 'Ask a question...')}
                                     value={pollData.question}
                                     onChange={(e) => setPollData(prev => ({ ...prev, question: e.target.value }))}
                                     style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem', border: '1px solid var(--border)', borderRadius: '0.25rem', background: 'var(--bg-main)', color: 'var(--text-main)' }}
@@ -266,7 +266,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                                     <div key={idx} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                                         <input
                                             type="text"
-                                            placeholder={`Option ${idx + 1}`}
+                                            placeholder={t('compose.poll.option_placeholder', `Option ${idx + 1}`)}
                                             value={opt}
                                             onChange={(e) => {
                                                 const newOpts = [...pollData.options];
@@ -284,11 +284,11 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                                 ))}
                                 {pollData.options.length < 4 && (
                                     <button onClick={addPollOption} style={{ padding: '0.5rem 1rem', border: '1px solid var(--primary)', background: 'transparent', color: 'var(--primary)', borderRadius: '0.25rem', cursor: 'pointer', marginTop: '0.25rem' }}>
-                                        Add option
+                                        {t('compose.poll.add_option', 'Add option')}
                                     </button>
                                 )}
                                 <button onClick={() => setShowPollCreator(false)} style={{ padding: '0.5rem 1rem', border: 'none', background: 'var(--danger)', color: 'white', borderRadius: '0.25rem', cursor: 'pointer', marginTop: '0.5rem', marginLeft: '0.5rem' }}>
-                                    Remove poll
+                                    {t('compose.poll.remove_poll', 'Remove poll')}
                                 </button>
                             </div>
                         )}
@@ -300,21 +300,21 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                                     onChange={(e) => setCodeData(prev => ({ ...prev, language: e.target.value }))}
                                     style={{ padding: '0.5rem', marginBottom: '0.5rem', border: '1px solid var(--border)', borderRadius: '0.25rem', background: 'var(--bg-card)', color: 'var(--text-main)' }}
                                 >
-                                    <option value="javascript">JavaScript</option>
-                                    <option value="python">Python</option>
-                                    <option value="java">Java</option>
-                                    <option value="cpp">C++</option>
-                                    <option value="html">HTML</option>
-                                    <option value="css">CSS</option>
+                                    <option value="javascript">{t('media.languages.javascript', 'JavaScript')}</option>
+                                    <option value="python">{t('media.languages.python', 'Python')}</option>
+                                    <option value="java">{t('media.languages.java', 'Java')}</option>
+                                    <option value="cpp">{t('media.languages.cpp', 'C++')}</option>
+                                    <option value="html">{t('media.languages.html', 'HTML')}</option>
+                                    <option value="css">{t('media.languages.css', 'CSS')}</option>
                                 </select>
                                 <textarea
                                     value={codeData.code}
                                     onChange={(e) => setCodeData(prev => ({ ...prev, code: e.target.value }))}
-                                    placeholder="Paste your code here..."
+                                    placeholder={t('media_picker.code_placeholder', 'Paste your code here...')}
                                     style={{ width: '100%', minHeight: '150px', padding: '0.75rem', border: '1px solid var(--border)', borderRadius: '0.25rem', fontFamily: 'monospace', fontSize: '0.9rem', background: 'var(--bg-card)', color: 'var(--text-main)' }}
                                 />
                                 <button onClick={() => setShowCodeEditor(false)} style={{ padding: '0.5rem 1rem', border: 'none', background: 'var(--danger)', color: 'white', borderRadius: '0.25rem', cursor: 'pointer', marginTop: '0.5rem' }}>
-                                    Remove code
+                                    {t('compose.code.remove_code', 'Remove code')}
                                 </button>
                             </div>
                         )}

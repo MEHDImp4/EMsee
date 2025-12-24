@@ -12,17 +12,17 @@ const Notifications = () => {
     const { user } = useAuth();
 
     // Socket Status State
-    const [socketStatus, setSocketStatus] = useState('Checking...');
+    const [socketStatus, setSocketStatus] = useState(t('notifications.socket_checking', 'Checking...'));
     const [socketId, setSocketId] = useState(null);
 
     useEffect(() => {
         if (!socket) {
-            setSocketStatus('No Socket');
+            setSocketStatus(t('notifications.no_socket', 'No Socket'));
             return;
         }
 
         const updateStatus = () => {
-            setSocketStatus(socket.connected ? 'Connected' : 'Disconnected');
+            setSocketStatus(socket.connected ? t('notifications.connected', 'Connected') : t('notifications.disconnected', 'Disconnected'));
             setSocketId(socket.id);
         };
 
@@ -48,10 +48,10 @@ const Notifications = () => {
                             {t('sidebar.notifications', 'Notifications')}
                         </h2>
                         {/* DEBUG: Visible Status */}
-                        <div style={{ fontSize: '0.8rem', padding: '4px 8px', background: '#222', color: '#ccc', borderRadius: '4px', marginTop: '4px', borderLeft: `3px solid ${socketStatus === 'Connected' ? '#4caf50' : '#f44336'}` }}>
-                            <strong>Status:</strong> <span style={{ color: socketStatus === 'Connected' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>{socketStatus}</span> |
-                            <strong> Port:</strong> 5001 |
-                            <strong> ID:</strong> {user?.id}
+                        <div style={{ fontSize: '0.8rem', padding: '4px 8px', background: '#222', color: '#ccc', borderRadius: '4px', marginTop: '4px', borderLeft: `3px solid ${socketStatus === t('notifications.connected', 'Connected') ? '#4caf50' : '#f44336'}` }}>
+                            <strong>{t('notifications.label_status', 'Status:')}</strong> <span style={{ color: socketStatus === t('notifications.connected', 'Connected') ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>{socketStatus}</span> |
+                            <strong> {t('notifications.label_port', 'Port:')}</strong> 5001 |
+                            <strong> {t('notifications.label_id', 'ID:')}</strong> {user?.id}
                         </div>
                     </div>
                     <button
@@ -92,7 +92,7 @@ const Notifications = () => {
             <div className="notifications-list">
                 {filteredNotifications.length === 0 && (
                     <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
-                        No notifications (User {user?.id})
+                        {t('notifications.no_notifications', 'No notifications (User {{id}})', { id: user?.id })}
                     </div>
                 )}
                 {filteredNotifications.map((notif) => (

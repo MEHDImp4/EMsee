@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" fill="none">
-  <!-- Abstract E shape formed by network nodes/bubbles -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Abstract E shape formed by network nodes/bubbles - Square version (favicon) -->
   <path d="M30 25H75" stroke="#3E8893" stroke-width="12" stroke-linecap="round"/>
   <path d="M30 50H65" stroke="#3E8893" stroke-width="12" stroke-linecap="round"/>
   <path d="M30 75H75" stroke="#3E8893" stroke-width="12" stroke-linecap="round"/>
@@ -11,7 +11,4 @@
   <circle cx="75" cy="25" r="6" fill="#3E8893"/>
   <circle cx="65" cy="50" r="6" fill="#3E8893"/>
   <circle cx="75" cy="75" r="6" fill="#3E8893"/>
-
-  <!-- App Name Text -->
-  <text x="85" y="80" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#64748B">Msee</text>
 </svg>

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { X, Users, Lock } from 'lucide-react';
 import CommunityService from '../services/community.service';
 import './css/CreateCommunityModal.css';
+import { useTranslation } from 'react-i18next';
 
 const CreateCommunityModal = ({ onClose, onSuccess }) => {
     const [name, setName] = useState('');
@@ -11,6 +12,7 @@ const CreateCommunityModal = ({ onClose, onSuccess }) => {
     const [writeAccess, setWriteAccess] = useState('EVERYONE');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const { t } = useTranslation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,7 +48,7 @@ const CreateCommunityModal = ({ onClose, onSuccess }) => {
         >
             <div className="modal-content" style={{ maxWidth: '500px' }}>
                 <div className="modal-header">
-                    <h2>Créer une communauté</h2>
+                    <h2>{t('community.create.title', 'Create a community')}</h2>
                     <button className="close-btn" type="button" onClick={onClose}>
                         <X size={24} />
                     </button>
@@ -56,30 +58,30 @@ const CreateCommunityModal = ({ onClose, onSuccess }) => {
                     {error && <div className="error-message">{error}</div>}
 
                     <div className="form-group">
-                        <label className="input-label">Nom</label>
+                        <label className="input-label">{t('community.create.name_label', 'Name')}</label>
                         <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="ex: Fans de Tech"
+                            placeholder={t('community.create.name_placeholder', 'ex: Tech Fans')}
                             required
                             className="modal-input"
                         />
                     </div>
 
                     <div className="form-group">
-                        <label className="input-label">Description</label>
+                        <label className="input-label">{t('community.create.description_label', 'Description')}</label>
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            placeholder="De quoi parle ce groupe ?"
+                            placeholder={t('community.create.description_placeholder', 'What is this group about?')}
                             className="modal-input"
                             rows={3}
                         />
                     </div>
 
                     <div className="form-group">
-                        <label className="input-label">Confidentialité</label>
+                        <label className="input-label">{t('community.create.privacy_label', 'Privacy')}</label>
                         <div className="privacy-options">
                             <label className={`privacy-option ${privacy === 'PUBLIC' ? 'selected' : ''}`}>
                                 <input
@@ -94,8 +96,8 @@ const CreateCommunityModal = ({ onClose, onSuccess }) => {
                                 </div>
                                 <Users size={20} className="option-icon" />
                                 <div className="option-text">
-                                    <strong>Public</strong>
-                                    <p>Tout le monde peut rejoindre</p>
+                                    <strong>{t('community.privacy.public', 'Public')}</strong>
+                                    <p>{t('community.privacy.public_desc', 'Everyone can join')}</p>
                                 </div>
                             </label>
 
@@ -112,22 +114,22 @@ const CreateCommunityModal = ({ onClose, onSuccess }) => {
                                 </div>
                                 <Lock size={20} className="option-icon" />
                                 <div className="option-text">
-                                    <strong>Privé</strong>
-                                    <p>Sur invitation ou demande</p>
+                                    <strong>{t('community.privacy.private', 'Private')}</strong>
+                                    <p>{t('community.privacy.private_desc', 'By invitation or request')}</p>
                                 </div>
                             </label>
                         </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="input-label">Qui peut publier ?</label>
+                        <label className="input-label">{t('community.create.who_can_post', 'Who can post?')}</label>
                         <select
                             value={writeAccess}
                             onChange={(e) => setWriteAccess(e.target.value)}
                             className="modal-input"
                         >
-                            <option value="EVERYONE">Tout le monde</option>
-                            <option value="ADMINS_ONLY">Admins uniquement (Canal d'annonce)</option>
+                            <option value="EVERYONE">{t('community.create.write_everyone', 'Everyone')}</option>
+                            <option value="ADMINS_ONLY">{t('community.create.write_admins', 'Admins only (Announcement channel)')}</option>
                         </select>
                     </div>
 
@@ -137,14 +139,14 @@ const CreateCommunityModal = ({ onClose, onSuccess }) => {
                             className="cancel-btn"
                             onClick={onClose}
                         >
-                            Annuler
+                            {t('common.cancel', 'Cancel')}
                         </button>
                         <button
                             type="submit"
                             className="create-btn"
                             disabled={loading || !name.trim()}
                         >
-                            {loading ? 'Création...' : 'Créer le groupe'}
+                            {loading ? t('community.create.creating', 'Creating...') : t('community.create.create_button', 'Create group')}
                         </button>
                     </div>
                 </form>

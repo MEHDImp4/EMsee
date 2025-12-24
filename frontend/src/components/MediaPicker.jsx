@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Image, Code, BarChart2, X } from 'lucide-react';
 import './css/MediaPicker.css';
+import { useTranslation } from 'react-i18next';
 
 const MediaPicker = ({ onMediaChange, onPollChange }) => {
     const [activeMode, setActiveMode] = useState(null); // 'image', 'code', 'poll'
@@ -8,6 +9,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
     const [codeSnippet, setCodeSnippet] = useState({ code: '', language: 'javascript' });
     const [poll, setPoll] = useState({ question: '', options: ['', ''] });
     const fileInputRef = useRef(null);
+    const { t } = useTranslation();
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
@@ -76,7 +78,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
         <div className="media-picker">
             {/* Mode Buttons */}
             <div className="media-picker-buttons">
-                <button
+                    <button
                     type="button"
                     className={`media-btn ${activeMode === 'image' ? 'active' : ''}`}
                     onClick={() => {
@@ -87,7 +89,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                             fileInputRef.current?.click();
                         }
                     }}
-                    title="Ajouter des images"
+                    title={t('media_picker.title_images', 'Ajouter des images')}
                 >
                     <Image size={20} />
                 </button>
@@ -101,7 +103,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                             setActiveMode('code');
                         }
                     }}
-                    title="Ajouter un code"
+                    title={t('media_picker.title_code', 'Ajouter un code')}
                 >
                     <Code size={20} />
                 </button>
@@ -115,7 +117,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                             setActiveMode('poll');
                         }
                     }}
-                    title="Créer un sondage"
+                    title={t('media_picker.title_poll', 'Créer un sondage')}
                 >
                     <BarChart2 size={20} />
                 </button>
@@ -152,7 +154,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <Image size={24} />
-                                <span>Ajouter</span>
+                                <span>{t('media_picker.add', 'Ajouter')}</span>
                             </button>
                         )}
                     </div>
@@ -167,17 +169,17 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                         onChange={(e) => handleCodeChange('language', e.target.value)}
                         className="language-select"
                     >
-                        <option value="javascript">JavaScript</option>
-                        <option value="python">Python</option>
-                        <option value="java">Java</option>
-                        <option value="cpp">C++</option>
-                        <option value="php">PHP</option>
-                        <option value="html">HTML</option>
-                        <option value="css">CSS</option>
-                        <option value="sql">SQL</option>
+                        <option value="javascript">{t('media.languages.javascript', 'JavaScript')}</option>
+                        <option value="python">{t('media.languages.python', 'Python')}</option>
+                        <option value="java">{t('media.languages.java', 'Java')}</option>
+                        <option value="cpp">{t('media.languages.cpp', 'C++')}</option>
+                        <option value="php">{t('media.languages.php', 'PHP')}</option>
+                        <option value="html">{t('media.languages.html', 'HTML')}</option>
+                        <option value="css">{t('media.languages.css', 'CSS')}</option>
+                        <option value="sql">{t('media.languages.sql', 'SQL')}</option>
                     </select>
                     <textarea
-                        placeholder="Collez votre code ici..."
+                        placeholder={t('media_picker.code_placeholder', 'Paste your code here...')}
                         value={codeSnippet.code}
                         onChange={(e) => handleCodeChange('code', e.target.value)}
                         className="code-textarea"
@@ -191,7 +193,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                 <div className="media-content poll-creator">
                     <input
                         type="text"
-                        placeholder="Question du sondage"
+                        placeholder={t('media_picker.poll_question', 'Poll question')}
                         value={poll.question}
                         onChange={(e) => handlePollChange('question', e.target.value)}
                         className="poll-question-input"
@@ -199,9 +201,9 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                     <div className="poll-options">
                         {poll.options.map((option, index) => (
                             <div key={index} className="poll-option-row">
-                                <input
+                                    <input
                                     type="text"
-                                    placeholder={`Option ${index + 1}`}
+                                    placeholder={t('media_picker.poll_option', `Option ${index + 1}`)}
                                     value={option}
                                     onChange={(e) => handlePollChange('option', e.target.value, index)}
                                     className="poll-option-input"
@@ -224,7 +226,7 @@ const MediaPicker = ({ onMediaChange, onPollChange }) => {
                             onClick={addPollOption}
                             className="add-option-btn"
                         >
-                            + Ajouter une option
+                            {t('media_picker.add_poll_option', '+ Ajouter une option')}
                         </button>
                     )}
                 </div>

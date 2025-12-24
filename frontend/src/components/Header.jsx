@@ -13,8 +13,7 @@ const Header = () => {
     <header style={{ padding: '1.5rem 0', position: 'sticky', top: 0, background: 'var(--bg-main)', backdropFilter: 'blur(10px)', zIndex: 50, transition: 'background-color 0.3s ease' }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-          <img src={logo} alt="EMsee Logo" style={{ width: '40px', height: '40px', borderRadius: '12px', objectFit: 'contain' }} />
-          <span style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)' }}>EMsee</span>
+          <img src={logo} alt="EMsee Logo" style={{ height: '40px', objectFit: 'contain' }} />
         </Link>
 
         {/* Desktop Nav */}

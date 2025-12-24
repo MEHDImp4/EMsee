@@ -56,6 +56,20 @@
   cursor: pointer;
 }
 
+.logo-wide {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  border-radius: 12px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.logo-wide:hover {
+  background-color: var(--hover);
+}
+
 .logo-circle:hover {
   background-color: var(--hover);
 }

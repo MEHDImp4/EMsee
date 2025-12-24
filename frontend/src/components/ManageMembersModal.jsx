@@ -4,12 +4,14 @@ import { X, Search, MoreVertical, Shield, UserMinus, ShieldCheck } from 'lucide-
 import CommunityService from '../services/community.service';
 import UserAvatar from '../components/UserAvatar';
 import './css/CreateCommunityModal.css'; // Reuse basic modal styles
+import { useTranslation } from 'react-i18next';
 
 const ManageMembersModal = ({ isOpen, onClose, communityId }) => {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeMenu, setActiveMenu] = useState(null);
+    const { t } = useTranslation();
 
     const fetchMembers = async () => {
         try {
@@ -50,7 +52,7 @@ const ManageMembersModal = ({ isOpen, onClose, communityId }) => {
         <div className="modal-overlay" style={{ zIndex: 99999 }} onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ height: '80vh', display: 'flex', flexDirection: 'column' }}>
                 <div className="modal-header">
-                    <h3>Gérer les membres</h3>
+                    <h3>{t('manage_members.title', 'Manage members')}</h3>
                     <button onClick={onClose} className="close-btn">
                         <X size={20} />
                     </button>
@@ -68,7 +70,7 @@ const ManageMembersModal = ({ isOpen, onClose, communityId }) => {
                         <Search size={18} style={{ color: 'var(--text-muted)', marginRight: '10px' }} />
                         <input
                             type="text"
-                            placeholder="Rechercher un membre..."
+                            placeholder={t('manage_members.search_placeholder', 'Search a member...')}
                             style={{ border: 'none', background: 'transparent', width: '100%', outline: 'none', color: 'var(--text-main)' }}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -78,9 +80,9 @@ const ManageMembersModal = ({ isOpen, onClose, communityId }) => {
 
                 <div className="modal-body" style={{ flex: 1, overflowY: 'auto' }}>
                     {loading ? (
-                        <div style={{ textAlign: 'center', padding: '2rem' }}>Chargement...</div>
+                        <div style={{ textAlign: 'center', padding: '2rem' }}>{t('manage_members.loading', 'Loading...')}</div>
                     ) : filteredMembers.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Aucun membre trouvé</div>
+                        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>{t('manage_members.no_members', 'No members found')}</div>
                     ) : (
                         <div className="members-list">
                             {filteredMembers.map(member => (
@@ -121,14 +123,14 @@ const ManageMembersModal = ({ isOpen, onClose, communityId }) => {
                                                             style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '10px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--text-main)' }}
                                                             onClick={() => handleAction(member.userId, 'promote')}
                                                         >
-                                                            <Shield size={16} /> Promouvoir Admin
+                                                            <Shield size={16} /> {t('manage_members.promote_admin', 'Promote Admin')}
                                                         </button>
                                                     )}
                                                     <button
                                                         style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '10px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--danger)' }}
                                                         onClick={() => handleAction(member.userId, 'kick')}
                                                     >
-                                                        <UserMinus size={16} /> Retirer du groupe
+                                                        <UserMinus size={16} /> {t('manage_members.kick_member', 'Remove from group')}
                                                     </button>
                                                 </div>
                                             )}

@@ -159,7 +159,10 @@ const useFeed = () => {
                 isLiked: false,
                 isReposted: false
             };
-            setPosts((prev) => [optimizedPost, ...prev]);
+            setPosts((prev) => {
+                if (prev.some(p => p.id === optimizedPost.id)) return prev;
+                return [optimizedPost, ...prev];
+            });
 
             // Reset form
             setNewPostContent('');

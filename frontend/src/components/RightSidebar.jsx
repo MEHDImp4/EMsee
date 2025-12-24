@@ -146,13 +146,13 @@ const SuggestionsSection = ({ suggestions, loading, onFollow, t }) => (
         <h3>{t('right_sidebar.suggestions', 'Suggestions')}</h3>
         <div className="suggestions-list">
             {loading ? (
-                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading...</div>
+                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('common.loading', 'Loading...')}</div>
             ) : suggestions.length > 0 ? (
                 suggestions.map((user) => (
                     <SuggestionItem key={user.id} user={user} onFollow={onFollow} t={t} />
                 ))
             ) : (
-                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>No suggestions</div>
+                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('right_sidebar.no_suggestions', 'No suggestions')}</div>
             )}
         </div>
     </div>

@@ -59,3 +59,16 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-main);
 }
+
+/* Focus Accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Improve Selection Visibility */
+::selection {
+  background-color: rgba(42, 157, 143, 0.3); /* Teal tint */
+  color: var(--text-main);
+}

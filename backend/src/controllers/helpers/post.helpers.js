@@ -7,7 +7,9 @@ const userSelectFields = {
     username: true,
     full_name: true,
     avatar: true,
-    role: true
+    role: true,
+    studentClass: true,
+    subjects: true
 };
 
 const postCountFields = {

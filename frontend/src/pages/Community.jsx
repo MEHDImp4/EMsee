@@ -87,13 +87,13 @@ const Community = () => {
                         className={`tab-btn ${activeTab === 'my' ? 'active' : ''}`}
                         onClick={() => setActiveTab('my')}
                     >
-                        Mes groupes
+                        {t('community.tabs.my', "My Groups")}
                     </button>
                     <button
                         className={`tab-btn ${activeTab === 'discover' ? 'active' : ''}`}
                         onClick={() => setActiveTab('discover')}
                     >
-                        Découvrir
+                        {t('community.tabs.discover', 'Discover')}
                     </button>
                 </div>
             </div>
@@ -106,13 +106,13 @@ const Community = () => {
                         <Users size={48} className="empty-icon" />
                         <h3>
                             {activeTab === 'my'
-                                ? "Vous n'avez rejoint aucun groupe"
-                                : "Aucun groupe public trouvé"}
+                                ? t('community.empty_my', "You haven't joined any groups")
+                                : t('community.empty_discover', 'No public groups found')}
                         </h3>
                         <p>
                             {activeTab === 'my'
-                                ? "Rejoignez des communautés ou créez-en une nouvelle !"
-                                : "Soyez le premier à créer un groupe public !"}
+                                ? t('community.empty_my_desc', 'Join communities or create a new one!')
+                                : t('community.empty_discover_desc', 'Be the first to create a public group!')}
                         </p>
                     </div>
                 ) : (
@@ -128,13 +128,13 @@ const Community = () => {
                                     <h4>{community.name}</h4>
                                     {community.privacy === 'PRIVATE' && <Lock size={14} className="lock-icon" />}
                                 </div>
-                                <p className="community-desc">{community.description || 'Pas de description'}</p>
+                                <p className="community-desc">{community.description || t('community.no_description', 'No description')}</p>
                                 <div className="community-meta">
-                                    <span>{community._count?.members || 1} membres</span>
+                                    <span>{community._count?.members || 1} {t('community.members', 'members')}</span>
                                 </div>
                             </div>
                             {activeTab === 'discover' && (
-                                <button className="join-btn-small">Voir</button>
+                                <button className="join-btn-small">{t('community.view_button', 'View')}</button>
                             )}
                         </div>
                     ))

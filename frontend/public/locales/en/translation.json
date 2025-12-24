@@ -119,14 +119,20 @@
         "retweets_title": "Retweets",
         "retweets_desc": "Relay important information.",
         "mentions_title": "Mentions",
-        "mentions_desc": "Tag your friends to notify them."
+        "mentions_desc": "Tag your friends to notify them.",
+        "communities_title": "Communities",
+        "communities_desc": "Join groups based on your interests.",
+        "messaging_title": "Private Messaging",
+        "messaging_desc": "Chat directly with your classmates.",
+        "bookmarks_title": "Bookmarks",
+        "bookmarks_desc": "Save posts for later."
     },
     "auth": {
         "select_account_type": "Select Account Type",
         "welcome_back": "Welcome back!",
         "login_subtitle": "Login to access your feed.",
-        "step": "Étape",
-        "next": "Suivant",
+        "step": "Step",
+        "next": "Next",
         "email": "Email",
         "password": "Password",
         "confirm_password": "Confirm Password",
@@ -149,23 +155,23 @@
         "username_error": "Lowercase and dots only.",
         "full_name": "Full Name",
         "fullname_placeholder": "John Doe",
-        "class": "Classe",
+        "class": "Class",
         "study_level": "Study Level",
         "select_level": "Select a level",
         "class_placeholder": "Ex: G1, G2...",
         "field_required": "Field required",
         "select_at_least_one": "Select at least one subject.",
         "email_error": "Email must end with",
-        "email_placeholder": "votre@email.com",
+        "email_placeholder": "your@email.com",
         "student_placeholder": "student@emsi-edu.ma",
         "professor_placeholder": "prof@emsi.ma",
         "field_of_study": "Field of Study",
         "year_study": "Year of Study",
-        "year_1_prepa": "1ère année prépa",
-        "year_2_prepa": "2ème année prépa",
-        "year_3_iir": "3ème année IIR",
-        "year_4_iir": "4ème année IIR",
-        "year_5_iir": "5ème année IIR",
+        "year_1_prepa": "1st Year Preparatory",
+        "year_2_prepa": "2nd Year Preparatory",
+        "year_3_iir": "3rd Year IIR",
+        "year_4_iir": "4th Year IIR",
+        "year_5_iir": "5th Year IIR",
         "select_filiere": "Select your major",
         "select_year": "Select your year",
         "subjects_taught": "Subjects Taught",
@@ -175,6 +181,8 @@
     "common": {
         "back": "Back",
         "save": "Save Changes",
+        "saving": "Saving...",
+        "na": "N/A",
         "loading": "Loading...",
         "load_more": "Load more",
         "error": "Error",
@@ -240,6 +248,7 @@
         "suggestions": "Suggestions",
         "follow": "Follow",
         "posts": "posts",
+        "no_suggestions": "No suggestions",
         "trending": "Trending",
         "education": "Education",
         "technology": "Technology",
@@ -271,6 +280,7 @@
     },
     "notifications": {
         "title": "Notifications",
+        "likes": "Likes",
         "all": "All",
         "verified": "Verified",
         "mentions": "Mentions",
@@ -284,10 +294,20 @@
             "all": "All",
             "verified": "Verified",
             "mentions": "Mentions"
-        }
+        },
+        "socket_checking": "Checking...",
+        "no_socket": "No Socket",
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "label_status": "Status:",
+        "label_port": "Port:",
+        "label_id": "ID:",
+        "no_notifications": "No notifications (User {{id}})"
     },
     "post": {
         "delete": "Delete post",
+        "title": "Post",
+        "not_found": "Post not found",
         "confirm_delete": "Delete this post?",
         "cannot_comment_own": "You cannot comment on your own post",
         "views": "Views",
@@ -313,25 +333,152 @@
         "no_bio": "No bio yet.",
         "posts": "Posts",
         "followers": "Followers",
-        "following": "Following"
+        "following": "Following",
+        "default_location": "Rabat, Morocco"
+    },
+    "badge": {
+        "class": "Student Class"
+    },
+    "hashtags": {
+        "trending": "Trending",
+        "explore": "Explore hashtag",
+        "top_hashtags": "Top Hashtags",
+        "posts": "posts",
+        "posts_count": "posts",
+        "no_posts": "No posts found with this hashtag",
+        "error": "Error",
+        "error_loading": "Failed to load hashtag content"
+    },
+    "post_preview": {
+        "loading_preview": "Loading preview...",
+        "check_out_post": "Check out this post",
+        "preview_unavailable": "(Preview unavailable)"
+    },
+    "media_picker": {
+        "title_images": "Add images",
+        "title_code": "Add code",
+        "title_poll": "Create poll",
+        "add": "Add",
+        "code_placeholder": "Paste your code here...",
+        "poll_question": "Poll question",
+        "poll_option": "Option {{num}}",
+        "add_poll_option": "+ Add an option",
+        "languages": {
+            "javascript": "JavaScript",
+            "python": "Python",
+            "java": "Java",
+            "cpp": "C++",
+            "php": "PHP",
+            "html": "HTML",
+            "css": "CSS",
+            "sql": "SQL"
+        }
+    },
+    "manage_members": {
+        "title": "Manage members",
+        "search_placeholder": "Search members...",
+        "loading": "Loading...",
+        "no_members": "No members found",
+        "promote_admin": "Promote Admin",
+        "kick_member": "Remove from group"
+    },
+    "compose": {
+        "permission": {
+            "everyone": "Everyone can reply",
+            "followers": "Followers only",
+            "none": "No one",
+            "everyone_short": "Everyone",
+            "followers_short": "Followers",
+            "none_short": "No one"
+        },
+        "poll": {
+            "question_placeholder": "Ask a question...",
+            "option_placeholder": "Option {{num}}",
+            "add_option": "Add option",
+            "remove_poll": "Remove poll"
+        },
+        "code": {
+            "remove_code": "Remove code"
+        }
+    },
+    "community": {
+        "create": {
+            "title": "Create a community",
+            "name_label": "Name",
+            "name_placeholder": "ex: Tech Fans",
+            "description_label": "Description",
+            "description_placeholder": "What is this group about?",
+            "privacy_label": "Privacy",
+            "who_can_post": "Who can post?",
+            "write_everyone": "Everyone",
+            "write_admins": "Admins only (Announcement channel)",
+            "creating": "Creating...",
+            "create_button": "Create group"
+        },
+        "edit": {
+            "title": "Edit community",
+            "name_label": "Name",
+            "description_label": "Description",
+            "privacy_label": "Privacy",
+            "saving": "Saving...",
+            "save": "Save"
+        },
+        "privacy": {
+            "public": "Public",
+            "public_desc": "Everyone can join",
+            "private": "Private",
+            "private_desc": "By invitation or request"
+        },
+        "tabs": {
+            "my": "My groups",
+            "discover": "Discover"
+        },
+        "empty_my": "You haven't joined any groups",
+        "empty_discover": "No public groups found",
+        "empty_my_desc": "Join communities or create a new one!",
+        "empty_discover_desc": "Be the first to create a public group!",
+        "no_description": "No description",
+        "members": "members",
+        "view_button": "View",
+        "errors": {
+            "failed_join": "Failed to join",
+            "failed_send": "Failed to send",
+            "delete_failed": "Error deleting community",
+            "leave_failed": "Error"
+        },
+        "confirm_delete_warning": "Are you sure you want to delete this community? This action is irreversible.",
+        "confirm_delete_final": "Final confirmation: Delete permanently?",
+        "confirm_leave": "Do you really want to leave this group?",
+        "not_found": "Community not found",
+        "edit_label": "Edit community",
+        "manage_members": "Manage members",
+        "delete": "Delete community",
+        "leave_group": "Leave group",
+        "request_sent": "Request sent",
+        "join_group": "Join group",
+        "start_conversation": "Start of conversation",
+        "add_reaction": "Add reaction",
+        "mention_everyone": "Mention everyone",
+        "input_placeholder": "Message...",
+        "admins_only": "Only admins can write here."
     },
     "settings": {
         "appearance": "Appearance",
         "theme_desc": "Choose your preferred theme.",
         "language": "Language",
-        "language_auto": "Auto (system)",
-        "account_security": "Account & security",
-        "change_password": "Change password",
+        "language_auto": "Auto (System)",
+        "account_security": "Account & Security",
+        "change_password": "Change Password",
         "password": {
-            "description": "Update your password regularly to secure your account.",
-            "current": "Current password",
-            "new": "New password",
-            "confirm": "Confirm new password",
-            "submit": "Update password",
-            "success": "Your password has been updated.",
+            "description": "Update your password regularly.",
+            "current": "Current Password",
+            "new": "New Password",
+            "confirm": "Confirm New Password",
+            "submit": "Update Password",
+            "success": "Password updated.",
             "errors": {
                 "mismatch": "Passwords do not match.",
-                "generic": "Unable to update your password. Please try again."
+                "generic": "Failed to update password."
             }
         },
         "themes": {
@@ -341,7 +488,7 @@
         }
     },
     "sidebar": {
-        "publish": "Post",
+        "publish": "Publish",
         "home": "Home",
         "explore": "Explore",
         "messages": "Messages",
@@ -351,30 +498,25 @@
         "settings": "Settings",
         "profile": "Profile",
         "logout": "Logout",
-        "logout_confirm": "Log out of EMsee?",
-        "logout_desc": "You can always log back in at any time. If you just want to switch accounts, you can add an existing account.",
-        "logout_btn": "Log out",
+        "logout_confirm": "Logout of EMsee?",
+        "logout_desc": "You can log back in anytime.",
+        "logout_btn": "Logout",
         "cancel": "Cancel"
     },
     "messages": {
         "title": "Messages",
-        "welcome_title": "Welcome to your messages",
-        "welcome_desc": "Connect with other students and professors privately. Select a conversation to start.",
-        "start_conv": "New conversation",
-        "new_conversation": "New conversation",
-        "search_users": "Search users...",
-        "no_users_found": "No users found",
-        "search_prompt": "Search for a user to start a conversation",
-        "no_conversations": "No conversations",
+        "welcome_title": "Welcome to Messages",
+        "welcome_desc": "Connect with others privately.",
+        "new_conversation": "New Conversation",
+        "empty": "No conversations",
+        "start_hint": "Press + to start a conversation",
+        "search_placeholder": "Search messages",
         "type_message": "Type your message...",
-        "you": "You"
+        "you": "You",
+        "search_users": "Search users...",
+        "no_users_found": "No users found"
     },
-    "hashtags": {
-        "trending": "Trending",
-        "explore": "Explore hashtag",
-        "posts_count": "posts",
-        "no_posts": "No posts found with this hashtag",
-        "error": "Error",
-        "error_loading": "Failed to load hashtag content"
+    "errors": {
+        "something_went_wrong": "Something went wrong."
     }
 }

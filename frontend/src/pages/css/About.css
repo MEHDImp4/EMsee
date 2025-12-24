@@ -102,14 +102,16 @@
 }
 
 .team-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.5rem;
 }
 
 .team-member-card {
+    flex: 0 1 250px; /* Base width for wrapping support */
     padding: 1.5rem;
-    background: var(--bg-soft); /* Slightly clearer background to contrast with card */
+    background: var(--bg-soft);
     border-radius: 1rem;
     text-align: center;
     font-weight: 600;

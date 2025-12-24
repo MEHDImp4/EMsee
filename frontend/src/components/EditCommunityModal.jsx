@@ -4,6 +4,7 @@ import { X, Camera, Upload } from 'lucide-react';
 import CommunityService from '../services/community.service';
 import { uploadImages } from '../services/media.service';
 import './css/CreateCommunityModal.css'; // Reusing the same CSS for now
+import { useTranslation } from 'react-i18next';
 
 const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
     const [name, setName] = useState(community?.name || '');
@@ -12,6 +13,7 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
     const [icon, setIcon] = useState(community?.icon || null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (community) {
@@ -72,7 +74,7 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
         <div className="modal-overlay" style={{ zIndex: 99999 }} onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h3>Modifier la communauté</h3>
+                    <h3>{t('community.edit.title', 'Edit community')}</h3>
                     <button onClick={onClose} className="close-btn">
                         <X size={20} />
                     </button>
@@ -110,7 +112,7 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
                             </div>
                         </div>
                         <div style={{ flex: 1 }}>
-                            <label className="input-label">Nom</label>
+                            <label className="input-label">{t('community.edit.name_label', 'Name')}</label>
                             <input
                                 type="text"
                                 className="modal-input"
@@ -121,7 +123,7 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
                     </div>
 
                     <div className="form-group">
-                        <label className="input-label">Description</label>
+                        <label className="input-label">{t('community.edit.description_label', 'Description')}</label>
                         <textarea
                             className="modal-input"
                             value={description}
@@ -131,7 +133,7 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
                     </div>
 
                     <div className="form-group">
-                        <label className="input-label">Confidentialité</label>
+                        <label className="input-label">{t('community.edit.privacy_label', 'Privacy')}</label>
                         <div className="privacy-options">
                             <div
                                 className={`privacy-option ${privacy === 'PUBLIC' ? 'selected' : ''}`}
@@ -141,8 +143,8 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
                                     {privacy === 'PUBLIC' && <div className="radio-dot" />}
                                 </div>
                                 <div>
-                                    <h4>Public</h4>
-                                    <p>Tout le monde peut rejoindre</p>
+                                    <h4>{t('community.privacy.public', 'Public')}</h4>
+                                    <p>{t('community.privacy.public_desc', 'Everyone can join')}</p>
                                 </div>
                             </div>
                             <div
@@ -153,8 +155,8 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
                                     {privacy === 'PRIVATE' && <div className="radio-dot" />}
                                 </div>
                                 <div>
-                                    <h4>Privé</h4>
-                                    <p>Sur invitation ou demande</p>
+                                    <h4>{t('community.privacy.private', 'Private')}</h4>
+                                    <p>{t('community.privacy.private_desc', 'By invitation or request')}</p>
                                 </div>
                             </div>
                         </div>
@@ -162,9 +164,9 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
                 </div>
 
                 <div className="modal-footer">
-                    <button onClick={onClose} className="cancel-btn">Annuler</button>
+                    <button onClick={onClose} className="cancel-btn">{t('common.cancel', 'Cancel')}</button>
                     <button onClick={handleSubmit} className="create-btn" disabled={loading}>
-                        {loading ? 'Enregistrement...' : 'Enregistrer'}
+                        {loading ? t('community.edit.saving', 'Saving...') : t('community.edit.save', 'Save')}
                     </button>
                 </div>
             </div>

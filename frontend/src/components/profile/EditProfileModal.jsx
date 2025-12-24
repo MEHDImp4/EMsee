@@ -104,7 +104,7 @@ const EditProfileModal = ({ isOpen, onClose }) => {
                         <div className="avatar-upload-area">
                             {/* Banner Upload */}
                             <div className="banner-preview-edit" style={{ width: '100%', height: '100px', 'borderRadius': '8px', overflow: 'hidden', marginBottom: '1rem', background: '#333', position: 'relative' }}>
-                                {bannerPreview ? <img src={bannerPreview} alt="Banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>No Banner</div>}
+                                                {bannerPreview ? <img src={bannerPreview} alt="Banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>{t('profile.no_banner', 'No Banner')}</div>}
                                 <label className="upload-btn" style={{ position: 'absolute', bottom: '5px', right: '5px', background: 'rgba(0,0,0,0.5)', padding: '5px', borderRadius: '4px', color: 'white' }}>
                                     <Upload size={14} />
                                     <input type="file" className="hidden" accept="image/*" onChange={handleBannerChange} style={{ display: 'none' }} />
@@ -143,7 +143,7 @@ const EditProfileModal = ({ isOpen, onClose }) => {
                             <input
                                 type="text"
                                 name="location"
-                                placeholder="Casablanca, Maroc"
+                                placeholder={t('profile.location_placeholder', 'Casablanca, Maroc')}
                                 value={formData.location}
                                 onChange={handleChange}
                             />
@@ -168,7 +168,7 @@ const EditProfileModal = ({ isOpen, onClose }) => {
                             disabled={loading}
                             className="save-btn"
                         >
-                            {loading ? 'Saving...' : (
+                            {loading ? t('common.saving', 'Saving...') : (
                                 <>
                                     <Save size={18} />
                                     {t('common.save', 'Save Changes')}

@@ -119,7 +119,13 @@
         "retweets_title": "Retweets",
         "retweets_desc": "Relayez les informations importantes.",
         "mentions_title": "Mentions",
-        "mentions_desc": "Taguez vos amis pour les notifier."
+        "mentions_desc": "Taguez vos amis pour les notifier.",
+        "communities_title": "Communautés",
+        "communities_desc": "Rejoignez des groupes par centres d'intérêt.",
+        "messaging_title": "Messagerie Privée",
+        "messaging_desc": "Discutez en direct avec vos camarades.",
+        "bookmarks_title": "Enregistrements",
+        "bookmarks_desc": "Sauvegardez les posts pour plus tard."
     },
     "auth": {
         "select_account_type": "Sélectionnez le type de compte",
@@ -175,6 +181,8 @@
     "common": {
         "back": "Retour",
         "save": "Enregistrer",
+        "saving": "Enregistrement...",
+        "na": "N/A",
         "loading": "Chargement...",
         "load_more": "Charger plus",
         "error": "Erreur",
@@ -239,6 +247,7 @@
         "show_more": "Voir plus",
         "suggestions": "Suggestions",
         "follow": "Suivre",
+        "no_suggestions": "Aucune suggestion",
         "posts": "posts",
         "trending": "Tendances",
         "education": "Éducation",
@@ -271,6 +280,7 @@
     },
     "notifications": {
         "title": "Notifications",
+        "likes": "J'aime",
         "all": "Tout",
         "verified": "Vérifié",
         "mentions": "Mentions",
@@ -346,7 +356,7 @@
         "explore": "Explorer",
         "messages": "Messages",
         "notifications": "Notifications",
-        "bookmarks": "Signets",
+        "bookmarks": "Enregistrements",
         "community": "Communauté",
         "settings": "Paramètres",
         "profile": "Profil",
@@ -366,15 +376,117 @@
         "no_users_found": "Aucun utilisateur trouvé",
         "search_prompt": "Recherchez un utilisateur pour démarrer une conversation",
         "no_conversations": "Aucune conversation",
+        "empty": "Aucune conversation",
+        "start_hint": "Appuyez sur + pour commencer une conversation",
         "type_message": "Tapez votre message...",
         "you": "Vous"
+    },
+    "badge": {
+        "class": "Classe"
     },
     "hashtags": {
         "trending": "Tendances",
         "explore": "Explorer le hashtag",
+        "top_hashtags": "Hashtags populaires",
+        "posts": "publications",
         "posts_count": "publications",
         "no_posts": "Aucune publication trouvée avec ce hashtag",
         "error": "Erreur",
         "error_loading": "Échec du chargement du contenu du hashtag"
+    },
+    "post_preview": {
+        "loading_preview": "Chargement de l'aperçu...",
+        "check_out_post": "Consultez ce post",
+        "preview_unavailable": "(Aperçu indisponible)"
+    },
+    "media_picker": {
+        "title_images": "Ajouter des images",
+        "title_code": "Ajouter du code",
+        "title_poll": "Créer un sondage",
+        "add": "Ajouter",
+        "code_placeholder": "Collez votre code ici...",
+        "poll_question": "Question du sondage",
+        "poll_option": "Option {{num}}",
+        "add_poll_option": "+ Ajouter une option",
+        "languages": {
+            "javascript": "JavaScript",
+            "python": "Python",
+            "java": "Java",
+            "cpp": "C++",
+            "php": "PHP",
+            "html": "HTML",
+            "css": "CSS",
+            "sql": "SQL"
+        }
+    },
+    "manage_members": {
+        "title": "Gérer les membres",
+        "search_placeholder": "Rechercher un membre...",
+        "loading": "Chargement...",
+        "no_members": "Aucun membre trouvé",
+        "promote_admin": "Promouvoir Admin",
+        "kick_member": "Retirer du groupe"
+    },
+    "compose": {
+        "permission": {
+            "everyone": "Tout le monde peut répondre",
+            "followers": "Abonnés uniquement",
+            "none": "Personne",
+            "everyone_short": "Tout le monde",
+            "followers_short": "Abonnés",
+            "none_short": "Personne"
+        },
+        "poll": {
+            "question_placeholder": "Posez une question...",
+            "option_placeholder": "Option {{num}}",
+            "add_option": "Ajouter une option",
+            "remove_poll": "Supprimer le sondage"
+        },
+        "code": {
+            "remove_code": "Supprimer le code"
+        }
+    },
+    "community": {
+        "create": {
+            "title": "Créer une communauté",
+            "name_label": "Nom",
+            "name_placeholder": "ex: Fans de Tech",
+            "description_label": "Description",
+            "description_placeholder": "De quoi parle ce groupe ?",
+            "privacy_label": "Confidentialité",
+            "who_can_post": "Qui peut publier ?",
+            "write_everyone": "Tout le monde",
+            "write_admins": "Admins uniquement (Canal d'annonce)",
+            "creating": "Création...",
+            "create_button": "Créer le groupe"
+        },
+        "edit": {
+            "title": "Modifier la communauté",
+            "name_label": "Nom",
+            "description_label": "Description",
+            "privacy_label": "Confidentialité",
+            "saving": "Enregistrement...",
+            "save": "Enregistrer"
+        },
+        "privacy": {
+            "public": "Public",
+            "public_desc": "Tout le monde peut rejoindre",
+            "private": "Privé",
+            "private_desc": "Sur invitation ou demande"
+        },
+        "tabs": {
+            "my": "Mes groupes",
+            "discover": "Découvrir"
+        },
+        "empty_my": "Vous n'avez rejoint aucun groupe",
+        "empty_discover": "Aucun groupe public trouvé",
+        "empty_my_desc": "Rejoignez des communautés ou créez-en une nouvelle !",
+        "empty_discover_desc": "Soyez le premier à créer un groupe public !",
+        "no_description": "Pas de description",
+        "members": "membres",
+        "view_button": "Voir"
+    },
+    "errors": {
+        "something_went_wrong": "Une erreur est survenue."
     }
 }

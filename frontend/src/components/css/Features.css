@@ -24,13 +24,17 @@
 }
 
 .grid-features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 2rem;
     padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .feature-card {
+    flex: 0 1 350px; /* Base width */
     background-color: var(--bg-card); /* Ensure this is distinct from page bg */
     padding: 2.5rem;
     border-radius: var(--radius);
@@ -40,6 +44,7 @@
     overflow: hidden;
     /* Added shadow for depth */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    width: 100%; /* For mobile fallback */
 }
 
 /* Hover Effect: Lift up + Stronger Shadow + Border Highlight */
@@ -103,7 +108,6 @@
     }
 
     .grid-features {
-        grid-template-columns: 1fr; /* Force 1 column on mobile */
         gap: 1.5rem;
         padding: 0 1rem;
     }
