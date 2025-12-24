@@ -9,8 +9,9 @@ services:
       - PORT=5000
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
       - JWT_SECRET=${JWT_SECRET}
-      - CLIENT_URL=${CLIENT_URL}
       - NODE_ENV=production
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - db
     volumes:
@@ -24,6 +25,8 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - backend
     networks:
@@ -65,7 +68,7 @@ services:
 
   watchtower:
     image: containrrr/watchtower
-    container_name: watchtower
+    container_name: projetjs-watchtower
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
