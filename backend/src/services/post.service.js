@@ -265,24 +265,24 @@ const getUserTimeline = async (username, currentUserId, limit = 20, offset = 0, 
         // Using existing raw query logic for 'all' or fallback
         const timeline = await prisma.$queryRaw`
             SELECT 
-                id, 
-                createdAt, 
-                'post' as type, 
-                id as originalPostId 
-            FROM posts 
-            WHERE userId = ${user.id}
+                "id", 
+                "createdAt", 
+                'post' as "type", 
+                "id" as "originalPostId" 
+            FROM "posts" 
+            WHERE "userId" = ${user.id}
             
             UNION ALL
             
             SELECT 
-                id, 
-                createdAt, 
-                'repost' as type, 
-                postId as originalPostId 
-            FROM reposts 
-            WHERE userId = ${user.id}
+                "id", 
+                "createdAt", 
+                'repost' as "type", 
+                "postId" as "originalPostId" 
+            FROM "reposts" 
+            WHERE "userId" = ${user.id}
             
-            ORDER BY createdAt desc
+            ORDER BY "createdAt" desc
             LIMIT ${limit} OFFSET ${offset}
         `;
 
