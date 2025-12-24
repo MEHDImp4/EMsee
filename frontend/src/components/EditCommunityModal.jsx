@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { X, Camera, Upload } from 'lucide-react';
 import CommunityService from '../services/community.service';
 import { uploadImages } from '../services/media.service';
+import { BASE_URL } from '../services/api';
 import './css/CreateCommunityModal.css'; // Reusing the same CSS for now
 import { useTranslation } from 'react-i18next';
 
@@ -67,7 +68,7 @@ const EditCommunityModal = ({ isOpen, onClose, community, onUpdate }) => {
     const getImageUrl = (path) => {
         if (!path) return null;
         if (path.startsWith('http')) return path;
-        return `http://localhost:5001${path}`;
+        return `${BASE_URL}${path}`;
     };
 
     return ReactDOM.createPortal(

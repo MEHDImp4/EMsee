@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Image as ImageIcon, Info, MoreVertical, Trash, Settings, Users, LogOut, X, AtSign, Smile } from 'lucide-react';
 import { uploadImages } from '../services/media.service';
+import { BASE_URL } from '../services/api';
 import EditCommunityModal from '../components/EditCommunityModal';
 import ManageMembersModal from '../components/ManageMembersModal';
 import CommunityService from '../services/community.service';
@@ -212,7 +213,7 @@ const CommunityChat = () => {
                     }}>
                         {community.icon ? (
                             <img
-                                src={community.icon.startsWith('http') ? community.icon : `http://localhost:5001${community.icon}`}
+                                src={community.icon.startsWith('http') ? community.icon : `${BASE_URL}${community.icon}`}
                                 alt={community.name}
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             />
@@ -429,7 +430,7 @@ const CommunityChat = () => {
                                                         return (
                                                             <div key={i} style={{ marginTop: 8, marginBottom: 8 }}>
                                                                 <img
-                                                                    src={`http://localhost:5001${line.trim()}`}
+                                                                    src={`${BASE_URL}${line.trim()}`}
                                                                     alt="Attachment"
                                                                     style={{ maxWidth: '100%', borderRadius: 12, maxHeight: 400, objectFit: 'cover', border: '1px solid var(--border)' }}
                                                                     onError={(e) => e.target.style.display = 'none'}

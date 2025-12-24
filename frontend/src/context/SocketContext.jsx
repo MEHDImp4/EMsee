@@ -37,10 +37,11 @@ export const SocketProvider = ({ children }) => {
             return;
         }
 
-        console.log('[SOCKET-CTX] Initializing connection to:', BASE_URL);
+        const socketUrl = import.meta.env.VITE_SOCKET_URL || BASE_URL;
+        console.log('[SOCKET-CTX] Initializing connection to:', socketUrl);
 
         // Connect
-        const newSocket = io(BASE_URL, {
+        const newSocket = io(socketUrl, {
             auth: { token },
             transports: ['websocket'], // Force WebSocket
             reconnection: true,
