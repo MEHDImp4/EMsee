@@ -341,8 +341,30 @@ select option {
     box-shadow: 0 4px 24px rgba(0,0,0,0.15); /* Softer shadow */
     flex: 0 1 auto; /* Don't force full height */
   }
+}
 
-  .compose-modal-input {
-      flex: 0 0 auto; /* Allow auto height on desktop */
-  }
+/* Ghost Icon Button */
+.ghost-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.ghost-icon-btn:hover {
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
+  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.ghost-icon-btn.danger:hover {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 24%, transparent);
 }

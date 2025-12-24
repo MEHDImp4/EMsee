@@ -22,7 +22,20 @@ const ConversationList = ({ conversations, selectedConversation, onSelectConvers
 
   return (
     <div className="conversation-list">
-      {conversations.length === 0 ? null : (
+      {conversations.length === 0 ? (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '3rem 1rem',
+          textAlign: 'center',
+          color: 'var(--text-muted)'
+        }}>
+          <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{t('messages.empty', 'Aucune conversation')}</p>
+          <p style={{ fontSize: '0.9rem' }}>{t('messages.start_hint', 'Appuyez sur + pour commencer une conversation')}</p>
+        </div>
+      ) : (
         conversations.map(conversation => {
           const otherUser = getOtherParticipant(conversation, currentUserId);
           const isSelected = selectedConversation?.id === conversation.id;

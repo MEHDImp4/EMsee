@@ -23,7 +23,7 @@ const HashtagText = ({ content }) => {
                     return (
                         <Link
                             key={index}
-                            to={`/hashtag/${hashtag}`}
+                            to={`/explore?q=${encodeURIComponent('#' + hashtag)}`}
                             className="hashtag-link"
                             onClick={(e) => e.stopPropagation()}
                         >

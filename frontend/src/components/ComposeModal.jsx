@@ -185,7 +185,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                             value={text}
                             onChange={(e) => setText(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
+                                if (e.key === 'Enter' && !e.shiftKey && !isSubmitting) {
                                     e.preventDefault();
                                     handleSubmit();
                                 }

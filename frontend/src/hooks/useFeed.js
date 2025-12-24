@@ -112,6 +112,8 @@ const useFeed = () => {
     }, [socket]);
 
     const handlePostSubmit = async () => {
+        // Prevent double submission
+        if (isUploading) return;
         if (!newPostContent.trim() && !mediaFiles.length && !codeSnippet && !pollData) return;
 
         setIsUploading(true);

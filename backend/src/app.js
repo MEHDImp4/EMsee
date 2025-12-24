@@ -14,6 +14,7 @@ const trendingRoutes = require('./routes/trending.routes');
 const mediaRoutes = require('./routes/media.routes');
 const pollRoutes = require('./routes/poll.routes');
 const messageRoutes = require('./routes/message.routes');
+const communityRoutes = require('./routes/community.routes');
 
 const http = require('http'); // Import http
 const { initializeSocket } = require('./services/socketService'); // Import socket service
@@ -62,6 +63,7 @@ app.use('/api/trending', trendingRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/polls', pollRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/communities', communityRoutes);
 
 // Swagger Documentation
 const swaggerUi = require('swagger-ui-express');

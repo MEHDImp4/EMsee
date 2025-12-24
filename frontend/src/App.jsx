@@ -28,6 +28,8 @@ const PasswordSettings = lazy(() => import('./pages/PasswordSettings'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Notifications = lazy(() => import('./pages/NotificationsPage'));
 const PostPage = lazy(() => import('./pages/PostPage'));
+const Community = lazy(() => import('./pages/Community'));
+const CommunityChat = lazy(() => import('./pages/CommunityChat'));
 
 const HashtagPage = lazy(() => import('./pages/HashtagPage'));
 
@@ -70,7 +72,8 @@ function App() {
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/hashtags/:name" element={<HashtagPage />} />
                     <Route path="/bookmarks" element={<Bookmarks />} />
-                    <Route path="/community" element={<div className="container" style={{ padding: '2rem' }}><h2>Communauté</h2><p>Coming Soon</p></div>} />
+                    <Route path="/community" element={<Community />} />
+                    <Route path="/community/:id" element={<CommunityChat />} />
                   </Route>
 
                   {/* Catch all */}

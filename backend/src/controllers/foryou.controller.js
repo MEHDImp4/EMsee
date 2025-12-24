@@ -116,25 +116,15 @@ const getForYouHashtags = asyncHandler(async (req, res) => {
     }
 
     // 5. Get trending hashtags (fallback/boost)
-    const [postAgg, commentAgg] = await Promise.all([
-        prisma.postHashtag.groupBy({
-            by: ['hashtagId'],
-            where: { createdAt: { gte: since } },
-            _count: { _all: true }
-        }),
-        prisma.commentHashtag.groupBy({
-            by: ['hashtagId'],
-            where: { createdAt: { gte: since } },
-            _count: { _all: true }
-        })
-    ]);
+    const postAgg = await prisma.postHashtag.groupBy({
+        by: ['hashtagId'],
+        where: { createdAt: { gte: since } },
+        _count: { _all: true }
+    });
 
     const trendingMap = new Map();
     for (const row of postAgg) {
         trendingMap.set(row.hashtagId, (trendingMap.get(row.hashtagId) || 0) + row._count._all);
-    }
-    for (const row of commentAgg) {
-        trendingMap.set(row.hashtagId, (trendingMap.get(row.hashtagId) || 0) + row._count._all * 0.6);
     }
 
     const trendingIds = Array.from(trendingMap.entries())
@@ -150,7 +140,7 @@ const getForYouHashtags = asyncHandler(async (req, res) => {
 
     // 6. Score and rank hashtags
     const scoreMap = new Map();
-    
+
     // Weight: user interactions = 5, followed = 3, class = 2, trending = 1
     Array.from(interactionHashtags).forEach(name => {
         scoreMap.set(name, (scoreMap.get(name) || 0) + 5);
@@ -175,8 +165,7 @@ const getForYouHashtags = asyncHandler(async (req, res) => {
                 name: true,
                 _count: {
                     select: {
-                        posts: true,
-                        comments: true
+                        posts: true
                     }
                 }
             },
@@ -184,7 +173,7 @@ const getForYouHashtags = asyncHandler(async (req, res) => {
         });
         return res.json(fallback.map(h => ({
             name: h.name,
-            totalCount: h._count.posts + h._count.comments,
+            totalCount: h._count.posts,
             category: 'trending'
         })));
     }
@@ -195,8 +184,7 @@ const getForYouHashtags = asyncHandler(async (req, res) => {
             name: true,
             _count: {
                 select: {
-                    posts: true,
-                    comments: true
+                    posts: true
                 }
             }
         }
@@ -204,7 +192,7 @@ const getForYouHashtags = asyncHandler(async (req, res) => {
 
     const results = hashtagData.map(h => ({
         name: h.name,
-        totalCount: h._count.posts + h._count.comments,
+        totalCount: h._count.posts,
         score: scoreMap.get(h.name) || 0,
         category: determineCategory(h.name, {
             interactions: interactionHashtags,
@@ -213,8 +201,8 @@ const getForYouHashtags = asyncHandler(async (req, res) => {
             trending: new Set(trendingNames)
         })
     }))
-    .sort((a, b) => b.score - a.score || b.totalCount - a.totalCount)
-    .slice(0, limit);
+        .sort((a, b) => b.score - a.score || b.totalCount - a.totalCount)
+        .slice(0, limit);
 
     res.json(results);
 });

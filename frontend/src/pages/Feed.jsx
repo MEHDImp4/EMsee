@@ -167,7 +167,7 @@ const Feed = () => {
             value={newPostContent}
             onChange={(e) => setNewPostContent(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
+              if (e.key === 'Enter' && !e.shiftKey && !isUploading) {
                 e.preventDefault();
                 handlePostSubmit();
               }

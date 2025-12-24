@@ -62,179 +62,61 @@ jest.mock('@prisma/client', () => ({
 }));
 
 // 2. Mock auth middleware to inject test user
-jest.mock('../middlewares/authMiddleware', () => ({
-  verifyToken: (req, res, next) => {
-    req.user = { id: 1 };
-    next();
-  }
-}));
+## Copilot Instructions — ProjetJS (EMsee)
 
-// 3. Import app AFTER mocks
+Purpose: essential, actionable guidance for AI coding agents working on this monorepo.
+
+Highlights
+- Monorepo: `frontend/` (React + Vite) and `backend/` (Node + Express + Prisma + Socket.IO).
+- DB: Prisma schema at `backend/prisma/schema.prisma` (MySQL by default).
+- Auth: JWT stored client-side; middleware at `backend/src/middlewares/authMiddleware.js`.
+- Realtime: Socket.IO; server emits via `getIo().emit(...)` and the client uses `SocketContext`.
+
+Quick dev commands
+- Backend dev: `cd backend && npm install && npm run dev` (nodemon).
+- Frontend dev: `cd frontend && npm install && npm run dev` (Vite on 5173).
+- Prisma: `cd backend && npx prisma migrate dev` then `npx prisma generate`.
+- Tests: `cd backend && npm test` (Jest + Supertest).
+
+Key patterns agents must follow
+- i18n: Never hardcode user-facing strings. Add keys to all three locales under `frontend/public/locales/{en,fr,es}/translation.json`. Run `node scripts/i18n-audit.js` to validate.
+- API calls: Use service modules in `frontend/src/services/` (see `api.js`). `api.js` attaches `Authorization: Bearer <token>` and handles 401 centrally.
+- State: No Redux — prefer React Context + custom hooks in `frontend/src/hooks/`.
+- Validation: Backend uses Zod validators in `backend/src/validators/`. Use `validate.middleware.js` to surface `{ error, details, message }`.
+
+Testing specifics (must follow)
+- Mock Prisma in backend tests to avoid DB access. Example pattern (before importing app):
+
+```js
+const mockPrisma = { post: { findMany: jest.fn(), create: jest.fn() }, user: { findUnique: jest.fn() } };
+jest.mock('@prisma/client', () => ({ PrismaClient: jest.fn(() => mockPrisma) }));
+// mock auth middleware to inject req.user
+jest.mock('../middlewares/authMiddleware', () => ({ verifyToken: (req,res,next)=>{ req.user={id:1}; next(); }}));
 const { app } = require('../app');
-
-// 4. Write tests with supertest
-describe('POST /api/posts', () => {
-  it('should create post with authenticated user', async () => {
-    mockPrisma.post.create.mockResolvedValue({ id: 1, content: 'Test' });
-    
-    const res = await request(app)
-      .post('/api/posts')
-      .send({ content: 'Test post' });
-    
-    expect(res.statusCode).toBe(201);
-    expect(mockPrisma.post.create).toHaveBeenCalledWith(
-      expect.objectContaining({ data: expect.any(Object) })
-    );
-  });
-});
 ```
 
-**Key testing rules:**
-- Mock Prisma to avoid DB dependency (`jest.mock('@prisma/client')`)
-- Always call `jest.clearAllMocks()` in `afterEach()`
-- Test pagination with `limit` and `page` query params
-- Verify auth-protected routes return 401 when mocking auth is disabled
-- Check Zod validation errors return 400 with `{ error, details, message }` structure
+- Call `jest.clearAllMocks()` in `afterEach()`.
+- Test pagination with `limit`/`page` and verify Zod 400 responses.
 
-**Frontend Testing:**
-- Currently minimal — prefer integration tests on backend API layer
-- If adding frontend tests, focus on custom hooks logic (`useFeed`, `useCommentPage`)
+Integration points & important files
+- Backend server: [backend/src/server.js](backend/src/server.js)
+- Prisma schema: [backend/prisma/schema.prisma](backend/prisma/schema.prisma)
+- Frontend bootstrap: [frontend/src/main.jsx](frontend/src/main.jsx) and [frontend/src/App.jsx](frontend/src/App.jsx)
+- Base API client: [frontend/src/services/api.js](frontend/src/services/api.js)
+- Socket helpers: backend `socketService.js`, frontend `SocketContext` in `frontend/src/context/`.
 
-**Don't test:**
-- Trivial getters/setters
-- Third-party library behavior (Prisma, Express middleware)
-- UI snapshot tests (no testing library configured)
+Conventions to respect when editing code
+- Preserve i18n keys across `en/fr/es` when adding UI text.
+- Add backend Zod validators alongside new routes in `backend/src/validators/`.
+- Place new service logic in `backend/src/services/` and controller entry in `backend/src/controllers/`, register route in `backend/src/routes/`.
+- For uploads, follow `backend/config/multer.js` configuration.
 
-## Critical Conventions (Non-Negotiable)
+Environment
+- Backend expects `.env` with `DATABASE_URL` and `JWT_SECRET` (see `backend/README.md`).
+- Frontend uses `VITE_API_URL` pointing to the API base.
 
-### Frontend File Structure
-- **Components:** `.jsx` extension, co-located CSS in `frontend/src/components/css/` or `frontend/src/pages/css/`
-- **Example:** `CommentCard.jsx` uses `frontend/src/components/css/CommentCard.css`
-- **Custom hooks:** Extract stateful logic to `frontend/src/hooks/use*.js` (see `useCommentPage.js`, `useFeed.js`)
+If something is unclear, ask for the missing env values, desired behavior, or which locale translations to add. After changes, run `cd backend && npm test` and `cd frontend && npm run dev` to smoke-test.
 
-### i18n (Internationalization)
-- **NEVER hardcode user-facing strings** — all text goes in `frontend/public/locales/{en,fr,es}/translation.json`
-- Access via `useTranslation()` hook: `const { t } = useTranslation(); t('key.path')`
-- Config: `frontend/src/i18n.js` (i18next with HTTP backend, language detector)
-- **Add new keys to ALL THREE locales** (en, fr, es) or i18n-audit will fail
-
-### API Services Pattern
+---
+Request: review this brief guide and tell me if you want additional examples (route template, validator snippet, or a test harness) to include.
 - **All HTTP calls** go through `frontend/src/services/` modules (never inline fetch in components)
-- **Base API client:** `frontend/src/services/api.js` exports `{ get, post, put, patch, delete }`
-  - Auto-adds `Authorization: Bearer <token>` header
-  - Handles 401 by clearing localStorage and reloading
-  - Supports FormData (removes Content-Type for multipart)
-- **Resource services:** `auth.service.js`, `post.service.js`, `comment.service.js`, `user.service.js`
-- **Example:** To add notifications API, create `frontend/src/services/notification.service.js`:
-  ```js
-  import api from './api';
-  export const getNotifications = () => api.get('/notifications');
-  export const markAsRead = (id) => api.patch(`/notifications/${id}/read`);
-  ```
-
-### State Management
-- **NO Redux/Zustand** — use React Context + local hooks
-- **Existing contexts:** `AuthContext` (user, login/logout), `SocketContext` (socket instance), `ModalContext` (global modals), `ThemeContext`
-- For local state, prefer custom hooks (see `frontend/src/hooks/`)
-
-### Backend Validation & Error Handling
-- **Validation:** Zod schemas in `backend/src/validators/` (see `auth.validator.js`, `post.schema.js`)
-- **Middleware:** `validate.middleware.js` parses Zod errors to `{ error, details: [{field, message}], message }`
-- **Controllers:** Wrap async logic with `asyncHandler` middleware (auto-catches errors)
-- **Example route:**
-  ```js
-  router.post('/posts', authenticateToken, validate(createPostSchema), postController.createPost);
-  ```
-
-### Socket.IO Events
-- **Backend:** Events emitted via `getIo().emit('event', data)` (see `socketService.js`)
-- **Frontend:** Listen in components via `const { socket } = useSocket()` then `socket.on('event', handler)`
-- **Authentication:** Socket handshake requires `{ auth: { token } }` — handled by `SocketContext`
-
-## Key Integration Points
-
-### Prisma Schema Relationships
-- **User** → Posts, Comments, Likes, Reposts, Follows (self-referential `Follow` model)
-- **Post** → Comments (nested), Likes, Reposts, `replyPermission` enum
-- **Comment** → Self-referential replies (`parent`/`replies`), CommentLikes, CommentReposts, CommentSaves
-
-### Frontend → Backend Auth Flow
-1. User logs in via `AuthContext.login()` → calls `AuthService.login()`
-2. Backend returns `{ token, user }` → stored in localStorage
-3. `api.js` auto-includes token in all requests
-4. Protected routes use `<ProtectedRoute>` (checks `isAuthenticated` from `AuthContext`)
-
-### Role-Based Features
-- Roles: `student`, `professor`, `admin` (defined in `backend/src/validators/auth.validator.js`)
-- **Email validation:** Students must use `@emsi-edu.ma`, professors/admins `@emsi.ma`
-- **Student-specific fields:** `filiere`, `year`, `studentClass` (required during registration)
-- **Professor-specific:** `subjects` array (min 1 subject required)
-
-## Common Tasks
-
-### Add a new page
-1. Create `frontend/src/pages/NewPage.jsx` and `frontend/src/pages/css/NewPage.css`
-2. Add route in `frontend/src/App.jsx` under appropriate layout (PublicLayout or DashboardLayout)
-3. Add i18n keys to `frontend/public/locales/{en,fr,es}/translation.json`
-
-### Add a backend endpoint
-1. Define Zod schema in `backend/src/validators/` (if needed)
-2. Add service logic in `backend/src/services/` or directly in controller
-3. Create controller function in `backend/src/controllers/` (use `asyncHandler`)
-4. Register route in `backend/src/routes/` with auth + validation middleware
-5. Document with JSDoc for Swagger (see `backend/src/routes/post.routes.js`)
-
-### Add realtime notification
-1. **Backend:** Emit event in controller: `getIo().emit('newNotification', { userId, data })`
-2. **Frontend:** Listen in component:
-   ```jsx
-   const { socket } = useSocket();
-   useEffect(() => {
-     if (!socket) return;
-     const handler = (data) => { /* update state */ };
-     socket.on('newNotification', handler);
-     return () => socket.off('newNotification', handler);
-   }, [socket]);
-   ```
-
-## Environment Setup
-
-**Backend .env required variables:**
-```ini
-DATABASE_URL="mysql://user:pass@localhost:3306/db_name"
-JWT_SECRET=your_secret_here
-PORT=5000
-```
-**Frontend .env:**
-```ini
-VITE_API_URL=http://localhost:5000/api
-```
-
-## Known Patterns & Anti-Patterns
-
-**✅ DO:**
-- Extract pagination logic to custom hooks (`useFeed`, `useExplore`)
-- Use lazy loading for pages (`React.lazy()` in `App.jsx`)
-- Validate all inputs with Zod on backend before DB operations
-- Use Prisma `include` for eager loading relations (avoid N+1 queries)
-
-**❌ DON'T:**
-- Hardcode strings visible to users (use i18n)
-- Call API directly in components (use service modules)
-- Store sensitive data in frontend state (JWTs in localStorage only)
-- Skip Zod validation on backend routes (security risk)
-
-## Debugging Tips
-
-- **Frontend API errors:** Check Network tab, verify token in localStorage
-- **Backend crashes:** Check for missing `JWT_SECRET` in `.env`
-- **Prisma issues:** Run `npm run db:generate` after schema changes
-- **Socket not connecting:** Verify `BASE_URL` in `SocketContext.jsx` matches backend origin
-- **i18n missing keys:** Run `node scripts/i18n-audit.js` for detailed report
-
-## Questions?
-
-If unclear on: 
-- **Pagination patterns** → inspect `backend/src/services/post.service.js` and `frontend/src/hooks/useFeed.js`
-- **File uploads** → see `multer` config (not yet fully implemented)
-- **Testing patterns** → check `backend/src/tests/post.test.js` for Jest+Supertest examples

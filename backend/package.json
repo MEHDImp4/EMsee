@@ -4,9 +4,9 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon src/server.js",
+    "dev": "npx prisma migrate deploy && nodemon src/server.js",
     "build": "echo 'No build needed for JS'",
-    "start": "node src/server.js",
+    "start": "npx prisma migrate deploy && node src/server.js",
     "test": "jest",
     "db:studio": "node scripts/prisma-wrapper.js studio",
     "db:migrate": "node scripts/prisma-wrapper.js migrate dev",

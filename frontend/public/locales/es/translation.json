@@ -314,9 +314,22 @@
         "logout_btn": "Cerrar sesión",
         "cancel": "Cancelar"
     },
-    "common": {
-        "back": "Atrás",
-        "save": "Guardar cambios"
+    "notifications": {
+        "title": "Notificaciones",
+        "all": "Todos",
+        "verified": "Verificados",
+        "mentions": "Menciones",
+        "empty": "No hay notificaciones aún",
+        "liked_post": "le gustó tu publicación",
+        "reposted_post": "recompartió tu publicación",
+        "commented_post": "comentó en tu publicación",
+        "mentioned_you": "te mencionó",
+        "system_alert": "Alerta del sistema",
+        "tabs": {
+            "all": "Todos",
+            "verified": "Verificados",
+            "mentions": "Menciones"
+        }
     },
     "messages": {
         "title": "Mensajes",
@@ -364,6 +377,8 @@
         "error_loading": "Error al cargar el contenido del hashtag"
     },
     "common": {
+        "back": "Atrás",
+        "save": "Guardar cambios",
         "loading": "Cargando...",
         "load_more": "Cargar más",
         "error": "Error",

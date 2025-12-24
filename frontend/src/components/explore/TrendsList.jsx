@@ -11,7 +11,7 @@ const TrendsList = ({ t }) => {
     useEffect(() => {
         const fetchForYou = async () => {
             try {
-                const data = await ForYouService.getForYouHashtags(10, 7);
+                const data = await ForYouService.getForYouHashtags(10, 30);
                 setTrends(data || []);
             } catch (error) {
                 console.error('Failed to load For You hashtags', error);

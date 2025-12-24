@@ -40,6 +40,12 @@ model User {
   notifications   Notification[]        @relation("recipient")
   sentNotifications Notification[]      @relation("actor")
   participants      ConversationParticipant[]
+  
+  // Community relations
+  ownedCommunities Community[]     @relation("ownedCommunities")
+  communityMemberships CommunityMember[]
+  communityMessages CommunityMessage[]
+  communityMessageReactions CommunityMessageReaction[]
 
   @@map("users")
 }
@@ -289,4 +295,96 @@ model Message {
   @@index([conversationId])
   @@index([senderId])
   @@map("messages")
+}
+
+model Community {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?  @db.Text
+  icon        String?
+  banner      String?
+  privacy     CommunityPrivacy @default(PUBLIC)
+  writeAccess CommunityWriteAccess @default(EVERYONE)
+  ownerId     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner       User     @relation("ownedCommunities", fields: [ownerId], references: [id])
+  members     CommunityMember[]
+  messages    CommunityMessage[]
+
+  @@map("communities")
+}
+
+model CommunityMember {
+  id          Int      @id @default(autoincrement())
+  communityId Int
+  userId      Int
+  role        CommunityRole @default(MEMBER)
+  status      MemberStatus  @default(ACTIVE)
+  joinedAt    DateTime      @default(now())
+
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, userId])
+  @@index([userId])
+  @@map("community_members")
+}
+
+model CommunityMessage {
+  id          Int      @id @default(autoincrement())
+  communityId Int
+  senderId    Int
+  content     String?  @db.Text
+  mediaUrl    String?
+  mediaType   String?
+  createdAt   DateTime @default(now())
+
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  sender      User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  reactions   CommunityMessageReaction[]
+
+  @@index([communityId])
+  @@index([senderId])
+  @@map("community_messages")
+}
+
+enum CommunityPrivacy {
+  PUBLIC
+  PRIVATE
+}
+
+enum CommunityWriteAccess {
+  EVERYONE
+  ADMINS_ONLY
+}
+
+enum CommunityRole {
+  OWNER
+  ADMIN
+  MEMBER
+  MODERATOR
+}
+
+enum MemberStatus {
+  ACTIVE
+  PENDING
+  BLOCKED
+}
+
+model CommunityMessageReaction {
+  id        Int      @id @default(autoincrement())
+  messageId Int
+  userId    Int
+  emoji     String
+  createdAt DateTime @default(now())
+
+  message   CommunityMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji]) // Prevent duplicate reaction of same type by same user
+  @@index([messageId])
+  @@index([userId])
+  @@map("community_message_reactions")
 }

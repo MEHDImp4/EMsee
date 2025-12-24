@@ -7,26 +7,29 @@ import PostService from '../services/post.service';
 import PageLoader from '../components/loaders/PageLoader';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Bookmarks = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-    const fetchBookmarks = async () => {
+    const fetchBookmarks = async (pageNum = 1) => { // Default to 1 if not provided, but we should use the argument
+        if (loading && pageNum !== 1) return; // Prevent concurrent pagination loads, but allow initial load
+
         try {
-            const response = await PostService.getBookmarks(page, 20);
-            // api.js returns parsed JSON directly, so response is { data: [...], meta: {...} }
+            const response = await PostService.getBookmarks(pageNum, 20);
             const newPosts = response?.data || [];
 
             if (newPosts.length === 0) {
                 setHasMore(false);
             } else {
-                setPosts(prev => [...prev, ...newPosts]);
-                setPage(prev => prev + 1);
+                setPosts(prev => pageNum === 1 ? newPosts : [...prev, ...newPosts]);
+                setPage(pageNum + 1);
             }
         } catch (error) {
             console.error('Error fetching bookmarks:', error);
@@ -36,7 +39,7 @@ const Bookmarks = () => {
     };
 
     useEffect(() => {
-        fetchBookmarks();
+        fetchBookmarks(1);
     }, []);
 
     const handleDeletePost = (postId) => {
@@ -57,7 +60,7 @@ const Bookmarks = () => {
                             {t('sidebar.bookmarks', 'Signets')}
                         </h2>
                         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                            @{posts[0]?.user?.username || 'user'}
+                            @{user?.username}
                         </div>
                     </div>
                 </div>
@@ -83,7 +86,7 @@ const Bookmarks = () => {
                                 <button
                                     className="ghost-icon-btn"
                                     style={{ width: 'auto', padding: '10px 20px', borderRadius: '20px', fontSize: '0.9rem' }}
-                                    onClick={fetchBookmarks}
+                                    onClick={() => fetchBookmarks(page)}
                                     disabled={loading}
                                 >
                                     {loading ? 'Chargement...' : 'Voir plus'}

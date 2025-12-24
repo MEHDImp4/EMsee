@@ -41,8 +41,7 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
             _count: {
                 select: {
                     likes: true,
-                    reposts: true,
-                    comments: true
+                    reposts: true
                 }
             }
         },
@@ -59,10 +58,10 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
     const scoredPosts = posts.map(post => {
         const likesCount = post._count.likes;
         const repostsCount = post._count.reposts;
-        const commentsCount = post._count.comments;
 
-        // Engagement score: likes * 2 + reposts * 3 + comments * 1.5
-        const engagementScore = (likesCount * 2) + (repostsCount * 3) + (commentsCount * 1.5);
+
+        // Engagement score: likes * 2 + reposts * 3
+        const engagementScore = (likesCount * 2) + (repostsCount * 3);
 
         // Time decay: exponential decay based on age
         const ageHours = (now.getTime() - new Date(post.createdAt).getTime()) / (1000 * 60 * 60);
@@ -75,7 +74,7 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
             ...post,
             likeCount: likesCount,
             repostCount: repostsCount,
-            commentCount: commentsCount,
+            commentCount: 0,
             liked: post.likes?.length > 0,
             reposted: post.reposts?.length > 0,
             trendingScore,
@@ -124,8 +123,7 @@ const getTrendingTopics = asyncHandler(async (req, res) => {
                             _count: {
                                 select: {
                                     likes: true,
-                                    reposts: true,
-                                    comments: true
+                                    reposts: true
                                 }
                             }
                         }
@@ -135,7 +133,7 @@ const getTrendingTopics = asyncHandler(async (req, res) => {
             _count: {
                 select: {
                     posts: true,
-                    comments: true
+                    posts: true
                 }
             }
         }
@@ -143,21 +141,19 @@ const getTrendingTopics = asyncHandler(async (req, res) => {
 
     // Calculate engagement score for each hashtag
     const scoredHashtags = hashtags.map(hashtag => {
-        const recentPosts = hashtag.posts.filter(p => 
+        const recentPosts = hashtag.posts.filter(p =>
             new Date(p.createdAt) >= since
         );
 
-        const totalLikes = recentPosts.reduce((sum, p) => 
+        const totalLikes = recentPosts.reduce((sum, p) =>
             sum + (p.post._count.likes || 0), 0
         );
-        const totalReposts = recentPosts.reduce((sum, p) => 
+        const totalReposts = recentPosts.reduce((sum, p) =>
             sum + (p.post._count.reposts || 0), 0
         );
-        const totalComments = recentPosts.reduce((sum, p) => 
-            sum + (p.post._count.comments || 0), 0
-        );
+        const totalComments = 0;
 
-        const engagementScore = (totalLikes * 2) + (totalReposts * 3) + (totalComments * 1.5);
+        const engagementScore = (totalLikes * 2) + (totalReposts * 3);
         const postCount = recentPosts.length;
 
         return {
