@@ -176,7 +176,11 @@
         "select_year": "Select your year",
         "subjects_taught": "Subjects Taught",
         "class_name": "Class (ex: IIR10, GI2)",
-        "check_failed": "Unable to verify availability. Please check your connection."
+        "check_failed": "Unable to verify availability. Please check your connection.",
+        "req_length": "Minimum 6 characters",
+        "req_upper": "One uppercase letter",
+        "req_lower": "One lowercase letter",
+        "req_digit": "One number"
     },
     "common": {
         "back": "Back",

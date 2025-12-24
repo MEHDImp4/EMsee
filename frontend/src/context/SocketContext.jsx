@@ -37,16 +37,18 @@ export const SocketProvider = ({ children }) => {
             return;
         }
 
-        const socketUrl = import.meta.env.VITE_SOCKET_URL || BASE_URL;
+        // Use VITE_SOCKET_URL or fallback to just root path (for same-origin) or BASE_URL
+        const socketUrl = import.meta.env.VITE_SOCKET_URL || (import.meta.env.DEV ? 'http://localhost:5001' : '/');
         console.log('[SOCKET-CTX] Initializing connection to:', socketUrl);
 
         // Connect
         const newSocket = io(socketUrl, {
             auth: { token },
-            transports: ['websocket'], // Force WebSocket
+            transports: ['websocket', 'polling'], // Allow polling fallbacks
             reconnection: true,
             reconnectionAttempts: 10,
             reconnectionDelay: 1000,
+            path: '/socket.io/', // Explicit default path
         });
 
         newSocket.on('connect', () => {
