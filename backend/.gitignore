@@ -1,3 +1,27 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# Build / output
+dist/
+build/
+coverage/
+
+# Uploaded media
+uploads/
+uploads/images/
+uploads/*
+
+# Prisma generated client (if present)
+prisma/client/
+
+# Misc
+.idea/
+.vscode/
 # Dependencies
 node_modules/
 npm-debug.log
