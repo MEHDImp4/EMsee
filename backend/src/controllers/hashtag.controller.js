@@ -14,8 +14,7 @@ const getTopHashtags = asyncHandler(async (req, res) => {
         include: {
             _count: {
                 select: {
-                    posts: true,
-                    comments: true
+                    posts: true
                 }
             }
         },
@@ -30,8 +29,7 @@ const getTopHashtags = asyncHandler(async (req, res) => {
     const formatted = hashtags.map(h => ({
         name: h.name,
         postCount: h._count.posts,
-        commentCount: h._count.comments,
-        totalCount: h._count.posts + h._count.comments
+        totalCount: h._count.posts
     }));
 
     res.json(formatted);
@@ -51,32 +49,18 @@ const getTrendingHashtags = asyncHandler(async (req, res) => {
     since.setDate(since.getDate() - days);
 
     // Aggregate post hashtag usage within window
-    const [postAgg, commentAgg] = await Promise.all([
-        prisma.postHashtag.groupBy({
-            by: ['hashtagId'],
-            where: { createdAt: { gte: since } },
-            _count: { _all: true },
-            _max: { createdAt: true }
-        }),
-        prisma.commentHashtag.groupBy({
-            by: ['hashtagId'],
-            where: { createdAt: { gte: since } },
-            _count: { _all: true },
-            _max: { createdAt: true }
-        })
-    ]);
+    const postAgg = await prisma.postHashtag.groupBy({
+        by: ['hashtagId'],
+        where: { createdAt: { gte: since } },
+        _count: { _all: true },
+        _max: { createdAt: true }
+    });
 
     // Merge counts per hashtagId
     const map = new Map();
     for (const row of postAgg) {
-        const prev = map.get(row.hashtagId) || { postCount: 0, commentCount: 0, lastActivity: new Date(0) };
+        const prev = map.get(row.hashtagId) || { postCount: 0, lastActivity: new Date(0) };
         prev.postCount += row._count._all;
-        prev.lastActivity = new Date(Math.max(prev.lastActivity.getTime(), new Date(row._max.createdAt || 0).getTime()));
-        map.set(row.hashtagId, prev);
-    }
-    for (const row of commentAgg) {
-        const prev = map.get(row.hashtagId) || { postCount: 0, commentCount: 0, lastActivity: new Date(0) };
-        prev.commentCount += row._count._all;
         prev.lastActivity = new Date(Math.max(prev.lastActivity.getTime(), new Date(row._max.createdAt || 0).getTime()));
         map.set(row.hashtagId, prev);
     }
@@ -93,14 +77,13 @@ const getTrendingHashtags = asyncHandler(async (req, res) => {
 
     const items = hashtagRows.map(h => {
         const stats = map.get(h.id);
-        const total = stats.postCount + stats.commentCount;
+        const total = stats.postCount;
         const ageHours = Math.max(0, (now.getTime() - (stats.lastActivity?.getTime() || now.getTime())) / 36e5);
         const decay = Math.exp(-LN2 * (ageHours / halfLifeHours));
-        const weighted = (stats.postCount + 0.6 * stats.commentCount) * decay;
+        const weighted = stats.postCount * decay;
         return {
             name: h.name,
             postCount: stats.postCount,
-            commentCount: stats.commentCount,
             totalCount: total,
             lastActivity: stats.lastActivity,
             score: weighted
@@ -167,8 +150,7 @@ const getPostsByHashtag = asyncHandler(async (req, res) => {
                         _count: {
                             select: {
                                 likes: true,
-                                reposts: true,
-                                comments: true
+                                reposts: true
                             }
                         }
                     }
@@ -189,7 +171,6 @@ const getPostsByHashtag = asyncHandler(async (req, res) => {
         ...ph.post,
         likeCount: ph.post._count.likes,
         repostCount: ph.post._count.reposts,
-        commentCount: ph.post._count.comments,
         liked: ph.post.likes?.length > 0,
         reposted: ph.post.reposts?.length > 0
     }));
@@ -206,88 +187,7 @@ const getPostsByHashtag = asyncHandler(async (req, res) => {
     });
 });
 
-/**
- * Get comments by hashtag
- * @route GET /api/hashtags/:name/comments
- */
-const getCommentsByHashtag = asyncHandler(async (req, res) => {
-    const { name } = req.params;
-    const page = parseInt(req.query.page) || 1;
-    const limit = Math.min(parseInt(req.query.limit) || 20, 50);
-    const skip = (page - 1) * limit;
-    const currentUserId = req.user?.id;
 
-    const hashtag = await prisma.hashtag.findUnique({
-        where: { name: name.toLowerCase() }
-    });
-
-    if (!hashtag) {
-        return res.status(404).json({ error: 'Hashtag not found' });
-    }
-
-    const [commentHashtags, total] = await Promise.all([
-        prisma.commentHashtag.findMany({
-            where: { hashtagId: hashtag.id },
-            include: {
-                comment: {
-                    include: {
-                        user: {
-                            select: {
-                                id: true,
-                                username: true,
-                                full_name: true,
-                                avatar: true
-                            }
-                        },
-                        post: {
-                            select: {
-                                id: true,
-                                content: true
-                            }
-                        },
-                        likes: currentUserId ? {
-                            where: { userId: currentUserId }
-                        } : false,
-                        _count: {
-                            select: {
-                                likes: true,
-                                reposts: true,
-                                replies: true
-                            }
-                        }
-                    }
-                }
-            },
-            orderBy: {
-                createdAt: 'desc'
-            },
-            skip,
-            take: limit
-        }),
-        prisma.commentHashtag.count({
-            where: { hashtagId: hashtag.id }
-        })
-    ]);
-
-    const comments = commentHashtags.map(ch => ({
-        ...ch.comment,
-        likeCount: ch.comment._count.likes,
-        repostCount: ch.comment._count.reposts,
-        replyCount: ch.comment._count.replies,
-        liked: ch.comment.likes?.length > 0
-    }));
-
-    res.json({
-        data: comments,
-        meta: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-            hashtag: hashtag.name
-        }
-    });
-});
 
 /**
  * Search hashtags by name
@@ -311,8 +211,7 @@ const searchHashtags = asyncHandler(async (req, res) => {
             name: true,
             _count: {
                 select: {
-                    posts: true,
-                    comments: true
+                    posts: true
                 }
             }
         },
@@ -329,8 +228,7 @@ const searchHashtags = asyncHandler(async (req, res) => {
     const formatted = hashtags.map(tag => ({
         name: tag.name,
         postCount: tag._count.posts,
-        commentCount: tag._count.comments,
-        totalCount: tag._count.posts + tag._count.comments
+        totalCount: tag._count.posts
     }));
 
     res.json(formatted);
@@ -340,6 +238,5 @@ module.exports = {
     getTopHashtags,
     getTrendingHashtags,
     getPostsByHashtag,
-    getCommentsByHashtag,
     searchHashtags
 };

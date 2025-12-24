@@ -6,6 +6,12 @@
   --danger: #E06C66; /* Salmon */
   --radius: 1rem;
   
+  /* Accents */
+  --accent-red: #E06C66; /* Salmon */
+  --accent-green: #4DA167; /* Sea Foam */
+  --accent-blue: #5AA6B0; /* Lighter Teal */
+  --accent-purple: #8D6B99; /* Muted Purple */
+  
   /* Light Mode */
   --bg-main: #FFFFFF; 
   --bg-sidebar: #F0F6F9; /* Very light tint of the light blue */
@@ -30,4 +36,10 @@
   --primary: #3E8893; 
   --primary-hover: #5AA6B0;
   --danger: #E06C66;
+  
+  /* Accents Dark Mode */
+  --accent-red: #E06C66; 
+  --accent-green: #4DA167; 
+  --accent-blue: #5AA6B0; 
+  --accent-purple: #8D6B99;
 }

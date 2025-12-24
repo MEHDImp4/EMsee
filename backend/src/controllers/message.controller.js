@@ -145,12 +145,10 @@ exports.markAsRead = asyncHandler(async (req, res) => {
   // Notify other participants that this user read the conversation
   const conversation = await messageService.getConversationById(conversationId, userId);
   conversation.participants.forEach(participant => {
-    if (participant.userId !== userId) {
-      io.to(`user_${participant.userId}`).emit('messagesRead', {
-        conversationId,
-        readByUserId: userId
-      });
-    }
+    io.to(`user_${participant.userId}`).emit('messagesRead', {
+      conversationId,
+      readByUserId: userId
+    });
   });
 
   res.status(200).json({

@@ -1,196 +1,114 @@
-.messages-container {
-  display: flex;
-  flex: 1;
-  height: 100vh; /* Force full viewport height */
-  max-height: 100vh;
-  overflow: hidden;
-  background-color: var(--bg-main);
-}
+/* Messages Page Styles - Refactored for Feed Layout */
 
-.messages-inbox-section {
-  width: 360px;
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bg-main);
-  overflow: hidden;
-}
+/* The parent container uses .feed-container from Feed.css for structure (usually max-width, margin auto) */
 
-.inbox-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.inbox-header h2 {
-  font-size: 1.25rem;
-  font-weight: 800;
-  margin: 0;
-  color: var(--text-main);
-}
-
-.icon-button {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  cursor: pointer;
-  color: var(--primary);
-  transition: all 0.2s;
-}
-
-.icon-button:hover {
-  background-color: rgba(29, 155, 240, 0.1);
-}
-
-.inbox-search {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--bg-card);
-  border-radius: 2rem;
-  margin: 1rem;
-  border: 1px solid var(--border);
-}
-
-.search-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--text-main);
-  font-size: 0.9375rem;
-  outline: none;
-}
-
-.search-input::placeholder {
-  color: var(--text-muted);
-}
-
-.conversations-list-wrapper {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.empty-inbox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  padding: 2rem;
-  text-align: center;
-  color: var(--text-muted);
-}
-
-.empty-inbox svg {
-  color: var(--primary);
-  margin-bottom: 1rem;
-  opacity: 0.5;
-}
-
-.empty-inbox p {
-  font-size: 0.9375rem;
-  margin-bottom: 1.5rem;
-}
-
-.messages-chat-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bg-main);
-  overflow: hidden;
-}
-
-.empty-chat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  padding: 2rem;
-  text-align: center;
-  color: var(--text-muted);
-}
-
-.empty-chat-icon {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-card);
-  border-radius: 50%;
-  margin-bottom: 1.5rem;
-  color: var(--primary);
-  opacity: 0.5;
-}
-
-.empty-chat h3 {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--text-main);
-  margin-bottom: 0.5rem;
-}
-
-.empty-chat p {
-  font-size: 0.9375rem;
-  margin-bottom: 1.5rem;
-  max-width: 400px;
-}
-
-.messages-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  color: var(--text-muted);
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (max-width: 1024px) {
-  .messages-inbox-section {
-    width: 340px;
-  }
-}
-
-@media (max-width: 768px) {
-  .messages-container {
+/* List View */
+.messages-view-list {
+    display: flex;
     flex-direction: column;
-    height: auto;
-  }
-
-  .messages-inbox-section {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    max-height: 40vh;
-  }
-
-  .messages-chat-section {
-    height: 60vh;
-  }
+    min-height: 100vh;
+    animation: fadeIn 0.3s ease;
 }
+
+/* Header Adjustments to match Feed Header */
+/* Header Content */
+.messages-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 1rem;
+    height: 53px;
+}
+
+.messages-header-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, var(--text-main) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+}
+
+/* New Message Button styling */
+.new-message-btn {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4);
+}
+
+.new-message-btn:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.6);
+}
+
+.messages-list-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    /* Padding might conflict with scrollbar or edge-to-edge design. 
+       Let's keep it minimal or 0 if ConversationList items have padding. */
+    padding-bottom: 80px; /* Space for bottom nav on mobile */
+}
+
+/* Chat View */
+.messages-view-chat {
+    /* Takes full height of the container to show chat window */
+    height: 100vh; /* Fixed height relative to viewport to ensure scrolling works inside ChatWindow */
+    /* Note: In 3-col layout, main-content often has safe areas. 
+       We might need calc(100vh - header) or similar if not handled by layout. */
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-main);
+    animation: slideInRight 0.3s ease;
+}
+
+/* Adjustments for ChatWindow when inside this view */
+.messages-view-chat .chat-window {
+    border-right: none; /* Remove borders that might have existed in split view */
+    border-left: none;
+    background: var(--bg-main);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { 
+        opacity: 0;
+        transform: translateX(20px); 
+    }
+    to { 
+        opacity: 1;
+        transform: translateX(0); 
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .messages-view-chat {
+        height: 100dvh;
+        position: fixed; /* Take over screen on mobile */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+    }
+    
+
+}
+
+

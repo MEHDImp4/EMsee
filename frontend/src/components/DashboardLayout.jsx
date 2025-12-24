@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }) => {
     const location = useLocation();
 
     // Hide right sidebar on messages page
-    const isMessagesPage = location.pathname === '/messages';
+
 
     // Close drawer on route change
     useEffect(() => {
@@ -57,7 +57,7 @@ const DashboardLayout = ({ children }) => {
 
     return (
         <div
-            className={`app-layout ${isMessagesPage ? 'messages-page-layout' : ''}`}
+            className="app-layout"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -81,7 +81,7 @@ const DashboardLayout = ({ children }) => {
                 {children || <Outlet />}
             </main>
 
-            {!isMessagesPage && <RightSidebar />}
+            <RightSidebar />
 
             {/* FAB opens the compose modal */}
             <FloatingPostButton onClick={() => openCompose()} />

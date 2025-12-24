@@ -2,7 +2,7 @@ import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { fr, es } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
-import { getImageUrl } from '../utils/imageUtils';
+import UserAvatar from './UserAvatar';
 import '../components/css/ConversationList.css';
 
 const ConversationList = ({ conversations, selectedConversation, onSelectConversation, currentUserId }) => {
@@ -34,12 +34,10 @@ const ConversationList = ({ conversations, selectedConversation, onSelectConvers
               onClick={() => onSelectConversation(conversation)}
             >
               <div className="conversation-avatar">
-                <img
-                  src={getImageUrl(otherUser?.avatar) || '/default-avatar.svg'}
-                  alt={otherUser?.full_name}
-                  onError={(e) => {
-                    e.target.src = '/default-avatar.svg';
-                  }}
+                <UserAvatar
+                  user={otherUser}
+                  size={50}
+                  className="conversation-avatar-img"
                 />
                 {conversation.unreadCount > 0 && (
                   <div className="unread-badge">{conversation.unreadCount}</div>

@@ -11,6 +11,7 @@ import { useModal } from '../context/ModalContext';
 import HashtagText from './HashtagText';
 import SharePostModal from './SharePostModal'; // Import new modal
 import './css/PostCard.css';
+import { getInitials } from '../utils/avatarUtils';
 
 const formatCount = (value = 0) => {
   const abs = Math.abs(value);
@@ -33,7 +34,7 @@ const formatRelativeTime = (date) => {
   return date.toLocaleDateString();
 };
 
-const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentIntent }) => {
+const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -44,17 +45,17 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
 
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isReposted, setIsReposted] = useState(initialIsReposted);
+  const [isBookmarked, setIsBookmarked] = useState(Boolean(post?.isBookmarked));
   const [isBusy, setIsBusy] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false); // State for share modal
 
   const initialLikes = post?._count?.likes ?? 0;
-  const initialComments = post?._count?.comments ?? 0;
+
   const initialReposts = post?._count?.reposts ?? 0;
   const initialViews = post?.views ?? post?.viewCount ?? 0;
 
   const [counts, setCounts] = useState({
     likes: initialLikes,
-    comments: initialComments,
     reposts: initialReposts,
     views: initialViews,
   });
@@ -110,6 +111,24 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
     }
   };
 
+  const toggleBookmark = async (e) => {
+    e.stopPropagation();
+    if (!post?.id || isBusy) return;
+
+    const next = !isBookmarked;
+    setIsBookmarked(next);
+
+    try {
+      setIsBusy(true);
+      await PostService.toggleBookmark(post.id);
+    } catch (error) {
+      console.error('Failed to toggle bookmark', error);
+      setIsBookmarked(!next);
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
   const goToPost = () => {
     if (isDetailView) return;
 
@@ -122,14 +141,7 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
     navigate(`/posts/${post.id}`);
   };
 
-  const handleCommentClick = (e) => {
-    e.stopPropagation();
-    if (isDetailView) {
-      if (onCommentIntent) onCommentIntent();
-      return;
-    }
-    openCompose(post);
-  };
+
 
   const handleDelete = async (e) => {
     e.stopPropagation();
@@ -196,7 +208,7 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
           {avatarUrl ? (
             <img src={avatarUrl} alt={displayName} />
           ) : (
-            <span>{displayName.charAt(0)}</span>
+            <span>{getInitials(displayName)}</span>
           )}
         </div>
       </div>
@@ -320,14 +332,14 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
         <div className="post-actions-bar">
           <button
             className={`action-btn comment ${isOwner ? 'disabled' : ''}`}
-            onClick={handleCommentClick}
+            onClick={(e) => e.stopPropagation()}
             disabled={isOwner}
             title={isOwner ? t('post.cannot_comment_own', "You cannot comment on your own post") : ''}
           >
             <div className="icon-wrapper">
               <MessageCircle size={18} />
             </div>
-            <span className="action-count">{formatCount(counts.comments)}</span>
+            <span className="action-count">{formatCount(0)}</span>
           </button>
 
           <button className={`action-btn repost ${isReposted ? 'active' : ''}`} onClick={toggleRepost}>
@@ -352,8 +364,12 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false, onCommentI
           </button>
 
           <div className="action-btn-group">
-            <button className="ghost-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Bookmark">
-              <Bookmark size={17} />
+            <button
+              className={`ghost-icon-btn ${isBookmarked ? 'active-bookmark' : ''}`}
+              onClick={toggleBookmark}
+              aria-label="Bookmark"
+            >
+              <Bookmark size={17} fill={isBookmarked ? "currentColor" : "none"} />
             </button>
             <button className="ghost-icon-btn" onClick={(e) => { e.stopPropagation(); setShowShareModal(true); }} aria-label="Share">
               <Share2 size={17} />

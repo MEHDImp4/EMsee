@@ -6,6 +6,19 @@ html, body {
   color: var(--text-main);
   transition: background-color 0.3s ease, color 0.3s ease;
   height: 100%;
+  overflow-y: scroll; /* Force scrollbar track to prevent jumping, better than scrollbar-gutter */
+}
+
+/* Hide scrollbar for sidebars but allow scrolling */
+.sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar,
+.right-sidebar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 * {

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import * as MessageService from '../services/message.service';
 import api from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import { useAuth } from '../context/AuthContext';
 
 export const useConversations = () => {
   const [conversations, setConversations] = useState([]);
@@ -9,6 +10,7 @@ export const useConversations = () => {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState(null);
   const { socket } = useSocket();
+  const { user } = useAuth(); // Get current user
 
   const fetchConversations = useCallback(async (page = 1) => {
     try {
@@ -31,7 +33,7 @@ export const useConversations = () => {
 
   // Listen for new messages via socket
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !user) return;
 
     const handleNewMessage = ({ conversationId, message }) => {
       setConversations(prev => {
@@ -54,12 +56,29 @@ export const useConversations = () => {
       });
     };
 
+    const handleMessagesRead = ({ conversationId, readByUserId }) => {
+      // If I am the one who read it, reset my unread count for this conversation
+      if (user && readByUserId === user.id) {
+        setConversations(prev => prev.map(conv => {
+          if (conv.id === conversationId) {
+            return {
+              ...conv,
+              unreadCount: 0
+            };
+          }
+          return conv;
+        }));
+      }
+    };
+
     socket.on('newMessage', handleNewMessage);
+    socket.on('messagesRead', handleMessagesRead);
 
     return () => {
       socket.off('newMessage', handleNewMessage);
+      socket.off('messagesRead', handleMessagesRead);
     };
-  }, [socket]);
+  }, [socket, user]);
 
   return { conversations, loading, error, pagination, refetch: fetchConversations };
 };
@@ -128,8 +147,10 @@ export const useConversationMessages = (conversationId) => {
     const handleMessagesRead = ({ conversationId: readConvId, readByUserId }) => {
       if (readConvId === conversationId) {
         setMessages(prev => prev.map(msg => {
-          // If I am the sender, mark my messages as read
-          if (msg.senderId !== readByUserId) { // Wait, logic: readByUserId is the one who read them. So if I sent them (msg.senderId !== readByUserId), they are read.
+          // If the message sender is NOT the one who read it, and I am the sender, then it is read.
+          // Actually simpler: If readByUserId matches the participant who isn't me, then my messages are read.
+          // But generic logic: If msg.senderId !== readByUserId, it means 'readByUserId' read 'msg.senderId's message.
+          if (msg.senderId !== readByUserId && !msg.read) {
             return { ...msg, read: true, readAt: new Date() };
           }
           return msg;

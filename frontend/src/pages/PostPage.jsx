@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import PostCard from '../components/PostCard';
 import './css/Feed.css';
-import CommentCard from '../components/CommentCard';
+
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import usePostPage from '../hooks/usePostPage';
@@ -19,14 +19,7 @@ const PostPage = () => {
 
     const {
         post,
-        comments,
-        loading,
-        replyText,
-        setReplyText,
-        submitting,
-        replyRef,
-        handleSubmitReply,
-        focusReplyBox
+        loading
     } = usePostPage({ id, socket });
 
     const isOwnPost = post?.user?.id === user?.id;
@@ -49,46 +42,10 @@ const PostPage = () => {
             </div>
 
             <div className="post-detail-view">
-                <PostCard post={post} isDetailView={true} onCommentIntent={focusReplyBox} />
+                <PostCard post={post} isDetailView={true} />
             </div>
 
-            {!isOwnPost && (
-                <div className="reply-composer">
-                    <div className="reply-avatar">
-                        {user?.avatar ? (
-                            <img src={`${BASE_URL}${user.avatar}`} alt={user.username} />
-                        ) : (
-                            <span>{(user?.full_name || user?.username || 'U').charAt(0)}</span>
-                        )}
-                    </div>
-                    <div className="reply-input-col">
-                        <textarea
-                            className="reply-textarea"
-                            rows="3"
-                            placeholder={t('post.reply_placeholder', 'Ajouter une réponse')}
-                            value={replyText}
-                            onChange={(e) => setReplyText(e.target.value)}
-                            ref={replyRef}
-                        />
-                        <div className="reply-actions">
-                            <div className="reply-hint">{t('post.replying_to', 'En réponse à')} @{post?.user?.username}</div>
-                            <button
-                                className="reply-btn"
-                                onClick={handleSubmitReply}
-                                disabled={!replyText.trim() || submitting}
-                            >
-                                {submitting ? t('common.save', 'Enregistrer') : t('post.reply', 'Répondre')}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
-            <div className="comments-section-page">
-                {comments.map((comment) => (
-                    <CommentCard key={comment.id} comment={comment} />
-                ))}
-            </div>
         </div>
     );
 };

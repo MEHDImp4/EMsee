@@ -7,10 +7,15 @@ const useFeed = () => {
     const [activeTab, setActiveTab] = useState('foryou');
     const [posts, setPosts] = useState([]);
     const [newPostContent, setNewPostContent] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false); // Changed to false initially to avoid double loader
     const [replyPermission, setReplyPermission] = useState('EVERYONE');
     const [showPermissionMenu, setShowPermissionMenu] = useState(false);
     const permissionMenuRef = useRef(null);
+
+    // Infinite Scroll State
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const LIMIT = 10;
 
     // Media states
     const [mediaFiles, setMediaFiles] = useState([]);
@@ -18,8 +23,6 @@ const useFeed = () => {
     const [pollData, setPollData] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const { socket } = useSocket();
-
-
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -36,16 +39,32 @@ const useFeed = () => {
         };
     }, [showPermissionMenu]);
 
-    const fetchPosts = async () => {
+    // Reset pagination when tab changes
+    useEffect(() => {
+        setPage(1);
+        setHasMore(true);
+        setPosts([]);
+        fetchPosts(1, true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeTab]);
+
+    const fetchPosts = async (pageNum, isReset = false) => {
+        if (loading) return; // Prevent concurrent fetches
         setLoading(true);
         try {
+            console.log(`Fetching posts for tab ${activeTab}, page ${pageNum}`);
             const response = activeTab === 'class'
-                ? await PostService.getClassPosts()
-                : await PostService.getAllPosts();
+                ? await PostService.getClassPosts(pageNum, LIMIT)
+                : await PostService.getAllPosts(pageNum, LIMIT);
 
             // Handle paginated response ({ data, meta }) or legacy array
-            const postsData = response.data ? response.data : response;
-            setPosts(postsData || []);
+            const postsData = response.data ? response.data : (Array.isArray(response) ? response : []);
+
+            if (postsData.length < LIMIT) {
+                setHasMore(false);
+            }
+
+            setPosts(prev => isReset ? postsData : [...prev, ...postsData]);
         } catch (error) {
             console.error('Failed to load posts', error);
         } finally {
@@ -53,9 +72,13 @@ const useFeed = () => {
         }
     };
 
-    useEffect(() => {
-        fetchPosts();
-    }, [activeTab]);
+    const loadMore = () => {
+        if (!loading && hasMore) {
+            const nextPage = page + 1;
+            setPage(nextPage);
+            fetchPosts(nextPage, false);
+        }
+    };
 
     // Real-time updates
     useEffect(() => {
@@ -176,7 +199,9 @@ const useFeed = () => {
         setCodeSnippet,
         pollData,
         setPollData,
-        isUploading
+        isUploading,
+        loadMore,
+        hasMore
     };
 };
 

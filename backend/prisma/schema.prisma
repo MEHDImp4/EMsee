@@ -28,12 +28,10 @@ model User {
   created_at DateTime @default(now())
 
   posts          Post[]
-  comments       Comment[]
-  commentLikes   CommentLike[]
-  commentReposts CommentRepost[]
-  commentSaves   CommentSave[]
+
   reposts        Repost[]
   likes          Like[]
+  bookmarks      Bookmark[]
   pollVotes      PollVote[]
   postViews      PostView[]
   followedBy     Follow[]        @relation("following")
@@ -52,14 +50,12 @@ model Notification {
   actorId     Int?
   type        NotificationType
   postId      Int?
-  commentId   Int?
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
 
   recipient   User     @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
   actor       User?    @relation("actor", fields: [actorId], references: [id], onDelete: Cascade)
   post        Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  comment     Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@index([recipientId])
   @@index([actorId])
@@ -71,7 +67,6 @@ enum NotificationType {
   MENTION
   LIKE
   REPOST
-  COMMENT
   FOLLOW
   SYSTEM
 }
@@ -81,9 +76,9 @@ model Post {
   content         String          @db.Text
   userId          Int
   user            User            @relation(fields: [userId], references: [id])
-  comments        Comment[]
   reposts         Repost[]
   likes           Like[]
+  bookmarks       Bookmark[]
   hashtags        PostHashtag[]
   media           Media[]
   poll            Poll?
@@ -103,61 +98,7 @@ enum ReplyPermission {
   NO_ONE
 }
 
-model Comment {
-  id              Int             @id @default(autoincrement())
-  content         String          @db.Text
-  postId          Int
-  userId          Int
-  parentCommentId Int?
-  post            Post            @relation(fields: [postId], references: [id])
-  user            User            @relation(fields: [userId], references: [id])
-  parent          Comment?        @relation("CommentReplies", fields: [parentCommentId], references: [id])
-  replies         Comment[]       @relation("CommentReplies")
-  likes           CommentLike[]
-  reposts         CommentRepost[]
-  saves           CommentSave[]
-  hashtags        CommentHashtag[]
-  notifications   Notification[]
-  createdAt       DateTime        @default(now())
 
-  @@map("comments")
-}
-
-model CommentLike {
-  id        Int      @id @default(autoincrement())
-  commentId Int
-  userId    Int
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-
-  @@unique([commentId, userId])
-  @@map("comment_likes")
-}
-
-model CommentRepost {
-  id        Int      @id @default(autoincrement())
-  commentId Int
-  userId    Int
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-
-  @@unique([commentId, userId])
-  @@map("comment_reposts")
-}
-
-model CommentSave {
-  id        Int      @id @default(autoincrement())
-  commentId Int
-  userId    Int
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-
-  @@unique([commentId, userId])
-  @@map("comment_saves")
-}
 
 model Repost {
   id        Int      @id @default(autoincrement())
@@ -179,8 +120,22 @@ model Like {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 
+
+  
   @@unique([postId, userId])
   @@map("likes")
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@map("bookmarks")
 }
 
 model Follow {
@@ -199,7 +154,6 @@ model Hashtag {
   id        Int              @id @default(autoincrement())
   name      String           @unique @db.VarChar(100)
   posts     PostHashtag[]
-  comments  CommentHashtag[]
   createdAt DateTime         @default(now())
 
   @@index([name])
@@ -220,19 +174,7 @@ model PostHashtag {
   @@map("post_hashtags")
 }
 
-model CommentHashtag {
-  id        Int      @id @default(autoincrement())
-  commentId Int
-  hashtagId Int
-  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  hashtag   Hashtag  @relation(fields: [hashtagId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
 
-  @@unique([commentId, hashtagId])
-  @@index([hashtagId])
-  @@index([createdAt])
-  @@map("comment_hashtags")
-}
 
 model Media {
   id        Int       @id @default(autoincrement())

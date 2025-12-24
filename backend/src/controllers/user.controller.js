@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const notificationService = require('../services/notification.service');
 const {
     profileSelectFields,
     userSearchSelectFields,
@@ -63,6 +64,14 @@ const followUser = async (req, res) => {
                 followingId: targetUserId
             }
         });
+
+        // Notify target user
+        await notificationService.createNotification({
+            recipientId: targetUserId,
+            actorId: currentUserId,
+            type: 'FOLLOW'
+        });
+
         return res.json({ following: true });
     } catch (error) {
         console.error('Error toggling follow:', error);

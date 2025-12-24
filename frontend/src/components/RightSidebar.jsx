@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import UserService from '../services/user.service';
 import HashtagService from '../services/hashtag.service';
 import { BASE_URL } from '../services/api';
+import { getInitials } from '../utils/avatarUtils';
 
 const TRENDS = [
     { metaKey: ['right_sidebar.trending', 'right_sidebar.morocco'], name: '#SaharaMarocain', count: '12.5k' },
@@ -23,10 +24,10 @@ const SearchBox = ({ placeholder }) => (
 
 const TrendingHashtagItem = ({ tag, t }) => {
     const navigate = useNavigate();
-    
+
     return (
-        <div 
-            className="trend-item hashtag-trend" 
+        <div
+            className="trend-item hashtag-trend"
             onClick={() => navigate(`/explore?q=%23${tag.name}`)}
             style={{ cursor: 'pointer' }}
         >
@@ -70,7 +71,7 @@ const TrendItem = ({ meta, name, count, postsLabel }) => {
 const TrendsSection = ({ t, trendingHashtags, loadingHashtags }) => (
     <div className="sidebar-card trends-card">
         <h3>{t('right_sidebar.trends_for_you', 'Tendances pour vous')}</h3>
-        
+
         {loadingHashtags ? (
             <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>
                 {t('common.loading', 'Loading...')}
@@ -98,9 +99,12 @@ const TrendsSection = ({ t, trendingHashtags, loadingHashtags }) => (
     </div>
 );
 
+
+
 const SuggestionItem = ({ user, onFollow, t }) => {
     const navigate = useNavigate();
     const toSearch = `/explore?q=%40${user.username}`;
+    const initials = getInitials(user.full_name || user.username);
 
     return (
         <div
@@ -116,7 +120,7 @@ const SuggestionItem = ({ user, onFollow, t }) => {
                     {user.avatar ? (
                         <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
-                        (user.full_name || user.username).charAt(0).toUpperCase()
+                        initials
                     )}
                 </div>
             </Link>
@@ -133,7 +137,7 @@ const SuggestionItem = ({ user, onFollow, t }) => {
             >
                 {user.isFollowing ? t('profile.following', 'Abonné') : t('right_sidebar.follow', 'Suivre')}
             </button>
-        </div>
+        </div >
     );
 };
 
@@ -211,8 +215,8 @@ const RightSidebar = () => {
             {!isExplorePage && (
                 <>
                     <SearchBox placeholder={t('right_sidebar.search', 'Rechercher')} />
-                    <TrendsSection 
-                        t={t} 
+                    <TrendsSection
+                        t={t}
                         trendingHashtags={trendingHashtags}
                         loadingHashtags={loadingHashtags}
                     />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PostService from '../services/post.service';
 import { getImageUrl } from '../utils/imageUtils';
 import { BASE_URL } from '../services/api';
+import UserAvatar from './UserAvatar';
 import './css/PostPreviewBubble.css';
 
 const PostPreviewBubble = ({ postId, fallbackContent }) => {
@@ -65,11 +66,10 @@ const PostPreviewBubble = ({ postId, fallbackContent }) => {
     return (
         <div className="post-preview-bubble" onClick={handleClick}>
             <div className="post-preview-header">
-                <img
-                    src={avatarUrl || '/default-avatar.svg'}
-                    alt={displayName}
+                <UserAvatar
+                    user={post.user}
+                    size={24}
                     className="post-preview-avatar"
-                    onError={(e) => e.target.src = '/default-avatar.svg'}
                 />
                 <div className="post-preview-user">
                     <span className="post-preview-name">{displayName}</span>

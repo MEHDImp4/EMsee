@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post.controller');
-const commentController = require('../controllers/comment.controller');
+
 const { verifyToken: authenticateToken } = require('../middlewares/authMiddleware');
 const { createPostSchema } = require('../validators/post.schema');
 const validateRequest = require('../middlewares/validateRequest');
@@ -126,32 +126,7 @@ router.post('/:id/vote', postController.votePoll);
  */
 router.post('/:id/repost', postController.repostPost);
 
-/**
- * @swagger
- * /api/posts/{id}/comment:
- *   post:
- *     summary: Comment on a post
- *     tags: [Posts]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               content:
- *                 type: string
- *     responses:
- *       201:
- *         description: Comment created
- */
-router.post('/:id/comment', postController.commentPost);
+
 
 /**
  * @swagger
@@ -171,23 +146,7 @@ router.post('/:id/comment', postController.commentPost);
  */
 router.delete('/:id', postController.deletePost);
 
-/**
- * @swagger
- * /api/posts/{id}/comments:
- *   get:
- *     summary: Get comments for a post
- *     tags: [Posts]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: List of comments
- */
-router.get('/:id/comments', postController.getPostComments);
+
 
 /**
  * @swagger
@@ -207,8 +166,19 @@ router.get('/:id/comments', postController.getPostComments);
  */
 router.get('/user/:username', postController.getUserPosts);
 
-router.get('/comments/:id/path', commentController.getCommentPath);
-router.get('/comments/:id', commentController.getCommentById);
+
+
+/**
+ * @swagger
+ * /api/posts/bookmarks:
+ *   get:
+ *     summary: Get user's bookmarked posts
+ *     tags: [Posts]
+ *     responses:
+ *       200:
+ *         description: List of bookmarked posts
+ */
+router.get('/bookmarks', postController.getBookmarkedPosts);
 
 /**
  * @swagger
@@ -229,5 +199,23 @@ router.get('/comments/:id', commentController.getCommentById);
  *         description: Post not found
  */
 router.get('/:id', postController.getPostById);
+
+/**
+ * @swagger
+ * /api/posts/{id}/bookmark:
+ *   post:
+ *     summary: Toggle bookmark on a post
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Bookmark toggled
+ */
+router.post('/:id/bookmark', postController.toggleBookmark);
 
 module.exports = router;

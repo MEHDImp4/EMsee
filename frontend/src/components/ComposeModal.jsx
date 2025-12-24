@@ -4,7 +4,7 @@ import { X, Image as ImageIcon, BarChart2, Code, Globe, Users, Lock } from 'luci
 import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import PostService from '../services/post.service';
-import CommentService from '../services/comment.service';
+
 import { useAuth } from '../context/AuthContext';
 import { BASE_URL } from '../services/api';
 
@@ -106,10 +106,9 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
 
         setIsSubmitting(true);
         try {
-            if (replyTo?.isComment) {
-                await CommentService.replyToComment(replyTo.id, text);
-            } else if (replyTo) {
-                await PostService.commentPost(replyTo.id, text);
+            if (replyTo) {
+                // await PostService.commentPost(replyTo.id, text);
+                console.log("Reply functionality is disabled.");
             } else {
                 // Prepare media data
                 let mediaData = images;

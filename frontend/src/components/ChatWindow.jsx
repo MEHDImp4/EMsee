@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Send, Loader, Image as ImageIcon, Check, CheckCheck, X, Download, ExternalLink } from 'lucide-react';
+import { Send, Loader, Image as ImageIcon, Check, CheckCheck, X, Download, ExternalLink, ArrowLeft } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { fr, es } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 import { useConversationMessages } from '../hooks/useMessages';
 import { useSocket } from '../context/SocketContext';
 import { getImageUrl } from '../utils/imageUtils';
+import UserAvatar from './UserAvatar';
 import SharePostModal from './SharePostModal'; // Import new modal
 import PostPreviewBubble from './PostPreviewBubble'; // Import preview bubble
 import './css/ChatWindow.css';
@@ -18,7 +19,7 @@ const getPostIdFromContent = (content) => {
   return match ? match[1] : null;
 };
 
-const ChatWindow = ({ conversation, currentUserId }) => {
+const ChatWindow = ({ conversation, currentUserId, onBack }) => {
   const { t, i18n } = useTranslation();
   const [messageText, setMessageText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -58,24 +59,23 @@ const ChatWindow = ({ conversation, currentUserId }) => {
 
     socket.on('userTyping', handleUserTyping);
 
-    // Listen for read receipts
-    const handleMessagesRead = ({ conversationId: readConvId, readByUserId }) => {
-      if (readConvId === conversation.id && readByUserId !== currentUserId) {
-        // Force update or let useMessages handle it?
-        // useMessages handles 'newMessage' but not 'messagesRead' yet?
-        // Actually useMessages doesn't export a way to update messages state from outside except refetch.
-        // However, we can listen here and locally update messages if we want, OR update useMessages to listen to it.
-        // Let's update useMessages to listen to it.
-        // Wait, easier to just accept the event here and maybe refetch or hack it for now if simple.
-        // Better: Update useConversationMessages in useMessages.js to listen to 'messagesRead'.
-        // But for now, let's just leave it, I will update useMessages.js in next step to handle 'messagesRead'.
-      }
-    };
-
     return () => {
       socket.off('userTyping', handleUserTyping);
     };
   }, [socket, conversation, currentUserId]);
+
+  // Separate effect for marking as read to track messages loading
+  useEffect(() => {
+    if (conversation?.id && messages.length > 0) {
+      const hasUnread = messages.some(m => !m.read && m.senderId !== currentUserId);
+      if (hasUnread) {
+        import('../services/message.service').then(service => {
+          service.markAsRead(conversation.id).catch(console.error);
+        });
+      }
+    }
+  }, [conversation?.id, messages, currentUserId]);
+
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
@@ -188,14 +188,16 @@ const ChatWindow = ({ conversation, currentUserId }) => {
   return (
     <div className="chat-window">
       <div className="chat-header">
+        {onBack && (
+          <button className="chat-back-btn" onClick={onBack}>
+            <ArrowLeft size={20} />
+          </button>
+        )}
         <div className="chat-header-user">
-          <img
-            src={getImageUrl(otherUser?.avatar) || '/default-avatar.svg'}
-            alt={otherUser?.full_name}
+          <UserAvatar
+            user={otherUser}
+            size={40}
             className="chat-header-avatar"
-            onError={(e) => {
-              e.target.src = '/default-avatar.svg';
-            }}
           />
           <div>
             <h3>{otherUser?.full_name}</h3>
@@ -214,13 +216,10 @@ const ChatWindow = ({ conversation, currentUserId }) => {
               className={`message ${isOwn ? 'message-own' : 'message-other'}`}
             >
               {!isOwn && (
-                <img
-                  src={getImageUrl(message.sender.avatar) || '/default-avatar.svg'}
-                  alt={message.sender.full_name}
+                <UserAvatar
+                  user={message.sender}
+                  size={32}
                   className="message-avatar"
-                  onError={(e) => {
-                    e.target.src = '/default-avatar.svg';
-                  }}
                 />
               )}
               <div className="message-content">

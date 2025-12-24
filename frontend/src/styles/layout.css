@@ -176,18 +176,8 @@
   flex-direction: column;
 }
 
-/* Messages page - expand main content without right sidebar */
-.messages-page-layout {
-  justify-content: center;
-}
-
-.messages-page-layout .main-content {
-  width: 1000px;
-  max-width: 90vw;
-  border-right: none;
-  flex-shrink: 1;
-  display: flex;
-}
+/* Messages page - Now follows standard layout with placeholder right sidebar */
+/* Standard layout applies */
 
 .feed-header {
   position: sticky;
@@ -767,24 +757,45 @@
 }
 
 /* 
-   Tablet Mode (851px - 949px)
-   Left sidebar visible (laptop style), Right sidebar also visible.
+   Tablet Mode (851px - 1099px)
+   Left sidebar compact (icons only), Right sidebar hidden, main content takes space.
 */
-@media (max-width: 949px) and (min-width: 851px) {
-  .sidebar { width: 250px; }
-  .sidebar-content { width: 230px; }
-  .main-content { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
-  .right-sidebar { display: flex; width: 260px; } /* Show right sidebar */
-  .container { max-width: 600px; }
+@media (max-width: 1099px) and (min-width: 851px) {
+  .sidebar { 
+    width: 80px; 
+    padding: 0 0.25rem;
+  }
+  .sidebar-content { 
+    width: 72px; 
+    align-items: center;
+  }
+  .nav-label { display: none; }
+  .post-btn-large .nav-label { display: none; }
+  .post-btn-large { 
+    width: 50px; 
+    height: 50px; 
+    padding: 0; 
+    border-radius: 50%; 
+  }
+  .post-btn-icon { display: flex; }
+  .user-info { display: none; }
+  .user-profile-card { justify-content: center; padding: 0.5rem; }
+  
+  .main-content { 
+    flex: 1;
+    width: auto;
+    min-width: 0;
+  }
+  .right-sidebar { display: none; }
 }
 
-/* Mobile: Below 850px */
+/* Mobile: Below 850px - Hide sidebar completely */
 @media (max-width: 850px) {
   .app-layout { flex-direction: column; margin-left: 0; }
   .main-content { width: 100%; border-left: none; border-right: none; }
-  .sidebar {
-      display: none; 
-  }
+  .sidebar { display: none; }
+  .right-sidebar { display: none; }
+  .mobile-only { display: block; }
 }
 
 
@@ -1301,4 +1312,17 @@
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+/* Messages Page Specific Layout Overrides */
+.messages-page-layout .main-content {
+  width: 1000px; /* Match combined width of Feed (680) + Right Sidebar (320) */
+  flex: none; /* Prevent flexing to ensure exact width match */
+  max-width: 100%; /* Responsive safety */
+  margin: 0; /* Keep attached to left sidebar */
+  border-right: 1px solid var(--border); /* Restore border for better aesthetics */
+}
+
+.messages-page-layout .right-sidebar {
+  display: none !important;
 }

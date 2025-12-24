@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, BarChart2, Code, Globe, Users, Lock } from 'lucide-react';
 import PostCard from '../components/PostCard';
@@ -8,6 +8,7 @@ import PollCreator from '../components/PollCreator';
 import { useAuth } from '../context/AuthContext';
 import useFeed from '../hooks/useFeed';
 import { BASE_URL } from '../services/api';
+import { getInitials } from '../utils/avatarUtils';
 import './css/Feed.css';
 
 const Feed = () => {
@@ -35,7 +36,9 @@ const Feed = () => {
     setCodeSnippet,
     pollData,
     setPollData,
-    isUploading
+    isUploading,
+    loadMore,
+    hasMore
   } = useFeed();
 
   const handleEmojiSelect = (emoji) => {
@@ -64,19 +67,19 @@ const Feed = () => {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const MAX_SIZE = 10 * 1024 * 1024; // 10MB
-    
+
     // Validate file sizes
     const invalidFiles = files.filter(file => file.size > MAX_SIZE);
     if (invalidFiles.length > 0) {
       alert(`Fichier(s) trop volumineux! Maximum 10MB par image.\nFichiers rejetés: ${invalidFiles.map(f => f.name).join(', ')}`);
       return;
     }
-    
+
     const newImages = files.map(file => ({
       file,
       preview: URL.createObjectURL(file)
     }));
-    
+
     const updatedImages = [...mediaFiles, ...newImages].slice(0, 4);
     setMediaFiles(updatedImages);
   };
@@ -96,6 +99,29 @@ const Feed = () => {
       setPollData(null);
     }
   };
+
+  const loaderRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [hasMore, loadMore]);
 
   return (
     <div className="feed-container">
@@ -129,7 +155,7 @@ const Feed = () => {
           <div className="avatar-circle">
             {user?.avatar ?
               <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-              : (user?.full_name?.charAt(0) || user?.username?.charAt(0) || 'U')}
+              : (getInitials(user?.full_name || user?.username))}
           </div>
         </div>
         <div className="compose-content">
@@ -150,13 +176,13 @@ const Feed = () => {
 
           {/* Media Previews */}
           <ImageUpload images={mediaFiles} onImagesChange={setMediaFiles} />
-          <CodeEditor 
-            code={codeSnippet?.code} 
+          <CodeEditor
+            code={codeSnippet?.code}
             language={codeSnippet?.language}
             onCodeChange={setCodeSnippet}
             onClose={() => setCodeSnippet(null)}
           />
-          <PollCreator 
+          <PollCreator
             poll={pollData}
             onPollChange={setPollData}
             onClose={() => setPollData(null)}
@@ -210,24 +236,24 @@ const Feed = () => {
                 style={{ display: 'none' }}
                 onChange={handleImageUpload}
               />
-              <button 
-                className="icon-btn" 
+              <button
+                className="icon-btn"
                 type="button"
                 title="Images"
                 onClick={handleImageClick}
               >
                 <Image size={20} />
               </button>
-              <button 
-                className="icon-btn" 
+              <button
+                className="icon-btn"
                 type="button"
                 title="Code"
                 onClick={handleCodeClick}
               >
                 <Code size={20} />
               </button>
-              <button 
-                className="icon-btn" 
+              <button
+                className="icon-btn"
                 type="button"
                 title="Sondage"
                 onClick={handlePollClick}
@@ -235,9 +261,9 @@ const Feed = () => {
                 <BarChart2 size={20} />
               </button>
             </div>
-            <button 
-              className="post-btn-small" 
-              onClick={handlePostSubmit} 
+            <button
+              className="post-btn-small"
+              onClick={handlePostSubmit}
               disabled={(!newPostContent.trim() && !mediaFiles.length && !codeSnippet && !pollData) || isUploading}
             >
               {isUploading ? t('feed.uploading', 'Publication...') : t('sidebar.publish', 'Publier')}
@@ -248,12 +274,37 @@ const Feed = () => {
 
       {/* Posts List */}
       <div className="posts-list">
-        {loading ? (
-          <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>
-        ) : (
-          posts?.map((post, index) => (
-            <PostCard key={`${post.id}-${index}`} post={post} onDelete={handleDeletePost} />
-          ))
+        {posts?.map((post, index) => (
+          <PostCard key={`${post.id}-${index}`} post={post} onDelete={handleDeletePost} />
+        ))}
+
+        {/* Infinite Scroll Loader / Sentinel */}
+        <div
+          ref={loaderRef}
+          style={{
+            height: '20px',
+            margin: '20px 0',
+            textAlign: 'center',
+            display: hasMore ? 'block' : 'none'
+          }}
+        >
+          {loading && (
+            <div style={{ padding: '10px', color: 'var(--text-muted)' }}>
+              Chargement...
+            </div>
+          )}
+        </div>
+
+        {!loading && !hasMore && posts.length > 0 && (
+          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            Vous avez tout vu !
+          </div>
+        )}
+
+        {!loading && posts.length === 0 && (
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            Aucun post pour le moment.
+          </div>
         )}
       </div>
     </div>

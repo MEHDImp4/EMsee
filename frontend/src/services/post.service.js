@@ -11,9 +11,9 @@ const PostService = {
         }
     },
 
-    getClassPosts: async () => {
+    getClassPosts: async (page = 1, limit = 20) => {
         try {
-            const response = await api.get('/posts/class');
+            const response = await api.get(`/posts/class?page=${page}&limit=${limit}`);
             return response;
         } catch (error) {
             console.error('Error fetching class posts:', error);
@@ -71,29 +71,11 @@ const PostService = {
         }
     },
 
-    commentPost: async (postId, content) => {
-        try {
-            const response = await api.post(`/posts/${postId}/comment`, { content });
-            return response;
-        } catch (error) {
-            console.error('Error commenting:', error);
-            throw error;
-        }
-    },
 
-    getComments: async (postId, page = 1, limit = 20) => {
-        try {
-            const response = await api.get(`/posts/${postId}/comments?page=${page}&limit=${limit}`);
-            return response;
-        } catch (error) {
-            console.error('Error fetching comments:', error);
-            throw error;
-        }
-    },
 
-    getUserPosts: async (username) => {
+    getUserPosts: async (username, type = 'posts', page = 1, limit = 20) => {
         try {
-            const response = await api.get(`/posts/user/${username}`);
+            const response = await api.get(`/posts/user/${username}?type=${type}&page=${page}&limit=${limit}`);
             return response;
         } catch (error) {
             console.error('Error fetching user posts:', error);
@@ -127,6 +109,26 @@ const PostService = {
         } catch (error) {
             // Silent fail - views are non-critical
             console.error('Error incrementing views:', error);
+        }
+    },
+
+    toggleBookmark: async (postId) => {
+        try {
+            const response = await api.post(`/posts/${postId}/bookmark`);
+            return response;
+        } catch (error) {
+            console.error('Error toggling bookmark:', error);
+            throw error;
+        }
+    },
+
+    getBookmarks: async (page = 1, limit = 20) => {
+        try {
+            const response = await api.get(`/posts/bookmarks?page=${page}&limit=${limit}`);
+            return response;
+        } catch (error) {
+            console.error('Error fetching bookmarks:', error);
+            throw error;
         }
     }
 };

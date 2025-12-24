@@ -12,61 +12,51 @@ const userSelectFields = {
 
 const postCountFields = {
     likes: true,
-    comments: true,
     reposts: true
 };
 
-const commentCountFields = {
-    likes: true,
-    replies: true,
-    reposts: true,
-    saves: true
+
+
+const buildPostInclude = (currentUserId) => {
+    const include = {
+        user: { select: userSelectFields },
+        _count: { select: postCountFields },
+        media: true,
+        poll: {
+            include: {
+                options: {
+                    include: {
+                        _count: { select: { votes: true } }
+                    }
+                },
+                votes: currentUserId ? { where: { userId: currentUserId } } : false
+            }
+        }
+    };
+
+    if (currentUserId) {
+        include.likes = { where: { userId: currentUserId }, select: { userId: true } };
+        include.reposts = { where: { userId: currentUserId }, select: { userId: true } };
+        include.bookmarks = { where: { userId: currentUserId }, select: { userId: true } };
+    }
+
+    return include;
 };
 
-const buildPostInclude = (currentUserId) => ({
-    user: { select: userSelectFields },
-    _count: { select: postCountFields },
-    likes: { where: { userId: currentUserId }, select: { userId: true } },
-    reposts: { where: { userId: currentUserId }, select: { userId: true } },
-    media: true,
-    poll: {
-        include: {
-            options: {
-                include: {
-                    _count: { select: { votes: true } }
-                }
-            },
-            votes: currentUserId ? { where: { userId: currentUserId } } : false
-        }
-    }
-});
 
-const buildCommentInclude = (currentUserId) => ({
-    user: { select: userSelectFields },
-    _count: { select: commentCountFields },
-    likes: { where: { userId: currentUserId }, select: { userId: true } },
-    reposts: { where: { userId: currentUserId }, select: { userId: true } },
-    saves: { where: { userId: currentUserId }, select: { userId: true } }
-});
 
 // Formatting helpers
 const formatPost = (post) => ({
     ...post,
     isLiked: post.likes?.length > 0,
     isReposted: post.reposts?.length > 0,
-    likes: undefined,
-    reposts: undefined
-});
-
-const formatComment = (comment) => ({
-    ...comment,
-    isLiked: comment.likes?.length > 0,
-    isReposted: comment.reposts?.length > 0,
-    isSaved: comment.saves?.length > 0,
+    isBookmarked: post.bookmarks?.length > 0,
     likes: undefined,
     reposts: undefined,
-    saves: undefined
+    bookmarks: undefined
 });
+
+
 
 // Permission check helper
 const checkReplyPermission = async (postId, userId) => {
@@ -95,30 +85,7 @@ const checkReplyPermission = async (postId, userId) => {
     return { allowed: true };
 };
 
-// Comment path builder
-const buildCommentPath = async (parentCommentId) => {
-    if (!parentCommentId) return [];
 
-    // Fetch all comments in the chain with a single query
-    const allComments = await prisma.comment.findMany({
-        include: { user: { select: userSelectFields } }
-    });
-
-    // Build the path by traversing parent relationships
-    const path = [];
-    let currentId = parentCommentId;
-    const commentMap = new Map(allComments.map(c => [c.id, c]));
-
-    while (currentId) {
-        const parent = commentMap.get(currentId);
-        if (!parent) break;
-
-        path.unshift(parent);
-        currentId = parent.parentCommentId;
-    }
-
-    return path;
-};
 
 const postSelectFields = {
     id: true,
@@ -129,12 +96,9 @@ const postSelectFields = {
 module.exports = {
     userSelectFields,
     postCountFields,
-    commentCountFields,
+    postCountFields,
     buildPostInclude,
-    buildCommentInclude,
     formatPost,
-    formatComment,
     checkReplyPermission,
-    buildCommentPath,
     postSelectFields // Export new helper
 };

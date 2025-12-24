@@ -7,7 +7,7 @@ const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const userRoutes = require('./routes/user.routes');
 const notificationRoutes = require('./routes/notification.routes');
-const commentRoutes = require('./routes/comment.routes');
+
 const hashtagRoutes = require('./routes/hashtag.routes');
 const foryouRoutes = require('./routes/foryou.routes');
 const trendingRoutes = require('./routes/trending.routes');
@@ -55,7 +55,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/notifications', notificationRoutes);
-app.use('/api/comments', commentRoutes);
+
 app.use('/api/hashtags', hashtagRoutes);
 app.use('/api/for-you', foryouRoutes);
 app.use('/api/trending', trendingRoutes);

@@ -68,7 +68,7 @@ describe('Post API Integration Tests', () => {
             expect(mockPrisma.post.findMany).toHaveBeenCalledWith(expect.objectContaining({
                 take: 20
             }));
-            expect(res.body).toHaveLength(1);
+            expect(res.body.data).toHaveLength(1);
         });
 
         it('should respect custom limit', async () => {
@@ -78,17 +78,6 @@ describe('Post API Integration Tests', () => {
 
             expect(mockPrisma.post.findMany).toHaveBeenCalledWith(expect.objectContaining({
                 take: 5
-            }));
-        });
-
-        it('should use cursor when provided', async () => {
-            mockPrisma.post.findMany.mockResolvedValue([]);
-
-            await request(app).get('/api/posts?cursor=100');
-
-            expect(mockPrisma.post.findMany).toHaveBeenCalledWith(expect.objectContaining({
-                cursor: { id: 100 },
-                skip: 1
             }));
         });
     });

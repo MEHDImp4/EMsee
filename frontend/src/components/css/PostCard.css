@@ -34,7 +34,7 @@
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--bg-main) 60%, var(--hover) 40%);
+  background: var(--border); /* Lighter background for better visibility */
   border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
   overflow: hidden;
   display: flex;
@@ -415,7 +415,11 @@
   color: var(--primary);
 }
 
-.poll-info {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+
+.active-bookmark {
+    color: var(--primary);
+}
+
+.active-bookmark svg {
+    filter: drop-shadow(0 0 2px rgba(var(--primary-rgb), 0.5));
 }

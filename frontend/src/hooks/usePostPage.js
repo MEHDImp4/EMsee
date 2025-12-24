@@ -1,43 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import PostService from '../services/post.service';
 
-// Helper to reduce nesting in state updates
-const incrementCommentCount = (prevPost) => {
-    if (!prevPost) return prevPost;
-    return {
-        ...prevPost,
-        _count: {
-            ...prevPost._count,
-            comments: (prevPost._count?.comments || 0) + 1
-        }
-    };
-};
+
 
 const usePostPage = ({ id, socket }) => {
     const [post, setPost] = useState(null);
-    const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [replyText, setReplyText] = useState('');
-    const [submitting, setSubmitting] = useState(false);
-    const replyRef = useRef(null);
-    const commentIdsRef = useRef(new Set());
-
-    const commentExists = (commentId) => commentIdsRef.current.has(commentId);
 
     useEffect(() => {
-        const fetchPostAndComments = async () => {
+        const fetchPost = async () => {
             try {
-                const [postData, commentsData] = await Promise.all([
-                    PostService.getPostById(id),
-                    PostService.getComments(id)
-                ]);
-
+                const postData = await PostService.getPostById(id);
                 setPost(postData);
-                // Handle paginated response ({ data, meta }) or legacy array
-                const commentsList = commentsData.data ? commentsData.data : commentsData;
-                const safeComments = commentsList || [];
-                setComments(safeComments);
-                commentIdsRef.current = new Set(safeComments.map((c) => c.id));
             } catch (error) {
                 console.error('Failed to load post', error);
             } finally {
@@ -45,63 +19,12 @@ const usePostPage = ({ id, socket }) => {
             }
         };
 
-        if (id) fetchPostAndComments();
+        if (id) fetchPost();
     }, [id]);
-
-    useEffect(() => {
-        if (!socket) return;
-
-        const handleNewComment = (newComment) => {
-            if (newComment.postId === parseInt(id, 10) && !commentExists(newComment.id)) {
-                commentIdsRef.current.add(newComment.id);
-                setComments((prev) => [...prev, newComment]);
-                setPost(incrementCommentCount);
-            }
-        };
-
-        socket.on('new_comment', handleNewComment);
-        return () => socket.off('new_comment', handleNewComment);
-    }, [socket, id]);
-
-    const handleCommentAdded = (newComment) => {
-        if (commentExists(newComment.id)) return;
-        commentIdsRef.current.add(newComment.id);
-        setComments((prev) => [...prev, newComment]);
-        setPost(incrementCommentCount);
-    };
-
-    const handleSubmitReply = async () => {
-        if (!replyText.trim() || !post?.id || submitting) return;
-        try {
-            setSubmitting(true);
-            const newComment = await PostService.commentPost(post.id, replyText.trim());
-            setReplyText('');
-            handleCommentAdded(newComment);
-            if (replyRef.current) replyRef.current.focus();
-        } catch (error) {
-            console.error('Failed to add comment', error);
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const focusReplyBox = () => {
-        if (replyRef.current) {
-            replyRef.current.focus();
-            replyRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    };
 
     return {
         post,
-        comments,
-        loading,
-        replyText,
-        setReplyText,
-        submitting,
-        replyRef,
-        handleSubmitReply,
-        focusReplyBox
+        loading
     };
 };
 

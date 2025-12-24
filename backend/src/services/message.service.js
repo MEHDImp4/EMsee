@@ -285,6 +285,19 @@ class MessageService {
       data: { lastReadAt: new Date() }
     });
 
+    // Also mark all unread messages from other users as read
+    await prisma.message.updateMany({
+      where: {
+        conversationId,
+        senderId: { not: userId },
+        read: false
+      },
+      data: {
+        read: true,
+        readAt: new Date()
+      }
+    });
+
     return { success: true };
   }
 

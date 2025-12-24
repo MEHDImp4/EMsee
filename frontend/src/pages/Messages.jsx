@@ -1,129 +1,98 @@
-import React, { useState } from 'react';
-import { MessageSquare, Loader, Search, MoreHorizontal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Plus, MessageSquare } from 'lucide-react';
 import { useConversations } from '../hooks/useMessages';
+import { useAuth } from '../context/AuthContext';
 import ConversationList from '../components/ConversationList';
 import ChatWindow from '../components/ChatWindow';
 import NewConversationModal from '../components/NewConversationModal';
-import '../pages/css/Messages.css';
+import PageLoader from '../components/loaders/PageLoader';
+import './css/Messages.css';
 
 const Messages = () => {
     const { t } = useTranslation();
-    const { conversations, loading, refetch } = useConversations();
-    const [selectedConversation, setSelectedConversation] = useState(null);
-    const [showNewConversationModal, setShowNewConversationModal] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const userData = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
-    const currentUserId = userData ? JSON.parse(userData)?.id : null;
+    const {
+        conversations,
+        loading,
+        error,
+        refetch
+    } = useConversations();
+    const { user: currentUser } = useAuth();
 
-    const handleConversationCreated = (conversation) => {
-        refetch();
+    // State
+    const [selectedConversation, setSelectedConversation] = useState(null);
+    const [showNewMessageModal, setShowNewMessageModal] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    // Handle resize
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const handleSelectConversation = (conversation) => {
         setSelectedConversation(conversation);
     };
 
-    const filteredConversations = conversations.filter(conv => {
-        if (!searchQuery.trim()) return true;
-        const otherUser = conv.participants.find(p => p.userId !== currentUserId)?.user;
-        return otherUser?.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               otherUser?.username.toLowerCase().includes(searchQuery.toLowerCase());
-    });
+    const handleBackToList = () => {
+        setSelectedConversation(null);
+    };
 
-    if (loading) {
-        return (
-            <div className="messages-container">
-                <div className="messages-inbox-section">
-                    <div className="messages-loading">
-                        <Loader className="spinner" size={32} />
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    const handleConversationCreated = (conversation) => {
+        refetch(); // Reload list
+        setSelectedConversation(conversation);
+    };
+
+    if (loading) return <PageLoader />;
 
     return (
-        <>
-            <div className="messages-container">
-                {/* Inbox Column */}
-                <div className="messages-inbox-section">
-                    <div className="inbox-header">
-                        <h2>{t('messages.title', 'Messages')}</h2>
-                        <button 
-                            className="icon-button"
-                            onClick={() => setShowNewConversationModal(true)}
-                            title="New message"
-                        >
-                            <MoreHorizontal size={20} />
-                        </button>
-                    </div>
-
-                    <div className="inbox-search">
-                        <Search size={18} />
-                        <input
-                            type="text"
-                            placeholder={t('messages.search_users', 'Search conversations...')}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="search-input"
-                        />
-                    </div>
-
-                    <div className="conversations-list-wrapper">
-                        {filteredConversations.length === 0 ? (
-                            <div className="empty-inbox">
-                                <MessageSquare size={48} />
-                                <p>{t('messages.no_conversations', 'No conversations yet')}</p>
-                                <button 
-                                    className="btn btn-primary"
-                                    onClick={() => setShowNewConversationModal(true)}
-                                >
-                                    {t('messages.start_conv', 'Start a conversation')}
-                                </button>
-                            </div>
-                        ) : (
-                            <ConversationList
-                                conversations={filteredConversations}
-                                selectedConversation={selectedConversation}
-                                onSelectConversation={setSelectedConversation}
-                                currentUserId={currentUserId}
-                            />
-                        )}
-                    </div>
-                </div>
-
-                {/* Chat Column */}
-                <div className="messages-chat-section">
-                    {selectedConversation && currentUserId ? (
-                        <ChatWindow
-                            conversation={selectedConversation}
-                            currentUserId={currentUserId}
-                        />
-                    ) : (
-                        <div className="empty-chat">
-                            <div className="empty-chat-icon">
-                                <MessageSquare size={64} />
-                            </div>
-                            <h3>{t('messages.welcome_title', 'Welcome to your messages')}</h3>
-                            <p>
-                                {t('messages.welcome_desc', 'Select a conversation to start messaging')}
-                            </p>
-                            <button 
-                                className="btn btn-primary" 
-                                onClick={() => setShowNewConversationModal(true)}
+        <div className="feed-container">
+            {!selectedConversation ? (
+                /* View 1: Conversation List */
+                <div className="messages-view-list">
+                    <div className="feed-header sticky-header">
+                        <div className="messages-header-content">
+                            <h2 className="messages-header-title">{t('messages.title', 'Messages')}</h2>
+                            <button
+                                className="new-message-btn"
+                                onClick={() => setShowNewMessageModal(true)}
+                                aria-label={t('messages.new_conversation', 'New Conversation')}
                             >
-                                {t('messages.start_conv', 'Start conversation')}
+                                <Plus size={20} />
                             </button>
                         </div>
-                    )}
-                </div>
-            </div>
+                    </div>
 
-            {showNewConversationModal && (
+                    <div className="messages-list-wrapper">
+                        <ConversationList
+                            conversations={conversations}
+                            selectedConversation={selectedConversation}
+                            onSelectConversation={handleSelectConversation}
+                            currentUserId={currentUser?.id}
+                        />
+                    </div>
+                </div>
+            ) : (
+                /* View 2: Active Chat */
+                <div className="messages-view-chat">
+                    {/* ChatWindow has its own header, we just place it here */}
+                    <ChatWindow
+                        conversation={selectedConversation}
+                        currentUserId={currentUser?.id}
+                        onBack={handleBackToList}
+                    />
+                </div>
+            )}
+
+            {/* Modals */}
+            {showNewMessageModal && (
                 <NewConversationModal
-                    onClose={() => setShowNewConversationModal(false)}
+                    onClose={() => setShowNewMessageModal(false)}
                     onConversationCreated={handleConversationCreated}
                 />
             )}
-        </>
+        </div>
     );
 };
 

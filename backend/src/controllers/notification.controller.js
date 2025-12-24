@@ -1,7 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const notificationService = require('../services/notification.service');
 const asyncHandler = require('../middlewares/asyncHandler');
-const { userSelectFields } = require('./helpers/post.helpers');
 
 /**
  * Get current user's notifications
@@ -10,49 +8,12 @@ const getUserNotifications = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
 
-    const [notifications, total] = await Promise.all([
-        prisma.notification.findMany({
-            where: { recipientId: userId },
-            take: limit,
-            skip,
-            orderBy: { createdAt: 'desc' },
-            include: {
-                actor: { select: userSelectFields },
-                post: {
-                    select: {
-                        id: true,
-                        content: true,
-                        media: true
-                    }
-                },
-                comment: {
-                    select: {
-                        id: true,
-                        content: true
-                    }
-                }
-            }
-        }),
-        prisma.notification.count({ where: { recipientId: userId } })
-    ]);
-
-    // Format notifications if needed
-    const formattedNotifications = notifications.map(n => ({
-        ...n,
-        // Add a preview text based on type
-        preview: n.post ? n.post.content?.substring(0, 50) : (n.comment ? n.comment.content?.substring(0, 50) : '')
-    }));
+    const result = await notificationService.getUserNotifications(userId, page, limit);
 
     res.json({
-        data: formattedNotifications,
-        meta: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit)
-        }
+        data: result.notifications,
+        meta: result.pagination
     });
 });
 
@@ -63,23 +24,7 @@ const markAsRead = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
 
-    // Verify ownership
-    const notification = await prisma.notification.findUnique({
-        where: { id: parseInt(id) }
-    });
-
-    if (!notification) {
-        return res.status(404).json({ error: 'Notification not found' });
-    }
-
-    if (notification.recipientId !== userId) {
-        return res.status(403).json({ error: 'Unauthorized' });
-    }
-
-    const updated = await prisma.notification.update({
-        where: { id: parseInt(id) },
-        data: { read: true }
-    });
+    const updated = await notificationService.markAsRead(parseInt(id), userId);
 
     res.json(updated);
 });
@@ -90,16 +35,60 @@ const markAsRead = asyncHandler(async (req, res) => {
 const markAllAsRead = asyncHandler(async (req, res) => {
     const userId = req.user.id;
 
-    await prisma.notification.updateMany({
-        where: { recipientId: userId, read: false },
-        data: { read: true }
-    });
+    await notificationService.markAllAsRead(userId);
 
     res.json({ message: 'All notifications marked as read' });
+});
+
+const createTestNotification = asyncHandler(async (req, res) => {
+    try {
+        const { recipientId, type } = req.body;
+        const result = await notificationService.createNotification({
+            recipientId,
+            actorId: req.user.id,
+            type: type || 'SYSTEM'
+        });
+        res.json(result);
+    } catch (error) {
+        console.error('Test notification failed:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+const checkSocketStatus = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const io = require('../services/socketService').getIo();
+
+    // Find socket for user
+    const rooms = io.sockets.adapter.rooms;
+    const userRoom = rooms.get(`user_${userId}`);
+    const isConnected = !!userRoom;
+
+    res.json({
+        userId,
+        isConnected,
+        roomSize: userRoom ? userRoom.size : 0,
+        allRooms: [...rooms.keys()].filter(r => r.startsWith('user_'))
+    });
+});
+
+/**
+ * Delete a notification
+ */
+const deleteNotification = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const result = await notificationService.deleteNotification(parseInt(id), userId);
+
+    res.json(result);
 });
 
 module.exports = {
     getUserNotifications,
     markAsRead,
-    markAllAsRead
+    markAllAsRead,
+    createTestNotification,
+    checkSocketStatus,
+    deleteNotification
 };

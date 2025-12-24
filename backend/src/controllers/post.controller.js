@@ -42,8 +42,11 @@ const getAllPosts = async (req, res) => {
 const getClassPosts = async (req, res) => {
     try {
         const currentUserId = req.user.id;
-        const posts = await postService.getClassPosts(currentUserId);
-        res.json(posts);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+
+        const result = await postService.getClassPosts(currentUserId, page, limit);
+        res.json(result);
     } catch (error) {
         console.error('Error fetching class posts:', error);
         res.status(500).json({ error: 'Server error' });
@@ -82,52 +85,9 @@ const repostPost = async (req, res) => {
     }
 };
 
-const commentPost = async (req, res) => {
-    try {
-        const postId = parseInt(req.params.id);
-        const userId = req.user.id;
-        const { content } = req.body;
 
-        if (!content) return res.status(400).json({ error: 'Content required' });
 
-        const comment = await postService.createComment(postId, userId, content);
 
-        // Increment view count (async, don't wait)
-        postService.incrementPostViews(postId, userId).catch(err =>
-            console.error('Error incrementing views:', err)
-        );
-
-        try {
-            getIo().emit('new_comment', comment);
-        } catch (socketError) {
-            console.error('Socket emission failed:', socketError);
-        }
-
-        res.status(201).json(comment);
-    } catch (error) {
-        if (error.status) {
-            return res.status(error.status).json({ error: error.message });
-        }
-        console.error('Error commenting:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-};
-
-const getPostComments = async (req, res) => {
-    try {
-        const postId = parseInt(req.params.id);
-        const currentUserId = req.user?.id;
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 20;
-
-        const result = await postService.getPostComments(postId, currentUserId, page, limit);
-
-        res.json(result);
-    } catch (error) {
-        console.error('Error fetching comments:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-};
 
 const getPostById = async (req, res) => {
     try {
@@ -160,8 +120,9 @@ const getUserPosts = async (req, res) => {
         const currentUserId = req.user?.id;
         const limit = parseInt(req.query.limit) || 20;
         const offset = parseInt(req.query.offset) || 0;
+        const type = req.query.type || 'all';
 
-        const posts = await postService.getUserTimeline(username, currentUserId, limit, offset);
+        const posts = await postService.getUserTimeline(username, currentUserId, limit, offset, type);
 
         res.json(posts);
     } catch (error) {
@@ -231,18 +192,45 @@ const votePoll = async (req, res) => {
     }
 };
 
+const toggleBookmark = async (req, res) => {
+    try {
+        const postId = parseInt(req.params.id);
+        const userId = req.user.id;
+
+        const result = await postService.toggleBookmark(postId, userId);
+        return res.json(result);
+    } catch (error) {
+        console.error('Error toggling bookmark:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const getBookmarkedPosts = async (req, res) => {
+    try {
+        const currentUserId = req.user.id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+
+        const result = await postService.getBookmarkedPosts(currentUserId, page, limit);
+        res.json(result);
+    } catch (error) {
+        console.error('Error fetching bookmarks:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
     likePost,
     repostPost,
-    commentPost,
-    getPostComments,
+
     getUserPosts,
     deletePost,
     getPostById,
-    getPostById,
     getClassPosts,
     incrementViews,
-    votePoll
+    votePoll,
+    toggleBookmark,
+    getBookmarkedPosts
 };

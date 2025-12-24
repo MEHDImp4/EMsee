@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import UserService from '../services/user.service';
 import { createConversation } from '../services/message.service';
 import { getImageUrl } from '../utils/imageUtils';
+import UserAvatar from './UserAvatar';
 import '../components/css/NewConversationModal.css';
 
 const NewConversationModal = ({ onClose, onConversationCreated }) => {
@@ -81,13 +82,10 @@ const NewConversationModal = ({ onClose, onConversationCreated }) => {
                 className="user-result-item"
                 onClick={() => !creating && handleSelectUser(user)}
               >
-                <img
-                  src={getImageUrl(user.avatar) || '/default-avatar.svg'}
-                  alt={user.full_name}
+                <UserAvatar
+                  user={user}
+                  size={40}
                   className="user-avatar"
-                  onError={(e) => {
-                    e.target.src = '/default-avatar.svg';
-                  }}
                 />
                 <div className="user-info">
                   <h4>{user.full_name}</h4>

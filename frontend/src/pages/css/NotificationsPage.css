@@ -1,13 +1,19 @@
+/* NotificationsPage.css - Clean and modern notifications page */
 
+.notifications-page {
+    max-width: 100%;
+    min-height: 100vh;
+}
 
+/* Sticky Header */
 .page-header.sticky {
     position: sticky;
     top: 0;
-    background: rgba(0, 0, 0, 0.85); /* Semi-transparent dark background */
+    background: var(--bg-main);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 100;
     border-bottom: 1px solid var(--border-color);
-    padding: 0;
 }
 
 .page-header h2 {
@@ -15,8 +21,10 @@
     font-weight: 700;
     padding: 16px;
     margin: 0;
+    color: var(--text-primary);
 }
 
+/* Tab Navigation */
 .tabs {
     display: flex;
     border-bottom: 1px solid var(--border-color);
@@ -28,15 +36,17 @@
     border: none;
     color: var(--text-secondary);
     font-weight: 500;
-    padding: 16px;
+    padding: 16px 12px;
     cursor: pointer;
     position: relative;
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.2s ease;
     font-size: 15px;
+    text-align: center;
 }
 
 .tab:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
 }
 
 .tab.active {
@@ -52,111 +62,60 @@
     transform: translateX(-50%);
     width: 56px;
     height: 4px;
-    background-color: var(--primary);
-    border-radius: 2px;
+    background: var(--primary);
+    border-radius: 9999px;
 }
 
+/* Notifications List */
 .notifications-list {
-    padding-bottom: 60px;
+    padding-bottom: 80px;
 }
 
-.notification-item {
-    display: flex;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-color);
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.notification-item:hover {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.notification-item.unread {
-    background: rgba(29, 155, 240, 0.05); /* Very subtle blue tint */
-}
-
-.notification-icon-col {
-    width: 48px;
-    display: flex;
-    justify-content: flex-end; /* Align icon right towards the content */
-    padding-right: 12px;
-}
-
-.notification-icon.like { color: #f91880; }
-.notification-icon.repost { color: #00ba7c; }
-.notification-icon.comment { color: #1d9bf0; }
-.notification-icon.mention { color: #1d9bf0; }
-.notification-icon.system { color: #7856ff; }
-
-.notification-content-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.notification-user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: 4px;
-}
-
-.notification-user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    background: var(--bg-card);
+/* Loading State */
+.loading-spinner {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    color: var(--text-primary);
-}
-
-.notification-text {
-    font-size: 15px;
-    line-height: 1.4;
-    color: var(--text-primary);
-}
-
-.user-name {
-    font-weight: 700;
-}
-
-.action-text {
-    color: var(--text-secondary);
-}
-
-.notification-preview {
-    margin-top: 4px;
-    font-size: 15px;
-    color: var(--text-secondary);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.notification-time {
-    font-size: 13px;
-    color: var(--text-secondary);
-}
-
-.empty-state {
     padding: 40px;
+    color: var(--text-muted);
+    font-size: 15px;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 60px 20px;
     text-align: center;
     color: var(--text-secondary);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
+}
+
+.empty-state svg {
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 15px;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .page-header h2 {
+        font-size: 18px;
+        padding: 12px 16px;
+    }
+
+    .tab {
+        padding: 14px 8px;
+        font-size: 14px;
+    }
+
+    .tab.active::after {
+        width: 48px;
+        height: 3px;
+    }
 }

@@ -8,15 +8,21 @@ const useProfilePage = ({ targetUsername, authUser }) => {
     const [userPosts, setUserPosts] = useState([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
     const [loadingProfile, setLoadingProfile] = useState(true);
+    const [activeTab, setActiveTab] = useState('posts'); // 'posts', 'reposts', 'likes'
 
     const isOwner = authUser?.username === targetUsername;
 
     useEffect(() => {
         if (!targetUsername) return;
         fetchProfileData();
-        fetchUserPosts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [targetUsername]);
+
+    useEffect(() => {
+        if (!targetUsername) return;
+        fetchUserPosts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [targetUsername, activeTab]);
 
     const fetchProfileData = async () => {
         setLoadingProfile(true);
@@ -33,10 +39,13 @@ const useProfilePage = ({ targetUsername, authUser }) => {
     const fetchUserPosts = async () => {
         setLoadingPosts(true);
         try {
-            const posts = await PostService.getUserPosts(targetUsername);
+            // Fetch posts based on activeTab
+            // Note: API returns just the array of posts for this endpoint currently
+            const posts = await PostService.getUserPosts(targetUsername, activeTab);
             setUserPosts(posts || []);
         } catch (error) {
             console.error('Failed to fetch user posts', error);
+            setUserPosts([]);
         } finally {
             setLoadingPosts(false);
         }
@@ -76,12 +85,12 @@ const useProfilePage = ({ targetUsername, authUser }) => {
             avatar: profileData.avatar ? `${BASE_URL}${profileData.avatar}` : null,
             banner: profileData.banner ? `${BASE_URL}${profileData.banner}` : null,
             stats: {
-                posts: userPosts?.length || 0,
+                posts: userPosts?.length || 0, // This might need adjustment if we want total count vs fetch count
                 followers: profileData.followersCount || 0,
                 following: profileData.followingCount || 0
             }
         };
-    }, [profileData, userPosts?.length]);
+    }, [profileData, userPosts]);
 
     return {
         profileData,
@@ -91,7 +100,9 @@ const useProfilePage = ({ targetUsername, authUser }) => {
         isOwner,
         userView,
         handleDeletePost,
-        toggleFollow
+        toggleFollow,
+        activeTab,
+        setActiveTab
     };
 };
 

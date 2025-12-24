@@ -110,34 +110,6 @@ router.get('/search', hashtagController.searchHashtags);
  */
 router.get('/:name/posts', hashtagController.getPostsByHashtag);
 
-/**
- * @swagger
- * /api/hashtags/{name}/comments:
- *   get:
- *     summary: Get comments by hashtag
- *     tags: [Hashtags]
- *     parameters:
- *       - in: path
- *         name: name
- *         required: true
- *         schema:
- *           type: string
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 20
- *     responses:
- *       200:
- *         description: Paginated list of comments
- *       404:
- *         description: Hashtag not found
- */
-router.get('/:name/comments', hashtagController.getCommentsByHashtag);
+
 
 module.exports = router;

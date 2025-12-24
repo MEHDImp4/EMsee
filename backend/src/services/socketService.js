@@ -6,56 +6,45 @@ let io;
 const initializeSocket = (server) => {
     io = socketIo(server, {
         cors: {
-            origin: "http://localhost:5173", // Allow frontend origin
-            methods: ["GET", "POST"]
-        }
+            origin: "*", // Allow ALL origins for dev stability
+            methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+            credentials: true
+        },
+        transports: ['websocket', 'polling'] // Allow both, prefer websocket
     });
 
     // Authentication Middleware
     io.use((socket, next) => {
         if (socket.handshake.auth && socket.handshake.auth.token) {
             jwt.verify(socket.handshake.auth.token, process.env.JWT_SECRET, (err, decoded) => {
-                if (err) return next(new Error('Authentication error'));
+                if (err) {
+                    console.error('[SOCKET] Auth Error:', err.message);
+                    return next(new Error('Authentication error'));
+                }
                 socket.user = decoded;
                 next();
             });
         } else {
+            console.error('[SOCKET] No token provided');
             next(new Error('Authentication error'));
         }
     });
 
     io.on('connection', (socket) => {
-        console.log(`User connected: ${socket.user?.id}`);
+        console.log(`[SOCKET] User Connected: ${socket.user?.id} (${socket.id})`);
 
-        // Join user to their personal room for direct messages
+        // Force join user room
         if (socket.user?.id) {
-            socket.join(`user_${socket.user.id}`);
-            console.log(`User ${socket.user.id} joined room: user_${socket.user.id}`);
+            const roomName = `user_${socket.user.id}`;
+            socket.join(roomName);
+            console.log(`[SOCKET] Joined Room: ${roomName}`);
         }
 
-        // Join conversation room
-        socket.on('joinConversation', (conversationId) => {
-            socket.join(`conversation_${conversationId}`);
-            console.log(`User ${socket.user.id} joined conversation: ${conversationId}`);
-        });
+        // Simple debug ping/pong
+        socket.on('ping', () => socket.emit('pong'));
 
-        // Leave conversation room
-        socket.on('leaveConversation', (conversationId) => {
-            socket.leave(`conversation_${conversationId}`);
-            console.log(`User ${socket.user.id} left conversation: ${conversationId}`);
-        });
-
-        // User is typing indicator
-        socket.on('typing', ({ conversationId, isTyping }) => {
-            socket.to(`conversation_${conversationId}`).emit('userTyping', {
-                userId: socket.user.id,
-                conversationId,
-                isTyping
-            });
-        });
-
-        socket.on('disconnect', () => {
-            console.log('User disconnected');
+        socket.on('disconnect', (reason) => {
+            console.log(`[SOCKET] User Disconnected: ${socket.user?.id} Reason: ${reason}`);
         });
     });
 

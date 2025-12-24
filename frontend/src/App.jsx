@@ -19,6 +19,7 @@ const Terms = lazy(() => import('./pages/Terms'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const About = lazy(() => import('./pages/About'));
 const Feed = lazy(() => import('./pages/Feed'));
+const Bookmarks = lazy(() => import('./pages/Bookmarks'));
 const Messages = lazy(() => import('./pages/Messages'));
 const Explore = lazy(() => import('./pages/Explore'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -27,7 +28,7 @@ const PasswordSettings = lazy(() => import('./pages/PasswordSettings'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Notifications = lazy(() => import('./pages/NotificationsPage'));
 const PostPage = lazy(() => import('./pages/PostPage'));
-const CommentPage = lazy(() => import('./pages/CommentPage'));
+
 const HashtagPage = lazy(() => import('./pages/HashtagPage'));
 
 function App() {
@@ -57,7 +58,7 @@ function App() {
                   }>
                     <Route path="/feed" element={<Feed />} />
                     <Route path="/posts/:id" element={<PostPage />} /> {/* Post detail */}
-                    <Route path="/comments/:id" element={<CommentPage />} /> {/* Comment detail */}
+
                     <Route path="/hashtags/:name" element={<HashtagPage />} /> {/* Hashtag explore */}
                     <Route path="/messages" element={<Messages />} />
                     <Route path="/profile" element={<Profile />} />
@@ -68,7 +69,7 @@ function App() {
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/hashtags/:name" element={<HashtagPage />} />
-                    <Route path="/bookmarks" element={<div className="container" style={{ padding: '2rem' }}><h2>Signets</h2><p>Coming Soon</p></div>} />
+                    <Route path="/bookmarks" element={<Bookmarks />} />
                     <Route path="/community" element={<div className="container" style={{ padding: '2rem' }}><h2>Communauté</h2><p>Coming Soon</p></div>} />
                   </Route>
 

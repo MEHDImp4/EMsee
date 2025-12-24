@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import './css/Profile.css';
 import EditProfileModal from '../components/profile/EditProfileModal';
 import PostCard from '../components/PostCard';
+import UserAvatar from '../components/UserAvatar';
 import useProfilePage from '../hooks/useProfilePage';
 
 const Profile = () => {
@@ -24,6 +25,8 @@ const Profile = () => {
     loadingProfile,
     isOwner,
     userView,
+    activeTab,
+    setActiveTab,
     handleDeletePost,
     toggleFollow
   } = useProfilePage({ targetUsername, authUser });
@@ -54,13 +57,11 @@ const Profile = () => {
       {/* Header Section with Avatar */}
       <div className="profile-header-content">
         <div className="profile-avatar-wrapper">
-          <div className="profile-avatar" style={user.avatar ? { padding: 0, overflow: 'hidden' } : {}}>
-            {user.avatar ? (
-              <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              (user.name || 'U').charAt(0)
-            )}
-          </div>
+          <UserAvatar
+            user={user}
+            size={140}
+            className="profile-avatar-component"
+          />
         </div>
 
         <div className="profile-actions">
@@ -184,11 +185,31 @@ const Profile = () => {
         )}
       </div>
 
-      {/* User Posts Section */}
+      {/* User Posts Section with Tabs */}
       <div className="profile-posts-section">
-        <div className="section-title" style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', fontWeight: 'bold' }}>
-          {t('profile.posts', 'Posts')}
+        <div className="profile-tabs">
+          <button
+            className={`tab-item ${activeTab === 'posts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('posts')}
+          >
+            {t('profile.tabs.posts', 'Posts')}
+          </button>
+          <button
+            className={`tab-item ${activeTab === 'reposts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('reposts')}
+          >
+            {t('profile.tabs.reposts', 'Reposts')}
+          </button>
+          {isOwner && (
+            <button
+              className={`tab-item ${activeTab === 'likes' ? 'active' : ''}`}
+              onClick={() => setActiveTab('likes')}
+            >
+              {t('profile.tabs.likes', 'J\'aime')}
+            </button>
+          )}
         </div>
+
         <div className="posts-list">
           {loadingPosts ? (
             <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>
@@ -198,7 +219,9 @@ const Profile = () => {
             ))
           ) : (
             <div style={{ padding: '20px', textAlign: 'center', color: '#8899a6' }}>
-              No posts yet.
+              {activeTab === 'posts' && t('profile.empty_posts', 'No posts yet.')}
+              {activeTab === 'reposts' && t('profile.empty_reposts', 'No reposts yet.')}
+              {activeTab === 'likes' && t('profile.empty_likes', 'No liked posts yet.')}
             </div>
           )}
         </div>
