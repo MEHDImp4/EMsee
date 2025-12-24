@@ -44,7 +44,7 @@ export const SocketProvider = ({ children }) => {
         // Connect
         const newSocket = io(socketUrl, {
             auth: { token },
-            transports: ['websocket', 'polling'], // Allow polling fallbacks
+            transports: ['polling', 'websocket'], // Try polling first for stability
             reconnection: true,
             reconnectionAttempts: 10,
             reconnectionDelay: 1000,
