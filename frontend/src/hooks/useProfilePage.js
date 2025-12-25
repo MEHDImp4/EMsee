@@ -64,6 +64,14 @@ const useProfilePage = ({ targetUsername, authUser }) => {
                 isFollowing: res.following,
                 followersCount: res.following ? prev.followersCount + 1 : prev.followersCount - 1
             }));
+
+            // Dispatch global event for other components (like RightSidebar)
+            window.dispatchEvent(new CustomEvent('user-follow-state-change', {
+                detail: {
+                    userId: profileData.id,
+                    isFollowing: res.following
+                }
+            }));
         } catch (error) {
             console.error('Failed to toggle follow', error);
         }

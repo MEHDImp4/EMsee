@@ -180,6 +180,19 @@ const RightSidebar = () => {
             }
         };
         fetchSuggestions();
+
+        // Listen for follow changes from other components (Profile page)
+        const handleFollowChange = (e) => {
+            const { userId, isFollowing } = e.detail;
+            setSuggestions((prev) => prev.map((user) => (
+                user.id === userId
+                    ? { ...user, isFollowing }
+                    : user
+            )));
+        };
+
+        window.addEventListener('user-follow-state-change', handleFollowChange);
+        return () => window.removeEventListener('user-follow-state-change', handleFollowChange);
     }, []);
 
     useEffect(() => {
@@ -199,12 +212,18 @@ const RightSidebar = () => {
 
     const handleFollow = async (userId) => {
         try {
-            await UserService.followUser(userId);
+            const res = await UserService.followUser(userId);
+            const isFollowing = res.following;
+
             setSuggestions((prev) => prev.map((user) => (
                 user.id === userId
-                    ? { ...user, isFollowing: !user.isFollowing }
+                    ? { ...user, isFollowing }
                     : user
             )));
+
+            window.dispatchEvent(new CustomEvent('user-follow-state-change', {
+                detail: { userId, isFollowing }
+            }));
         } catch (error) {
             console.error('Failed to follow user', error);
         }

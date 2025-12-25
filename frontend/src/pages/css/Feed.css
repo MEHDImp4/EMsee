@@ -375,3 +375,11 @@
 .posts-list {
     padding: 0;
 }
+
+.no-replies {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1rem;
+    border-bottom: 1px solid var(--border);
+}
