@@ -31,9 +31,13 @@ const PostService = {
         }
     },
 
-    createPost: async (content, replyPermission = 'EVERYONE', media = null, poll = null) => {
+    createPost: async (content, replyPermission = 'EVERYONE', media = null, poll = null, parentId = null) => {
         try {
             const payload = { content, replyPermission };
+
+            if (parentId) {
+                payload.parentId = parentId;
+            }
 
             if (media && media.length > 0) {
                 payload.media = media;

@@ -334,10 +334,12 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
 
         <div className="post-actions-bar">
           <button
-            className={`action-btn comment ${isOwner ? 'disabled' : ''}`}
-            onClick={(e) => e.stopPropagation()}
-            disabled={isOwner}
-            title={isOwner ? t('post.cannot_comment_own', "You cannot comment on your own post") : ''}
+            className="action-btn comment"
+            onClick={(e) => {
+              e.stopPropagation();
+              openCompose(post);
+            }}
+            aria-label={t('post.comment', 'Comment')}
           >
             <div className="icon-wrapper">
               <MessageCircle size={18} />

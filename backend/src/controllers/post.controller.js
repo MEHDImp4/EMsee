@@ -6,10 +6,10 @@ const { getIo } = require('../services/socketService');
  * Creates a new post.
  */
 const createPost = asyncHandler(async (req, res) => {
-    const { content, replyPermission, media, poll } = req.body;
+    const { content, replyPermission, media, poll, parentId } = req.body;
     const userId = req.user.id;
 
-    const post = await postService.createPost(userId, content, replyPermission, media, poll);
+    const post = await postService.createPost(userId, content, replyPermission, media, poll, parentId);
 
     // Emit real-time event
     try {

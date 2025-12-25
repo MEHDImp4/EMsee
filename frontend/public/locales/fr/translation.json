@@ -323,7 +323,15 @@
         "no_bio": "Pas encore de biographie.",
         "posts": "Posts",
         "followers": "Abonnés",
-        "following": "Abonnements"
+        "following": "Abonnements",
+        "loading_profile": "Chargement du profil...",
+        "empty_posts": "Aucun post pour le moment.",
+        "empty_reposts": "Aucun repost pour le moment.",
+        "tabs": {
+            "posts": "Posts",
+            "reposts": "Reposts",
+            "likes": "J'aime"
+        }
     },
     "settings": {
         "appearance": "Apparence",

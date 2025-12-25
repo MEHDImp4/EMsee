@@ -10,7 +10,7 @@ const { extractHashtags } = require('../utils/hashtagExtractor');
 
 const prisma = new PrismaClient();
 
-const createPost = async (userId, content = '', replyPermission = 'EVERYONE', mediaData = null, pollData = null) => {
+const createPost = async (userId, content = '', replyPermission = 'EVERYONE', mediaData = null, pollData = null, parentId = null) => {
     // Extract hashtags from content
     const hashtagNames = extractHashtags(content || '');
 
@@ -18,7 +18,8 @@ const createPost = async (userId, content = '', replyPermission = 'EVERYONE', me
         data: {
             content: content || '',
             userId,
-            replyPermission: replyPermission || 'EVERYONE'
+            replyPermission: replyPermission || 'EVERYONE',
+            parentId: parentId ? parseInt(parentId) : undefined
         },
         include: { user: { select: userSelectFields } }
     });
@@ -142,9 +143,16 @@ const getClassPosts = async (currentUserId, page = 1, limit = 20) => {
 };
 
 const getPostById = async (postId, currentUserId) => {
+    const include = buildPostInclude(currentUserId);
+    // Include direct replies
+    include.replies = {
+        include: buildPostInclude(currentUserId),
+        orderBy: { createdAt: 'desc' }
+    };
+
     const post = await prisma.post.findUnique({
         where: { id: postId },
-        include: buildPostInclude(currentUserId)
+        include
     });
 
     if (!post) return null;

@@ -94,6 +94,10 @@ model Post {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   replyPermission ReplyPermission @default(EVERYONE)
+  
+  parentId        Int?
+  parent          Post?           @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
+  replies         Post[]          @relation("PostToPost")
 
   @@map("posts")
 }

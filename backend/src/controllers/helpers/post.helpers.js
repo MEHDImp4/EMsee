@@ -55,7 +55,8 @@ const formatPost = (post) => ({
     isBookmarked: post.bookmarks?.length > 0,
     likes: undefined,
     reposts: undefined,
-    bookmarks: undefined
+    bookmarks: undefined,
+    replies: post.replies?.map(formatPost)
 });
 
 

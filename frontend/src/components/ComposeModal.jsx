@@ -106,29 +106,31 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
 
         setIsSubmitting(true);
         try {
-            if (replyTo) {
-                // await PostService.commentPost(replyTo.id, text);
-                console.log("Reply functionality is disabled.");
-            } else {
-                // Prepare media data
-                let mediaData = images;
-                if (showCodeEditor && codeData.code.trim()) {
-                    mediaData = [...mediaData, {
-                        type: 'CODE',
-                        code: codeData.code,
-                        language: codeData.language
-                    }];
-                }
-
-                // Prepare poll data
-                const poll = showPollCreator && pollData.question.trim() ? {
-                    question: pollData.question,
-                    options: pollData.options.filter(o => o.trim()),
-                    endsAt: pollData.endsAt || null
-                } : null;
-
-                await PostService.createPost(text, replyPermission, mediaData.length > 0 ? mediaData : null, poll);
+            // Prepare media data
+            let mediaData = images;
+            if (showCodeEditor && codeData.code.trim()) {
+                mediaData = [...mediaData, {
+                    type: 'CODE',
+                    code: codeData.code,
+                    language: codeData.language
+                }];
             }
+
+            // Prepare poll data
+            const poll = showPollCreator && pollData.question.trim() ? {
+                question: pollData.question,
+                options: pollData.options.filter(o => o.trim()),
+                endsAt: pollData.endsAt || null
+            } : null;
+
+            // Create post or reply
+            await PostService.createPost(
+                text,
+                replyPermission,
+                mediaData.length > 0 ? mediaData : null,
+                poll,
+                replyTo ? replyTo.id : null // Pass parentId if replying
+            );
             setText('');
             setImages([]);
             setPollData({ question: '', options: ['', ''], endsAt: '' });

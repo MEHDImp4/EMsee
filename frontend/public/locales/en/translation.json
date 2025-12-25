@@ -338,7 +338,15 @@
         "posts": "Posts",
         "followers": "Followers",
         "following": "Following",
-        "default_location": "Rabat, Morocco"
+        "default_location": "Rabat, Morocco",
+        "loading_profile": "Loading Profile...",
+        "empty_posts": "No posts yet.",
+        "empty_reposts": "No reposts yet.",
+        "tabs": {
+            "posts": "Posts",
+            "reposts": "Reposts",
+            "likes": "Likes"
+        }
     },
     "badge": {
         "class": "Student Class"
