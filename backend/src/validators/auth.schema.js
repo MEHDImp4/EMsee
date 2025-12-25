@@ -10,7 +10,7 @@ const passwordSchema = z.string()
 
 const usernameSchema = z.string()
     .min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères")
-    .max(30, "Le nom d'utilisateur est trop long")
+    .max(10, "Le nom d'utilisateur ne doit pas dépasser 10 caractères")
     .regex(/^[a-zA-Z0-9_]+$/, "Le nom d'utilisateur ne doit contenir que des lettres, chiffres et underscores");
 
 // Email domains by role

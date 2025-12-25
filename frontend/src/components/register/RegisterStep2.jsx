@@ -34,7 +34,9 @@ const RegisterStep2 = (props) => {
             </div>
 
             <div className="form-group">
-                <label className="form-label" htmlFor="username">{t('auth.username')}</label>
+                <label className="form-label" htmlFor="username">
+                    {t('auth.username')} <span className="student-email-hint">(max 10 {t('auth.characters', 'caractères')})</span>
+                </label>
                 <div className="input-wrapper">
                     <span className="input-prefix" aria-hidden="true">@</span>
                     <input

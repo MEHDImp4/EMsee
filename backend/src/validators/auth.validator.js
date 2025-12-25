@@ -10,6 +10,7 @@ const DOMAINS = {
 const registerSchema = z.object({
     username: z.string()
         .min(2, 'Username must be at least 2 characters')
+        .max(10, 'Username must not exceed 10 characters')
         .regex(/^[a-z0-9.]+$/, 'Username must be alphanumeric and lowercase (dots allowed)'),
     email: z.string().email('Invalid email address'),
     password: z.string()

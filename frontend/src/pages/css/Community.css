@@ -126,3 +126,22 @@
     margin-bottom: 1rem;
     opacity: 0.5;
 }
+
+.join-btn-small {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.join-btn-small:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}

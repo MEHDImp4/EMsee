@@ -296,17 +296,123 @@ const CommunityChat = () => {
             {/* Chat Area */}
             <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {!isMember ? (
-                    <div style={{ textAlign: 'center', marginTop: '20vh' }}>
-                        <div style={{ width: 80, height: 80, borderRadius: 20, background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', fontSize: '2rem', color: 'white' }}>
-                            {community.name.substring(0, 2).toUpperCase()}
+                    <div style={{
+                        textAlign: 'center',
+                        marginTop: '10vh',
+                        padding: '2rem',
+                        maxWidth: '400px',
+                        margin: '10vh auto 0'
+                    }}>
+                        {/* Community Icon */}
+                        <div style={{
+                            width: 100,
+                            height: 100,
+                            borderRadius: 24,
+                            background: community.icon ? 'transparent' : 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: '0 auto 1.5rem',
+                            fontSize: '2.5rem',
+                            color: 'white',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                            overflow: 'hidden',
+                            border: '3px solid var(--border)'
+                        }}>
+                            {community.icon ? (
+                                <img
+                                    src={community.icon.startsWith('http') ? community.icon : `${BASE_URL}${community.icon}`}
+                                    alt={community.name}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            ) : (
+                                community.name.substring(0, 2).toUpperCase()
+                            )}
                         </div>
-                        <h2>{community.name}</h2>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{community.description}</p>
 
-                        {isPending ? (
-                            <button disabled className="submit-btn" style={{ opacity: 0.7 }}>{t('community.request_sent', 'Request sent')}</button>
+                        {/* Community Name */}
+                        <h2 style={{
+                            margin: '0 0 0.5rem',
+                            fontSize: '1.75rem',
+                            color: 'var(--text-main)',
+                            fontWeight: 700
+                        }}>
+                            {community.name}
+                        </h2>
+
+                        {/* Members count */}
+                        <p style={{
+                            color: 'var(--text-muted)',
+                            fontSize: '0.9rem',
+                            marginBottom: '1rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem'
+                        }}>
+                            <Users size={16} />
+                            {community._count?.members || 1} {t('community.members', 'members')}
+                        </p>
+
+                        {/* Description */}
+                        {community.description ? (
+                            <div style={{
+                                background: 'var(--bg-secondary)',
+                                borderRadius: '12px',
+                                padding: '1rem 1.25rem',
+                                marginBottom: '2rem',
+                                border: '1px solid var(--border)'
+                            }}>
+                                <p style={{
+                                    color: 'var(--text-main)',
+                                    margin: 0,
+                                    fontSize: '0.95rem',
+                                    lineHeight: '1.6',
+                                    textAlign: 'left'
+                                }}>
+                                    {community.description}
+                                </p>
+                            </div>
                         ) : (
-                            <button onClick={handleJoin} className="submit-btn">
+                            <p style={{
+                                color: 'var(--text-muted)',
+                                marginBottom: '2rem',
+                                fontStyle: 'italic'
+                            }}>
+                                {t('community.no_description', 'No description')}
+                            </p>
+                        )}
+
+                        {/* Join Button */}
+                        {isPending ? (
+                            <button
+                                disabled
+                                className="submit-btn"
+                                style={{
+                                    opacity: 0.7,
+                                    padding: '0.875rem 2rem',
+                                    fontSize: '1rem',
+                                    borderRadius: '25px',
+                                    width: '100%',
+                                    maxWidth: '250px'
+                                }}
+                            >
+                                {t('community.request_sent', 'Request sent')}
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleJoin}
+                                className="submit-btn"
+                                style={{
+                                    padding: '0.875rem 2rem',
+                                    fontSize: '1rem',
+                                    borderRadius: '25px',
+                                    width: '100%',
+                                    maxWidth: '250px',
+                                    fontWeight: 600,
+                                    transition: 'transform 0.2s, box-shadow 0.2s'
+                                }}
+                            >
                                 {t('community.join_group', 'Join group')}
                             </button>
                         )}
