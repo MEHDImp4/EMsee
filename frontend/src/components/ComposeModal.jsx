@@ -7,8 +7,9 @@ import PostService from '../services/post.service';
 
 import { useAuth } from '../context/AuthContext';
 import { BASE_URL } from '../services/api';
+import './css/ComposeModal.css'; // Import custom styles
 
-const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
+const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { // Added onPostCreated prop
     const { t } = useTranslation();
     const { user } = useAuth();
     const [text, setText] = useState('');
@@ -101,36 +102,46 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
         }
     };
 
+    const { isComposeOpen, replyTo, modalOptions, closeCompose } = useModal(); // Get modalOptions from context
+
+    // Reset all states when modal opens/closes
+    useEffect(() => {
+        if (!isOpen) {
+            // ... (reset logic)
+        }
+    }, [isOpen]);
+
+    // ... (rest of logic)
+
     const handleSubmit = async () => {
         if ((!text.trim() && images.length === 0 && !showPollCreator && !showCodeEditor) || isSubmitting) return;
 
         setIsSubmitting(true);
         try {
-            // Prepare media data
+            // ... (prepare data)
             let mediaData = images;
             if (showCodeEditor && codeData.code.trim()) {
-                mediaData = [...mediaData, {
-                    type: 'CODE',
-                    code: codeData.code,
-                    language: codeData.language
-                }];
+                mediaData = [...mediaData, { type: 'CODE', code: codeData.code, language: codeData.language }];
             }
 
-            // Prepare poll data
             const poll = showPollCreator && pollData.question.trim() ? {
                 question: pollData.question,
                 options: pollData.options.filter(o => o.trim()),
                 endsAt: pollData.endsAt || null
             } : null;
 
-            // Create post or reply
-            await PostService.createPost(
+            const newPost = await PostService.createPost(
                 text,
                 replyPermission,
                 mediaData.length > 0 ? mediaData : null,
                 poll,
-                replyTo ? replyTo.id : null // Pass parentId if replying
+                replyTo ? replyTo.id : null
             );
+
+            // Trigger callback if provided (either via prop or context options)
+            if (onPostCreated) onPostCreated(newPost);
+            if (modalOptions?.onSuccess) modalOptions.onSuccess(newPost);
+
             setText('');
             setImages([]);
             setPollData({ question: '', options: ['', ''], endsAt: '' });
@@ -163,20 +174,20 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
 
                 <div className="compose-modal-content">
                     <div className="compose-modal-avatar">
-                        <div className="avatar-circle" style={avatarUrl ? { width: 40, height: 40, padding: 0, overflow: 'hidden' } : { width: 40, height: 40 }}>
+                        <div className="avatar-circle">
                             {avatarUrl ? (
-                                <img src={avatarUrl} alt={userName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={avatarUrl} alt={userName} />
                             ) : (
                                 userInitials
                             )}
                         </div>
-                        {replyTo && <div style={{ width: '2px', background: 'var(--border)', margin: '4px auto 0', height: 'calc(100% - 44px)' }}></div>}
+                        {replyTo && <div className="reply-line"></div>}
                     </div>
 
                     <div className="compose-modal-body">
                         {replyTo && (
                             <div className="compose-replying-to">
-                                Replying to <span style={{ color: 'var(--primary)' }}>@{replyTo.user?.username}</span>
+                                Replying to <span>@{replyTo.user?.username}</span>
                             </div>
                         )}
 
@@ -195,21 +206,16 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                         />
 
                         {!replyTo && (
-                            <div className="compose-reply-permission" style={{ position: 'relative' }} ref={permissionMenuRef}>
-                                <div
-                                    onClick={() => setShowPermissionMenu(!showPermissionMenu)}
-                                    style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-                                >
-                                    {replyPermission === 'EVERYONE' && <Globe size={16} />}
-                                    {replyPermission === 'FOLLOWERS' && <Users size={16} />}
-                                    {replyPermission === 'NO_ONE' && <Lock size={16} />}
+                            <div className="compose-reply-permission" ref={permissionMenuRef} onClick={() => setShowPermissionMenu(!showPermissionMenu)}>
+                                {replyPermission === 'EVERYONE' && <Globe size={16} />}
+                                {replyPermission === 'FOLLOWERS' && <Users size={16} />}
+                                {replyPermission === 'NO_ONE' && <Lock size={16} />}
 
-                                    <span>
-                                        {replyPermission === 'EVERYONE' && t('compose.permission.everyone', 'Everyone can reply')}
-                                        {replyPermission === 'FOLLOWERS' && t('compose.permission.followers', 'Followers only')}
-                                        {replyPermission === 'NO_ONE' && t('compose.permission.none', 'No one')}
-                                    </span>
-                                </div>
+                                <span>
+                                    {replyPermission === 'EVERYONE' && t('compose.permission.everyone', 'Everyone can reply')}
+                                    {replyPermission === 'FOLLOWERS' && t('compose.permission.followers', 'Followers only')}
+                                    {replyPermission === 'NO_ONE' && t('compose.permission.none', 'No one')}
+                                </span>
 
                                 {showPermissionMenu && (
                                     <div className="permission-menu">
@@ -322,7 +328,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null }) => {
                         )}
 
                         <div className="compose-modal-footer">
-                            <div className="compose-icons" style={{ marginLeft: '-8px', position: 'relative' }}>
+                            <div className="compose-icons">
                                 <input
                                     ref={fileInputRef}
                                     type="file"

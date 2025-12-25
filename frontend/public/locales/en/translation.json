@@ -307,7 +307,10 @@
         "label_status": "Status:",
         "label_port": "Port:",
         "label_id": "ID:",
-        "no_notifications": "No notifications (User {{id}})"
+        "no_notifications": "No notifications (User {{id}})",
+        "and_others": "and others",
+        "followed_you": "followed you",
+        "delete": "Delete"
     },
     "post": {
         "delete": "Delete post",

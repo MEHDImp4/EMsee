@@ -52,14 +52,18 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
 
   const initialLikes = post?._count?.likes ?? 0;
 
-  const initialReposts = post?._count?.reposts ?? 0;
-  const initialViews = post?.views ?? post?.viewCount ?? 0;
+  const initialReplies = post?._count?.replies ?? 0; // Get initial replies count
 
   const [counts, setCounts] = useState({
     likes: initialLikes,
     reposts: initialReposts,
     views: initialViews,
+    replies: initialReplies, // Add replies to state
   });
+
+  // ... existing code ...
+
+
 
   const isOwner = user?.id && post?.user?.id && user.id === post.user.id;
 
@@ -128,6 +132,10 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
     } finally {
       setIsBusy(false);
     }
+  };
+
+  const handleReplySuccess = () => {
+    optimisticUpdate('replies', 1);
   };
 
   const goToPost = () => {
@@ -355,14 +363,14 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
             className="action-btn comment"
             onClick={(e) => {
               e.stopPropagation();
-              openCompose(post);
+              openCompose(post, { onSuccess: handleReplySuccess });
             }}
             aria-label={t('post.comment', 'Comment')}
           >
             <div className="icon-wrapper">
               <MessageCircle size={18} />
             </div>
-            <span className="action-count">{formatCount(0)}</span>
+            <span className="action-count">{formatCount(counts.replies)}</span>
           </button>
 
           <button className={`action-btn repost ${isReposted ? 'active' : ''}`} onClick={toggleRepost}>

@@ -295,7 +295,10 @@
             "all": "Tous",
             "verified": "Vérifié",
             "mentions": "Mentions"
-        }
+        },
+        "and_others": "et d'autres",
+        "followed_you": "vous a suivi",
+        "delete": "Supprimer"
     },
     "post": {
         "cannot_comment_own": "Vous ne pouvez pas commenter votre propre post",
