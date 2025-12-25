@@ -205,7 +205,14 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
   return (
     <article className={`post-card ${isDetailView ? 'post-card-detail' : ''}`} onClick={goToPost} role="article">
       <div className="post-avatar-col">
-        <div className="post-avatar">
+        <div
+          className="post-avatar"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/profile/${post.user.username}`);
+          }}
+          style={{ cursor: 'pointer' }}
+        >
           {avatarUrl ? (
             <img src={avatarUrl} alt={displayName} />
           ) : (
@@ -218,7 +225,16 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
         <header className="post-header">
           <div className="post-info">
             <div className="post-name-row">
-              <span className="post-name">{displayName}</span>
+              <span
+                className="post-name"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/profile/${post.user.username}`);
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                {displayName}
+              </span>
               {userRole && (
                 <span className={`post-role-badge post-role-${userRole}`}>
                   {(() => {

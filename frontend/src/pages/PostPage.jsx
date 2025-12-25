@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import PostCard from '../components/PostCard';
+import QuickReply from '../components/QuickReply';
 import './css/Feed.css';
 
 import { useSocket } from '../context/SocketContext';
@@ -43,6 +44,28 @@ const PostPage = () => {
 
             <div className="post-detail-view">
                 <PostCard post={post} isDetailView={true} />
+            </div>
+
+            <QuickReply
+                parentPost={post}
+                onReplySuccess={() => {
+                    // Simple refresh for now. Optimistic updates would be better but require modifying the hook or state here.
+                    // Effectively we can just reload the page or trigger a refetch if we exposed it.
+                    // For simplicity, let's reload the window or navigate to same page to trigger hook re-run
+                    window.location.reload();
+                }}
+            />
+
+            <div className="replies-feed">
+                {post.replies && post.replies.length > 0 ? (
+                    post.replies.map(reply => (
+                        <PostCard key={reply.id} post={reply} />
+                    ))
+                ) : (
+                    <div className="no-replies">
+                        {t('post.no_replies', 'No replies yet. Be the first!')}
+                    </div>
+                )}
             </div>
 
 

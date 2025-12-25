@@ -188,6 +188,7 @@
         "saving": "Saving...",
         "na": "N/A",
         "loading": "Loading...",
+        "sending": "Sending...",
         "load_more": "Load more",
         "error": "Error",
         "retry": "Retry"
@@ -316,7 +317,7 @@
         "cannot_comment_own": "You cannot comment on your own post",
         "views": "Views",
         "reply": "Reply",
-        "reply_placeholder": "Add your reply",
+        "reply_placeholder": "Post your reply",
         "replying_to": "Replying to",
         "comment": "Comment",
         "replies": "Replies",

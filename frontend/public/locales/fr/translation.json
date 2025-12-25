@@ -184,6 +184,7 @@
         "saving": "Enregistrement...",
         "na": "N/A",
         "loading": "Chargement...",
+        "sending": "Envoi...",
         "load_more": "Charger plus",
         "error": "Erreur",
         "retry": "Réessayer"
@@ -302,7 +303,7 @@
         "confirm_delete": "Supprimer ce post ?",
         "views": "Vues",
         "reply": "Répondre",
-        "reply_placeholder": "Ajouter une réponse",
+        "reply_placeholder": "Postez votre réponse",
         "replying_to": "En réponse à",
         "comment": "Commentaire",
         "replies": "Réponses",
