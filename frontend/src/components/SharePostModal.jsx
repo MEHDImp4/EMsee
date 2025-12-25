@@ -3,7 +3,6 @@ import { X, Search, Check, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import * as MessageService from '../services/message.service';
 import { getImageUrl } from '../utils/imageUtils';
-import { getImageUrl } from '../utils/imageUtils';
 import { useAuth } from '../context/AuthContext'; // Assuming needed for current user ID to filter participants
 import UserAvatar from './UserAvatar';
 import './css/SharePostModal.css';
