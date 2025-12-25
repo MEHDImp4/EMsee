@@ -4,7 +4,8 @@ const { UserModel } = require('../../models/UserModel');
 const asyncHandler = require('../../middlewares/asyncHandler');
 
 const login = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+    const { email: rawEmail, password } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     const user = await UserModel.findByEmail(email);
     if (!user || !user.password) {

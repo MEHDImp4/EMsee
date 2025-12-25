@@ -4,7 +4,8 @@ const { UserModel } = require('../../models/UserModel');
 const asyncHandler = require('../../middlewares/asyncHandler');
 
 const register = asyncHandler(async (req, res) => {
-    const { username, email, password, full_name, role, filiere, year, studentClass, subjects } = req.body;
+    const { username, email: rawEmail, password, full_name, role, filiere, year, studentClass, subjects } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     // Check if user exists (email)
     const existingEmail = await UserModel.findByEmail(email);
