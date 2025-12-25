@@ -48,6 +48,9 @@ const CommunityChat = () => {
     const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
+    // Reactions
+    const [activeReactionMessage, setActiveReactionMessage] = useState(null);
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -106,7 +109,6 @@ const CommunityChat = () => {
         }
     };
 
-    const [activeReactionMessage, setActiveReactionMessage] = useState(null);
 
     const handleReaction = async (messageId, emoji) => {
         // Optimistic update
