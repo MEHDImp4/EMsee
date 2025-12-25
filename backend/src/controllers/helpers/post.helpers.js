@@ -14,7 +14,8 @@ const userSelectFields = {
 
 const postCountFields = {
     likes: true,
-    reposts: true
+    reposts: true,
+    replies: true
 };
 
 

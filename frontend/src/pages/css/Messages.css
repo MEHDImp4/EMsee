@@ -49,6 +49,11 @@
     box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.6);
 }
 
+/* Dark mode: white icon */
+[data-theme="dark"] .new-message-btn {
+    color: white;
+}
+
 .messages-list-wrapper {
     flex: 1;
     overflow-y: auto;
