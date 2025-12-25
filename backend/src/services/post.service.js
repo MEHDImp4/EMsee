@@ -152,6 +152,9 @@ const getPostById = async (postId, currentUserId) => {
         include: buildPostInclude(currentUserId),
         orderBy: { createdAt: 'desc' }
     };
+    include.parent = {
+        include: buildPostInclude(currentUserId)
+    };
 
     const post = await prisma.post.findUnique({
         where: { id: postId },

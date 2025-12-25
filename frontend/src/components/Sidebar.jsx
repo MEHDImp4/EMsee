@@ -7,6 +7,7 @@ import LogoutModal from './LogoutModal';
 import { useAuth } from '../context/AuthContext';
 import { BASE_URL } from '../services/api';
 import { useModal } from '../context/ModalContext';
+import UserAvatar from './UserAvatar';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
@@ -47,13 +48,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             {/* Drawer Header for mobile */}
             <div className="drawer-header mobile-only">
                 <div className="drawer-profile-info">
-                    <div className="avatar-circle-large" style={avatarUrl ? { padding: 0, overflow: 'hidden' } : {}}>
-                        {avatarUrl ? (
-                            <img src={avatarUrl} alt={userName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        ) : (
-                            userInitials
-                        )}
-                    </div>
+                    <UserAvatar user={user} size={64} className="avatar-circle-large" />
                     <div className="drawer-user-details">
                         <span className="drawer-name">{userName}</span>
                         <span className="drawer-handle">{userHandle}</span>
@@ -117,13 +112,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                 overflow: 'hidden'
                             }}
                         >
-                            <div className="avatar-circle" style={avatarUrl ? { padding: 0, overflow: 'hidden' } : {}}>
-                                {avatarUrl ? (
-                                    <img src={avatarUrl} alt={userName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                ) : (
-                                    userInitials
-                                )}
-                            </div>
+                            <UserAvatar user={user} size={40} className="avatar-circle" />
                             <div className="user-info">
                                 <div className="user-name">{userName}</div>
                                 <div className="user-handle">{userHandle}</div>

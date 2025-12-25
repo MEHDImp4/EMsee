@@ -6,6 +6,7 @@ import UserService from '../services/user.service';
 import HashtagService from '../services/hashtag.service';
 import { BASE_URL } from '../services/api';
 import { getInitials } from '../utils/avatarUtils';
+import UserAvatar from './UserAvatar';
 
 const TRENDS = [
     { metaKey: ['right_sidebar.trending', 'right_sidebar.morocco'], name: '#SaharaMarocain', count: '12.5k' },
@@ -116,13 +117,7 @@ const SuggestionItem = ({ user, onFollow, t }) => {
             style={{ cursor: 'pointer' }}
         >
             <Link to={toSearch} className="suggestion-avatar" style={{ textDecoration: 'none', display: 'block' }}>
-                <div className="avatar-circle" style={{ width: 40, height: 40, overflow: 'hidden' }}>
-                    {user.avatar ? (
-                        <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                        initials
-                    )}
-                </div>
+                <UserAvatar user={user} size={40} className="avatar-circle" />
             </Link>
             <div className="suggestion-info">
                 <Link to={toSearch} className="suggestion-name" style={{ textDecoration: 'none', color: 'var(--text-main)', display: 'block' }}>

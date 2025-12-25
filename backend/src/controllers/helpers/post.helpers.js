@@ -56,7 +56,8 @@ const formatPost = (post) => ({
     likes: undefined,
     reposts: undefined,
     bookmarks: undefined,
-    replies: post.replies?.map(formatPost)
+    replies: post.replies?.map(formatPost),
+    parent: post.parent ? formatPost(post.parent) : undefined
 });
 
 

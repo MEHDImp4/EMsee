@@ -8,6 +8,7 @@ import PostService from '../services/post.service';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import { BASE_URL } from '../services/api';
+import UserAvatar from './UserAvatar';
 import './css/ComposeModal.css'; // Import custom styles
 
 const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { // Added onPostCreated prop
@@ -103,7 +104,9 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { /
         }
     };
 
-    const { isComposeOpen, modalOptions, closeCompose } = useModal(); // Get modalOptions from context
+    const { isComposeOpen, modalOptions, closeCompose, replyTo: contextReplyTo } = useModal(); // Get modalOptions from context
+
+    const activeReplyTo = replyTo || contextReplyTo;
 
     // Reset all states when modal opens/closes
     useEffect(() => {
@@ -136,7 +139,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { /
                 replyPermission,
                 mediaData.length > 0 ? mediaData : null,
                 poll,
-                replyTo ? replyTo.id : null
+                activeReplyTo ? activeReplyTo.id : null
             );
 
             // Trigger callback if provided (either via prop or context options)
@@ -169,32 +172,26 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { /
                         disabled={!text.trim() || isSubmitting}
                         onClick={handleSubmit}
                     >
-                        {isSubmitting ? '...' : (replyTo ? t('post.reply', 'Reply') : t('sidebar.publish', 'Publish'))}
+                        {isSubmitting ? '...' : (activeReplyTo ? t('post.reply', 'Reply') : t('sidebar.publish', 'Publish'))}
                     </button>
                 </div>
 
                 <div className="compose-modal-content">
                     <div className="compose-modal-avatar">
-                        <div className="avatar-circle">
-                            {avatarUrl ? (
-                                <img src={avatarUrl} alt={userName} />
-                            ) : (
-                                userInitials
-                            )}
-                        </div>
-                        {replyTo && <div className="reply-line"></div>}
+                        <UserAvatar user={user} size={40} className="avatar-circle" />
+                        {activeReplyTo && <div className="reply-line"></div>}
                     </div>
 
                     <div className="compose-modal-body">
-                        {replyTo && (
+                        {activeReplyTo && (
                             <div className="compose-replying-to">
-                                Replying to <span>@{replyTo.user?.username}</span>
+                                Replying to <span>@{activeReplyTo.user?.username}</span>
                             </div>
                         )}
 
                         <textarea
                             className="compose-modal-input"
-                            placeholder={replyTo ? t('post.reply_placeholder', 'Post your reply') : t('feed.placeholder', "What's happening at EMSI?")}
+                            placeholder={activeReplyTo ? t('post.reply_placeholder', 'Post your reply') : t('feed.placeholder', "What's happening at EMSI?")}
                             autoFocus
                             value={text}
                             onChange={(e) => setText(e.target.value)}
@@ -206,7 +203,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { /
                             }}
                         />
 
-                        {!replyTo && (
+                        {!activeReplyTo && (
                             <div className="compose-reply-permission" ref={permissionMenuRef} onClick={() => setShowPermissionMenu(!showPermissionMenu)}>
                                 {replyPermission === 'EVERYONE' && <Globe size={16} />}
                                 {replyPermission === 'FOLLOWERS' && <Users size={16} />}

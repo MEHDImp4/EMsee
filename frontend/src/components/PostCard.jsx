@@ -13,6 +13,7 @@ import SharePostModal from './SharePostModal';
 import './css/PostCard.css';
 import { getInitials } from '../utils/avatarUtils';
 import UserBadge from './UserBadge';
+import UserAvatar from './UserAvatar';
 
 const formatCount = (value = 0) => {
   const abs = Math.abs(value);
@@ -218,20 +219,15 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
   return (
     <article className={`post-card ${isDetailView ? 'post-card-detail' : ''} ${isComment ? 'is-comment' : ''}`} onClick={goToPost} role="article" >
       <div className="post-avatar-col">
-        <div
+        <UserAvatar
+          user={post.user}
+          size={isComment ? 36 : 46}
           className="post-avatar"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/profile/${post.user.username}`);
           }}
-          style={{ cursor: 'pointer' }}
-        >
-          {avatarUrl ? (
-            <img src={avatarUrl} alt={displayName} />
-          ) : (
-            <span>{getInitials(displayName)}</span>
-          )}
-        </div>
+        />
       </div>
 
       <div className="post-content-col">

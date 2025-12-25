@@ -43,6 +43,12 @@ const PostPage = () => {
             </div>
 
             <div className="post-detail-view">
+                {post.parent && (
+                    <div className="parent-context">
+                        <PostCard post={post.parent} />
+                        <div className="thread-connector-large"></div>
+                    </div>
+                )}
                 <PostCard post={post} isDetailView={true} />
             </div>
 
@@ -55,6 +61,8 @@ const PostPage = () => {
                     window.location.reload();
                 }}
             />
+
+            <div className="replies-divider" style={{ borderBottom: '1px solid var(--border)', margin: '1rem 0' }}></div>
 
             <div className="replies-feed">
                 {post.replies && post.replies.length > 0 ? (

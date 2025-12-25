@@ -383,3 +383,33 @@
     font-size: 1rem;
     border-bottom: 1px solid var(--border);
 }
+
+.parent-context {
+    position: relative;
+}
+
+.thread-connector-large {
+    position: absolute;
+    left: 50%; /* Center relative to container, wait, standard Avatar is left aligned. */
+    /* We need to align with Avatar. Avatar in PostCard is ~1rem padding left + 20px radius center = ~36px */
+    left: 36px;
+    bottom: -1px; /* Connect to next card */
+    top: auto;
+    height: 20px; /* Small connector stub */
+    width: 2px;
+    background-color: var(--border);
+    z-index: 10;
+    transform: translateX(-50%);
+}
+/* Adjust height/position to look like a continuous line */
+.parent-context .thread-connector-large {
+    top: 0;
+    bottom: 0;
+    height: auto;
+    /* Actually we want a line running through the parent if it's part of a thread?
+       Or just from bottom of parent to top of child.
+       PostCard usually has internal padding.
+       Let's just put a line connecting the two.
+    */
+    display: none; /* Hide for now until we fine tune visual alignment with Avatar */
+}
