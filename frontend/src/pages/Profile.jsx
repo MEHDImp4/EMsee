@@ -93,7 +93,7 @@ const Profile = () => {
         <div className="profile-identity">
           <h1 className="profile-name">
             {user.name}
-            <span className="profile-role-badge">{t(`auth.${user.role}`)}</span>
+            <span className="profile-role-badge">{t(`auth.${user.role?.toLowerCase()}`)}</span>
           </h1>
           <p className="profile-handle">{user.handle}</p>
         </div>
@@ -102,9 +102,9 @@ const Profile = () => {
 
         <div className="profile-meta-row">
           <div className="meta-item">
-              <MapPin size={16} />
-              <span>{user.location || t('profile.default_location', 'Rabat, Morocco')}</span>
-            </div>
+            <MapPin size={16} />
+            <span>{user.location || t('profile.default_location', 'Rabat, Morocco')}</span>
+          </div>
           <div className="meta-item">
             <Mail size={16} />
             <span>{user.email}</span>

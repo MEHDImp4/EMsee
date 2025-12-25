@@ -53,7 +53,7 @@ const UserResults = ({ results, searchQuery, isSearching, t }) => {
                             <div>
                                 <div style={{ fontWeight: 'bold' }}>{user.full_name || user.username}</div>
                                 <div style={{ color: 'var(--text-muted)' }}>@{user.username}</div>
-                                <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t(`auth.${user.role || 'student'}`)}</div>
+                                <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t(`auth.${(user.role || 'student').toLowerCase()}`)}</div>
                             </div>
                         </div>
                     </Link>
