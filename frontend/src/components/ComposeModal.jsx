@@ -102,7 +102,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { /
         }
     };
 
-    const { isComposeOpen, replyTo, modalOptions, closeCompose } = useModal(); // Get modalOptions from context
+    const { isComposeOpen, modalOptions, closeCompose } = useModal(); // Get modalOptions from context
 
     // Reset all states when modal opens/closes
     useEffect(() => {
