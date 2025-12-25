@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from '../../services/api';
 import UserService from '../../services/user.service';
+import UserAvatar from '../UserAvatar';
 
 const UserResults = ({ results, searchQuery, isSearching, t }) => {
     const [recentUsers, setRecentUsers] = useState([]);
@@ -36,8 +37,8 @@ const UserResults = ({ results, searchQuery, isSearching, t }) => {
         return (
             <div className="users-list">
                 {!searchQuery && (
-                    <div style={{ 
-                        padding: '1rem', 
+                    <div style={{
+                        padding: '1rem',
                         borderBottom: '1px solid var(--border)',
                         fontWeight: 600,
                         fontSize: '1.125rem'
@@ -48,13 +49,7 @@ const UserResults = ({ results, searchQuery, isSearching, t }) => {
                 {displayUsers.map((user) => (
                     <Link to={`/profile/${user.username}`} key={user.id} style={{ textDecoration: 'none', color: 'inherit' }}>
                         <div style={{ padding: '1rem', display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
-                            <div className="avatar-circle" style={{ width: 40, height: 40, overflow: 'hidden' }}>
-                                {user.avatar ? (
-                                    <img src={`${BASE_URL}${user.avatar}`} alt={user.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                ) : (
-                                    (user.full_name || user.username).charAt(0).toUpperCase()
-                                )}
-                            </div>
+                            <UserAvatar user={user} size={40} className="avatar-circle" />
                             <div>
                                 <div style={{ fontWeight: 'bold' }}>{user.full_name || user.username}</div>
                                 <div style={{ color: 'var(--text-muted)' }}>@{user.username}</div>

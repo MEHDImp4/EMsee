@@ -12,8 +12,8 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '1rem' }}>
-                    <div className="logo-circle" style={{ width: 48, height: 48, marginBottom: '1rem', cursor: 'default' }}>
-                        <img src={logo} alt="Logo" style={{ width: 28, height: 28 }} />
+                    <div className="logo-circle" style={{ width: 80, height: 80, marginBottom: '1rem', cursor: 'default' }}>
+                        <img src={logo} alt="Logo" style={{ width: 48, height: 48 }} />
                     </div>
                     <h3 className="modal-title">{t('sidebar.logout_confirm', 'Se déconnecter de EMsee ?')}</h3>
                     <p className="modal-desc">

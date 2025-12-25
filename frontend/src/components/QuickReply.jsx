@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Send, Image as ImageIcon } from 'lucide-react';
 import PostService from '../services/post.service';
 import { useAuth } from '../context/AuthContext';
+import UserAvatar from './UserAvatar';
 import './css/QuickReply.css';
 
 const QuickReply = ({ parentPost, onReplySuccess }) => {
@@ -41,10 +42,7 @@ const QuickReply = ({ parentPost, onReplySuccess }) => {
     return (
         <div className="quick-reply-container">
             <div className="quick-reply-avatar">
-                <img
-                    src={user.avatar || `https://ui-avatars.com/api/?name=${user.username}&background=random`}
-                    alt={user.username}
-                />
+                <UserAvatar user={user} size={40} />
             </div>
             <div className="quick-reply-content">
                 <form onSubmit={handleSubmit}>

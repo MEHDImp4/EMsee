@@ -7,10 +7,12 @@ import FloatingPostButton from './FloatingPostButton';
 import ComposeModal from './ComposeModal';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useModal } from '../context/ModalContext';
+import { useAuth } from '../context/AuthContext';
 
 const DashboardLayout = ({ children }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const { isComposeOpen, openCompose, closeCompose, replyTo } = useModal();
+    const { user } = useAuth();
     const location = useLocation();
 
     // Hide right sidebar on messages page
@@ -62,7 +64,7 @@ const DashboardLayout = ({ children }) => {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
         >
-            <MobileHeader onAvatarClick={() => setIsDrawerOpen(true)} />
+            <MobileHeader user={user} onAvatarClick={() => setIsDrawerOpen(true)} />
 
             <Sidebar
                 isOpen={isDrawerOpen}

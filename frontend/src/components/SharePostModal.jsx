@@ -3,7 +3,9 @@ import { X, Search, Check, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import * as MessageService from '../services/message.service';
 import { getImageUrl } from '../utils/imageUtils';
+import { getImageUrl } from '../utils/imageUtils';
 import { useAuth } from '../context/AuthContext'; // Assuming needed for current user ID to filter participants
+import UserAvatar from './UserAvatar';
 import './css/SharePostModal.css';
 
 const SharePostModal = ({ post, onClose }) => {
@@ -101,11 +103,10 @@ const SharePostModal = ({ post, onClose }) => {
                                     disabled={!!sendingTo}
                                 >
                                     <div className="share-user-info">
-                                        <img
-                                            src={getImageUrl(otherUser?.avatar) || '/default-avatar.svg'}
-                                            alt={otherUser?.full_name}
+                                        <UserAvatar
+                                            user={otherUser}
+                                            size={40}
                                             className="share-avatar"
-                                            onError={(e) => e.target.src = '/default-avatar.svg'}
                                         />
                                         <div className="share-user-details">
                                             <span className="share-name">{otherUser?.full_name}</span>

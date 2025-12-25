@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo.svg';
+import UserAvatar from './UserAvatar';
 
-const MobileHeader = ({ onAvatarClick }) => {
+const MobileHeader = ({ onAvatarClick, user }) => {
     return (
         <div className="mobile-header">
             <div className="mobile-header-left">
-                <div className="avatar-circle-small" onClick={onAvatarClick}>
-                    MA
+                <div onClick={onAvatarClick}>
+                    <UserAvatar user={user} size={32} />
                 </div>
             </div>
 
