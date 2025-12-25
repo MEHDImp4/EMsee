@@ -6,6 +6,7 @@ import api from '../services/api';
 import PostService from '../services/post.service';
 
 import { useAuth } from '../context/AuthContext';
+import { useModal } from '../context/ModalContext';
 import { BASE_URL } from '../services/api';
 import './css/ComposeModal.css'; // Import custom styles
 
