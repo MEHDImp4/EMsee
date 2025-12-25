@@ -14,6 +14,7 @@ import './css/ComposeModal.css'; // Import custom styles
 const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { // Added onPostCreated prop
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { isComposeOpen, modalOptions, closeCompose, replyTo: contextReplyTo } = useModal(); // Get modalOptions from context
     const [text, setText] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [replyPermission, setReplyPermission] = useState('EVERYONE');
@@ -104,18 +105,7 @@ const ComposeModal = ({ isOpen, onClose, replyTo = null, onPostCreated }) => { /
         }
     };
 
-    const { isComposeOpen, modalOptions, closeCompose, replyTo: contextReplyTo } = useModal(); // Get modalOptions from context
-
     const activeReplyTo = replyTo || contextReplyTo;
-
-    // Reset all states when modal opens/closes
-    useEffect(() => {
-        if (!isOpen) {
-            // ... (reset logic)
-        }
-    }, [isOpen]);
-
-    // ... (rest of logic)
 
     const handleSubmit = async () => {
         if ((!text.trim() && images.length === 0 && !showPollCreator && !showCodeEditor) || isSubmitting) return;
