@@ -30,8 +30,13 @@ class UserModel {
     }
 
     static async findByEmail(email) {
-        return await prisma.user.findUnique({
-            where: { email },
+        return await prisma.user.findFirst({
+            where: {
+                email: {
+                    equals: email,
+                    mode: 'insensitive'
+                }
+            },
         });
     }
 

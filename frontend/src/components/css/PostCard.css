@@ -17,6 +17,30 @@
   cursor: pointer;
 }
 
+/* Specific styles for Comments/Replies */
+.post-card.is-comment {
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    background-color: var(--bg-main); /* or slightly different if needed */
+}
+
+.post-card.is-comment .post-avatar {
+    width: 36px; /* Smaller avatar for comments */
+    height: 36px;
+}
+
+.post-card.is-comment .post-name {
+    font-size: 0.95rem;
+}
+
+.post-card.is-comment .post-text {
+    font-size: 0.95rem;
+}
+
+/* Connecting line for threaded look (optional, can be expanded) */
+/* .post-card.is-comment::before { } */
+
+
 .post-card:hover {
   background-color: color-mix(in srgb, var(--hover) 65%, transparent);
   border-color: var(--border);

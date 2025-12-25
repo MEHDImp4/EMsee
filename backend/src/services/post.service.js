@@ -78,12 +78,13 @@ const getAllPosts = async (currentUserId, page = 1, limit = 20) => {
 
     const [posts, total] = await Promise.all([
         prisma.post.findMany({
+            where: { parentId: null },
             take,
             skip,
             orderBy: { createdAt: 'desc' },
             include: buildPostInclude(currentUserId)
         }),
-        prisma.post.count()
+        prisma.post.count({ where: { parentId: null } })
     ]);
 
     return {
@@ -109,6 +110,7 @@ const getClassPosts = async (currentUserId, page = 1, limit = 20) => {
     const [posts, total] = await Promise.all([
         prisma.post.findMany({
             where: {
+                parentId: null,
                 user: {
                     filiere: user.filiere,
                     year: user.year,
@@ -122,6 +124,7 @@ const getClassPosts = async (currentUserId, page = 1, limit = 20) => {
         }),
         prisma.post.count({
             where: {
+                parentId: null,
                 user: {
                     filiere: user.filiere,
                     year: user.year,

@@ -202,8 +202,10 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
   // A simple hack: just call the API. The socket event 'post_updated' (which we emitted in backend) 
   // needs to be listened to in 'useFeed.js' to update the list.
 
+  const isComment = Boolean(post?.parentId);
+
   return (
-    <article className={`post-card ${isDetailView ? 'post-card-detail' : ''}`} onClick={goToPost} role="article">
+    <article className={`post-card ${isDetailView ? 'post-card-detail' : ''} ${isComment ? 'is-comment' : ''}`} onClick={goToPost} role="article">
       <div className="post-avatar-col">
         <div
           className="post-avatar"
