@@ -54,6 +54,9 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
 
   const initialReplies = post?._count?.replies ?? 0; // Get initial replies count
 
+  const initialReposts = post?._count?.reposts ?? 0;
+  const initialViews = post?.views ?? 0;
+
   const [counts, setCounts] = useState({
     likes: initialLikes,
     reposts: initialReposts,
@@ -213,7 +216,7 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
   const isComment = Boolean(post?.parentId);
 
   return (
-    <article className={`post-card ${isDetailView ? 'post-card-detail' : ''} ${isComment ? 'is-comment' : ''}`} onClick={goToPost} role="article">
+    <article className={`post-card ${isDetailView ? 'post-card-detail' : ''} ${isComment ? 'is-comment' : ''}`} onClick={goToPost} role="article" >
       <div className="post-avatar-col">
         <div
           className="post-avatar"
@@ -415,7 +418,7 @@ const PostCard = ({ post, onDelete = () => { }, isDetailView = false }) => {
           onClose={() => setShowShareModal(false)}
         />
       )}
-    </article>
+    </article >
   );
 };
 
