@@ -180,7 +180,8 @@
         "req_length": "Minimum 6 characters",
         "req_upper": "One uppercase letter",
         "req_lower": "One lowercase letter",
-        "req_digit": "One number"
+        "req_digit": "One number",
+        "characters": "characters"
     },
     "common": {
         "back": "Back",
