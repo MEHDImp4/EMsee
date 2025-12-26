@@ -12,7 +12,9 @@ class UserModel {
                 filiere: userData.filiere,
                 year: userData.year,
                 studentClass: userData.studentClass,
-                subjects: userData.subjects, // Prisma handles JSON automatically
+                subjects: (prisma.isSqliteLocal && userData.subjects && typeof userData.subjects === 'object')
+                    ? JSON.stringify(userData.subjects)
+                    : userData.subjects, // Prisma handles JSON automatically (in Postgres)
                 avatar: userData.avatar,
                 bio: userData.bio,
                 location: userData.location,
@@ -23,6 +25,11 @@ class UserModel {
 
     static async update(id, userData) {
         const { id: _, ...dataToUpdate } = userData;
+
+        if (prisma.isSqliteLocal && dataToUpdate.subjects && typeof dataToUpdate.subjects === 'object') {
+            dataToUpdate.subjects = JSON.stringify(dataToUpdate.subjects);
+        }
+
         await prisma.user.update({
             where: { id },
             data: dataToUpdate,
@@ -30,13 +37,18 @@ class UserModel {
     }
 
     static async findByEmail(email) {
+        const query = {
+            email: {
+                equals: email
+            }
+        };
+        // SQLite does not support case-insensitive filtering for String in this configuration
+        if (!prisma.isSqliteLocal) {
+            query.email.mode = 'insensitive';
+        }
+
         return await prisma.user.findFirst({
-            where: {
-                email: {
-                    equals: email,
-                    mode: 'insensitive'
-                }
-            },
+            where: query,
         });
     }
 

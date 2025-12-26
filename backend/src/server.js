@@ -1,3 +1,4 @@
+console.log('[SERVER_START] Arguments:', process.argv);
 const { server } = require('./app');
 
 if (!process.env.JWT_SECRET) {

@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "npx prisma migrate deploy && nodemon src/server.js",
-    "dev:local": "node scripts/setup-sqlite.js && npx prisma db push --schema prisma/schema.local.prisma && npx prisma generate --schema prisma/schema.local.prisma && nodemon src/server.js --sqlite",
+    "dev:local": "node scripts/setup-sqlite.js && npx prisma db push --schema prisma/schema.local.prisma && npx prisma generate --schema prisma/schema.local.prisma && cross-env DATABASE_PROVIDER=sqlite nodemon src/server.js",
     "build": "echo 'No build needed for JS'",
     "start": "npx prisma migrate deploy && node src/server.js",
     "test": "jest",
@@ -35,6 +35,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
     "prisma": "^5.10.0",

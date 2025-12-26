@@ -2,8 +2,10 @@ const { PrismaClient } = require('@prisma/client');
 
 let prisma = new PrismaClient();
 
-// Check if running in local SQLite mode (passed via flag)
-const isSqliteLocal = process.argv.includes('--sqlite');
+// Check if running in local SQLite mode (passed via env)
+console.log('[DB_DEBUG] Env:', process.env.DATABASE_PROVIDER);
+const isSqliteLocal = process.env.DATABASE_PROVIDER === 'sqlite';
+console.log('[DB_DEBUG] isSqliteLocal:', isSqliteLocal);
 
 if (isSqliteLocal) {
     console.log('[DEV:LOCAL] Initializing Prisma with SQLite JSON polyfill');
@@ -23,33 +25,9 @@ if (isSqliteLocal) {
                     }
                 }
             }
-        },
-        query: {
-            user: {
-                create({ args, query }) {
-                    if (args.data.subjects && typeof args.data.subjects === 'object') {
-                        args.data.subjects = JSON.stringify(args.data.subjects);
-                    }
-                    return query(args);
-                },
-                update({ args, query }) {
-                    if (args.data.subjects && typeof args.data.subjects === 'object') {
-                        args.data.subjects = JSON.stringify(args.data.subjects);
-                    }
-                    return query(args);
-                },
-                upsert({ args, query }) {
-                    if (args.create.subjects && typeof args.create.subjects === 'object') {
-                        args.create.subjects = JSON.stringify(args.create.subjects);
-                    }
-                    if (args.update.subjects && typeof args.update.subjects === 'object') {
-                        args.update.subjects = JSON.stringify(args.update.subjects);
-                    }
-                    return query(args);
-                }
-            }
         }
     });
 }
 
+prisma.isSqliteLocal = isSqliteLocal;
 module.exports = prisma;
