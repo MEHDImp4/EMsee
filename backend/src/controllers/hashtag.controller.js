@@ -9,6 +9,8 @@ const prisma = new PrismaClient();
  */
 const getTopHashtags = asyncHandler(async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
 
     const hashtags = await prisma.hashtag.findMany({
         include: {
@@ -23,7 +25,8 @@ const getTopHashtags = asyncHandler(async (req, res) => {
                 _count: 'desc'
             }
         },
-        take: limit
+        take: limit,
+        skip: skip
     });
 
     const formatted = hashtags.map(h => ({

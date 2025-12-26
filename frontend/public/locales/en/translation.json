@@ -73,7 +73,8 @@
             "your_class": "Your class",
             "trending": "Trending",
             "popular": "Popular"
-        }
+        },
+        "no_more_results": "No more results"
     },
     "app_name": "ProjetJS",
     "step": "Step",
@@ -354,7 +355,8 @@
         }
     },
     "badge": {
-        "class": "Student Class"
+        "class": "Student Class",
+        "subject": "Professor Subject"
     },
     "hashtags": {
         "trending": "Trending",
@@ -535,5 +537,8 @@
     },
     "errors": {
         "something_went_wrong": "Something went wrong."
+    },
+    "bookmarks": {
+        "empty": "You have no bookmarks yet."
     }
 }

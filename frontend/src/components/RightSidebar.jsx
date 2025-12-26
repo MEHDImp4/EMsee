@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, MoreHorizontal, TrendingUp } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -136,22 +136,44 @@ const SuggestionItem = ({ user, onFollow, t }) => {
     );
 };
 
-const SuggestionsSection = ({ suggestions, loading, onFollow, t }) => (
-    <div className="sidebar-card suggestions-card">
-        <h3>{t('right_sidebar.suggestions', 'Suggestions')}</h3>
-        <div className="suggestions-list">
-            {loading ? (
-                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('common.loading', 'Loading...')}</div>
-            ) : suggestions.length > 0 ? (
-                suggestions.map((user) => (
-                    <SuggestionItem key={user.id} user={user} onFollow={onFollow} t={t} />
-                ))
-            ) : (
-                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('right_sidebar.no_suggestions', 'No suggestions')}</div>
-            )}
+const SuggestionsSection = ({ suggestions, loading, onFollow, t, loadMore, hasMore }) => {
+    const observerTarget = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore && !loading) {
+                    loadMore();
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (observerTarget.current) observer.observe(observerTarget.current);
+        return () => observerTarget.current && observer.unobserve(observerTarget.current);
+    }, [hasMore, loading, loadMore]);
+
+    return (
+        <div className="sidebar-card suggestions-card">
+            <h3>{t('right_sidebar.suggestions', 'Suggestions')}</h3>
+            <div className="suggestions-list">
+                {suggestions && suggestions.length > 0 ? (
+                    <>
+                        {suggestions.map((user) => (
+                            <SuggestionItem key={user.id} user={user} onFollow={onFollow} t={t} />
+                        ))}
+                        {/* Observer for infinite loading */}
+                        <div ref={observerTarget} style={{ padding: '0.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                            {loading && t('common.loading', '...')}
+                        </div>
+                    </>
+                ) : !loading && (
+                    <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('right_sidebar.no_suggestions', 'No suggestions')}</div>
+                )}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const RightSidebar = () => {
     const { t } = useTranslation();
@@ -160,21 +182,31 @@ const RightSidebar = () => {
     const [loading, setLoading] = useState(true);
     const [trendingHashtags, setTrendingHashtags] = useState([]);
     const [loadingHashtags, setLoadingHashtags] = useState(true);
+    // suggestions pagination
+    const [suggestionsPage, setSuggestionsPage] = useState(1);
+    const [hasMoreSuggestions, setHasMoreSuggestions] = useState(true);
 
     const isExplorePage = location.pathname === '/explore';
 
     useEffect(() => {
-        const fetchSuggestions = async () => {
+        const fetchSuggestions = async (pageNum = 1) => {
             try {
-                const users = await UserService.getSuggestions();
-                setSuggestions(users || []);
+                if (pageNum === 1) setLoading(true);
+                const users = await UserService.getSuggestions(3, pageNum);
+
+                if (pageNum === 1) {
+                    setSuggestions(users || []);
+                } else {
+                    setSuggestions(prev => [...prev, ...(users || [])]);
+                }
+                setHasMoreSuggestions(users && users.length === 3);
             } catch (error) {
                 console.error('Failed to load suggestions', error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchSuggestions();
+        fetchSuggestions(1);
 
         // Listen for follow changes from other components (Profile page)
         const handleFollowChange = (e) => {
@@ -190,11 +222,24 @@ const RightSidebar = () => {
         return () => window.removeEventListener('user-follow-state-change', handleFollowChange);
     }, []);
 
+    const fetchMoreSuggestions = async () => {
+        if (!hasMoreSuggestions) return;
+        const nextPage = suggestionsPage + 1;
+        setSuggestionsPage(nextPage);
+        try {
+            const users = await UserService.getSuggestions(3, nextPage);
+            setSuggestions(prev => [...prev, ...(users || [])]);
+            setHasMoreSuggestions(users && users.length === 3);
+        } catch (error) {
+            console.error('Failed to load more suggestions', error);
+        }
+    };
+
     useEffect(() => {
         const fetchTrendingHashtags = async () => {
             try {
                 // Weighted algorithm with 24h half-life over 7 days window
-                const hashtags = await HashtagService.getTrendingHashtags(5, 7, 'weighted', 24);
+                const hashtags = await HashtagService.getTrendingHashtags(10, 7, 'weighted', 24);
                 setTrendingHashtags(hashtags || []);
             } catch (error) {
                 console.error('Failed to load trending hashtags', error);
@@ -242,6 +287,8 @@ const RightSidebar = () => {
                 loading={loading}
                 onFollow={handleFollow}
                 t={t}
+                loadMore={fetchMoreSuggestions}
+                hasMore={hasMoreSuggestions}
             />
         </aside>
     );

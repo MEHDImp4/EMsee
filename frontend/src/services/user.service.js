@@ -25,16 +25,16 @@ const UserService = {
         return await api.get(`/users/${handle}`);
     },
 
-    searchUsers: async (query) => {
-        return await api.get(`/users/search?q=${encodeURIComponent(query)}`);
+    searchUsers: async (query, page = 1, limit = 10) => {
+        return await api.get(`/users/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
     },
 
-    getRecentUsers: async (limit = 10) => {
-        return await api.get(`/users/recent?limit=${limit}`);
+    getRecentUsers: async (limit = 10, page = 1) => {
+        return await api.get(`/users/recent?limit=${limit}&page=${page}`);
     },
 
-    getSuggestions: async () => {
-        return await api.get('/users/suggestions');
+    getSuggestions: async (limit = 3, page = 1) => {
+        return await api.get(`/users/suggestions?limit=${limit}&page=${page}`);
     },
 
     followUser: async (userId) => {

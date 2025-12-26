@@ -73,7 +73,8 @@
             "your_class": "Votre classe",
             "trending": "Tendances",
             "popular": "Populaire"
-        }
+        },
+        "no_more_results": "Fin des résultats"
     },
     "app_name": "ProjetJS",
     "step": "Étape",
@@ -394,7 +395,8 @@
         "you": "Vous"
     },
     "badge": {
-        "class": "Classe"
+        "class": "Classe",
+        "subject": "Matière"
     },
     "hashtags": {
         "trending": "Tendances",
@@ -500,5 +502,8 @@
     },
     "errors": {
         "something_went_wrong": "Une erreur est survenue."
+    },
+    "bookmarks": {
+        "empty": "Vous n'avez aucun signet pour le moment."
     }
 }

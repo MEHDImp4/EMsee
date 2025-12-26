@@ -1,34 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, Hash, MoreHorizontal } from 'lucide-react';
-import HashtagService from '../../services/hashtag.service';
+import { Hash, MoreHorizontal } from 'lucide-react';
 
-const TopHashtagsList = ({ t }) => {
-    const [hashtags, setHashtags] = useState([]);
-    const [loading, setLoading] = useState(true);
+const TopHashtagsList = ({ t, hashtags, loadMore, hasMore, loadingMore, isSearching }) => {
+    const observerTarget = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchTopHashtags = async () => {
-            try {
-                setLoading(true);
-                const data = await HashtagService.getTopHashtags(10);
-                setHashtags(data || []);
-            } catch (error) {
-                console.error('Failed to fetch top hashtags:', error);
-            } finally {
-                setLoading(false);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore && !loadingMore && !isSearching) {
+                    loadMore();
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (observerTarget.current) {
+            observer.observe(observerTarget.current);
+        }
+
+        return () => {
+            if (observerTarget.current) {
+                observer.unobserve(observerTarget.current);
             }
         };
-
-        fetchTopHashtags();
-    }, []);
+    }, [hasMore, loadingMore, isSearching, loadMore]);
 
     const handleHashtagClick = (hashtagName) => {
         navigate(`/explore?q=%23${hashtagName}`);
     };
 
-    if (loading) {
+    // Initial Loading State (searching or fetching first page)
+    const initialLoading = isSearching && (!hashtags || hashtags.length === 0);
+
+    if (initialLoading) {
         return (
             <div className="trends-list">
                 <h3 style={{ padding: '1rem 1rem 0.5rem 1rem', fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
@@ -41,7 +47,7 @@ const TopHashtagsList = ({ t }) => {
         );
     }
 
-    if (hashtags.length === 0) {
+    if (!hashtags || hashtags.length === 0) {
         return (
             <div className="trends-list">
                 <h3 style={{ padding: '1rem 1rem 0.5rem 1rem', fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
@@ -61,7 +67,7 @@ const TopHashtagsList = ({ t }) => {
             </h3>
             {hashtags.map((hashtag, index) => (
                 <div
-                    key={hashtag.name}
+                    key={`${hashtag.name}-${index}`}
                     className="trend-item"
                     onClick={() => handleHashtagClick(hashtag.name)}
                     style={{
@@ -77,9 +83,9 @@ const TopHashtagsList = ({ t }) => {
                     onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                 >
                     <div>
-                        <div style={{ 
-                            fontSize: '0.85rem', 
-                            color: 'var(--text-muted)', 
+                        <div style={{
+                            fontSize: '0.85rem',
+                            color: 'var(--text-muted)',
                             marginBottom: '0.2rem',
                             display: 'flex',
                             alignItems: 'center',
@@ -88,11 +94,11 @@ const TopHashtagsList = ({ t }) => {
                             <Hash size={14} />
                             <span>#{index + 1} · {t('hashtags.trending', 'Tendance')}</span>
                         </div>
-                        <div style={{ 
-                            fontSize: '1rem', 
-                            fontWeight: 700, 
-                            color: 'var(--primary-color, #1DA1F2)', 
-                            marginBottom: '0.2rem' 
+                        <div style={{
+                            fontSize: '1rem',
+                            fontWeight: 700,
+                            color: 'var(--primary-color, #1DA1F2)',
+                            marginBottom: '0.2rem'
                         }}>
                             #{hashtag.name}
                         </div>
@@ -100,8 +106,8 @@ const TopHashtagsList = ({ t }) => {
                             {hashtag.totalCount.toLocaleString()} {t('hashtags.posts', 'posts')}
                         </div>
                     </div>
-                    <button 
-                        className="more-btn" 
+                    <button
+                        className="more-btn"
                         onClick={(e) => e.stopPropagation()}
                         style={{
                             background: 'transparent',
@@ -122,6 +128,14 @@ const TopHashtagsList = ({ t }) => {
                     </button>
                 </div>
             ))}
+
+            {/* Loader for infinite scroll */}
+            <div ref={observerTarget} style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                {(loadingMore) && t('common.loading', 'Chargement...')}
+                {!hasMore && hashtags.length > 0 && (
+                    <span style={{ fontSize: '0.9rem' }}>{t('explore.no_more_results', 'Fin des résultats')}</span>
+                )}
+            </div>
         </div>
     );
 };

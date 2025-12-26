@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { BASE_URL } from '../../services/api';
-import UserService from '../../services/user.service';
 import UserAvatar from '../UserAvatar';
 
-const UserResults = ({ results, searchQuery, isSearching, t }) => {
-    const [recentUsers, setRecentUsers] = useState([]);
-    const [loadingRecent, setLoadingRecent] = useState(false);
+const UserResults = ({ results, searchQuery, isSearching, loadMore, hasMore, loadingMore, t }) => {
+    const observerTarget = useRef(null);
 
     useEffect(() => {
-        // Fetch recent users when no search query
-        if (!searchQuery) {
-            const fetchRecent = async () => {
-                try {
-                    setLoadingRecent(true);
-                    const data = await UserService.getRecentUsers(10);
-                    setRecentUsers(data || []);
-                } catch (error) {
-                    console.error('Failed to fetch recent users:', error);
-                } finally {
-                    setLoadingRecent(false);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore && !loadingMore && !isSearching) {
+                    loadMore();
                 }
-            };
-            fetchRecent();
+            },
+            { threshold: 1.0 }
+        );
+
+        if (observerTarget.current) {
+            observer.observe(observerTarget.current);
         }
-    }, [searchQuery]);
 
-    const displayUsers = searchQuery ? results : recentUsers;
-    const loading = searchQuery ? isSearching : loadingRecent;
+        return () => {
+            if (observerTarget.current) {
+                observer.unobserve(observerTarget.current);
+            }
+        };
+    }, [hasMore, loadingMore, isSearching, loadMore]);
 
-    if (loading) {
+    // Determine loading state for initial load (when results are empty and searching)
+    const initialLoading = isSearching && results.length === 0;
+
+    if (initialLoading) {
         return <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('explore.searching', 'Recherche en cours...')}</div>;
     }
 
-    if (displayUsers.length > 0) {
+    if (results.length > 0) {
         return (
             <div className="users-list">
                 {!searchQuery && (
@@ -46,7 +46,7 @@ const UserResults = ({ results, searchQuery, isSearching, t }) => {
                         {t('explore.recent_users', 'Nouveaux utilisateurs')}
                     </div>
                 )}
-                {displayUsers.map((user) => (
+                {results.map((user) => (
                     <Link to={`/profile/${user.username}`} key={user.id} style={{ textDecoration: 'none', color: 'inherit' }}>
                         <div style={{ padding: '1rem', display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
                             <UserAvatar user={user} size={40} className="avatar-circle" />
@@ -58,6 +58,14 @@ const UserResults = ({ results, searchQuery, isSearching, t }) => {
                         </div>
                     </Link>
                 ))}
+
+                {/* Loader for infinite scroll */}
+                <div ref={observerTarget} style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    {(loadingMore) && t('common.loading', 'Chargement...')}
+                    {!hasMore && results.length > 0 && (
+                        <span style={{ fontSize: '0.9rem' }}>{t('explore.no_more_results', 'Fin des résultats')}</span>
+                    )}
+                </div>
             </div>
         );
     }
@@ -66,7 +74,7 @@ const UserResults = ({ results, searchQuery, isSearching, t }) => {
         return <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('explore.no_results', `Aucun utilisateur trouvé pour "${searchQuery}"`)}</div>;
     }
 
-    return <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>{t('explore.search_hint', 'Utilisez la barre de recherche pour trouver des personnes.')}</div>;
+    return null; // Should not reach here typically given parent logic
 };
 
 export default UserResults;

@@ -3,8 +3,8 @@ import api from './api';
 /**
  * Get top hashtags by total post count
  */
-export const getTopHashtags = (limit = 10) => {
-    return api.get(`/hashtags/top?limit=${limit}`);
+export const getTopHashtags = (limit = 10, page = 1) => {
+    return api.get(`/hashtags/top?limit=${limit}&page=${page}`);
 };
 
 /**

@@ -82,6 +82,9 @@ const followUser = async (req, res) => {
 const searchUsers = async (req, res) => {
     try {
         const { q } = req.query;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
 
         if (!q || q.trim() === '') {
             return res.json([]);
@@ -101,7 +104,8 @@ const searchUsers = async (req, res) => {
                 ]
             },
             select: userSearchSelectFields,
-            take: 10
+            take: limit,
+            skip: skip
         });
 
         res.json(users);
@@ -114,6 +118,8 @@ const searchUsers = async (req, res) => {
 const getRecentUsers = async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
         const currentUserId = req.user?.id;
 
         const users = await prisma.user.findMany({
@@ -124,6 +130,7 @@ const getRecentUsers = async (req, res) => {
                 created_at: 'desc'
             },
             take: limit,
+            skip: skip,
             select: {
                 id: true,
                 username: true,
@@ -144,14 +151,18 @@ const getRecentUsers = async (req, res) => {
 const getSuggestions = async (req, res) => {
     try {
         const currentUserId = req.user.id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 3;
+        const skip = (page - 1) * limit;
 
         const suggestions = await prisma.user.findMany({
             where: {
                 id: { not: currentUserId }
             },
-            take: 3, // In future, maybe take more and shuffle
+            take: limit,
+            skip: skip,
             orderBy: {
-                created_at: 'desc'
+                created_at: 'desc' // Simplistic "suggestions" for now
             },
             select: {
                 id: true,

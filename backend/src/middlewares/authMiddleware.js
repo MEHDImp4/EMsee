@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
+    if (req.method === 'OPTIONS') {
+        return next();
+    }
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {

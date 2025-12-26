@@ -23,7 +23,11 @@ const Explore = () => {
         isSearching,
         tabs,
         hashtagPosts,
-        handleSearch
+        topHashtags,
+        handleSearch,
+        loadMore,
+        hasMore,
+        loadingMore
     } = useExplore(initialQuery);
 
     useEffect(() => {
@@ -99,22 +103,37 @@ const Explore = () => {
 
                 {activeTab === 'trending' && !searchQuery && <TrendingContent t={t} />}
 
-                {(activeTab === 'users' || (searchQuery && !searchQuery.startsWith('#'))) && (
+                {activeTab === 'users' && (
                     <UserResults
                         results={searchResults}
                         searchQuery={searchQuery}
                         isSearching={isSearching}
+                        loadMore={loadMore}
+                        hasMore={hasMore}
+                        loadingMore={loadingMore}
                         t={t}
                     />
                 )}
 
-                {activeTab === 'hashtags' && !searchQuery && <TopHashtagsList t={t} />}
+                {activeTab === 'hashtags' && !searchQuery.startsWith('#') && (
+                    <TopHashtagsList
+                        t={t}
+                        hashtags={topHashtags}
+                        loadMore={loadMore}
+                        hasMore={hasMore}
+                        loadingMore={loadingMore}
+                        isSearching={isSearching}
+                    />
+                )}
 
                 {activeTab === 'hashtags' && searchQuery.startsWith('#') && (
                     <HashtagResults
                         posts={hashtagPosts}
                         searchQuery={searchQuery}
                         isSearching={isSearching}
+                        loadMore={loadMore}
+                        hasMore={hasMore}
+                        loadingMore={loadingMore}
                         t={t}
                     />
                 )}
