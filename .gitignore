@@ -52,3 +52,9 @@ build/
 *.log
 .DS_Store
 coverage/
+
+# Local SQLite
+*.db
+*.sqlite
+backend/prisma/schema.local.prisma
+*.sqlite-journal

@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "npx prisma migrate deploy && nodemon src/server.js",
+    "dev:local": "node scripts/setup-sqlite.js && npx prisma db push --schema prisma/schema.local.prisma && npx prisma generate --schema prisma/schema.local.prisma && nodemon src/server.js --sqlite",
     "build": "echo 'No build needed for JS'",
     "start": "npx prisma migrate deploy && node src/server.js",
     "test": "jest",
