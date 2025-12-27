@@ -69,7 +69,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             <div className="sidebar-content">
                 <div className="logo-area desktop-only">
                     <Link to="/feed" className="logo-wide">
-                        <img src={logo} alt="Logo" style={{ height: 48, width: 'auto' }} />
+                        <img src={logo} alt="Logo" style={{ height: 44, width: 'auto' }} />
                     </Link>
                 </div>
 

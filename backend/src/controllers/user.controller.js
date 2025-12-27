@@ -35,10 +35,22 @@ const getProfile = async (req, res) => {
 const followUser = async (req, res) => {
     try {
         const targetUserId = parseInt(req.params.id);
-        const currentUserId = req.user.id;
+        const currentUserId = parseInt(req.user.id);
+
+        console.log(`[DEBUG] Follow toggle: ${currentUserId} -> ${targetUserId}`);
+
+        if (isNaN(targetUserId) || isNaN(currentUserId)) {
+            return res.status(400).json({ error: 'Invalid user ID' });
+        }
 
         if (targetUserId === currentUserId) {
             return res.status(400).json({ error: 'Cannot follow yourself' });
+        }
+
+        // Verify current user still exists (could be deleted during seed/reset)
+        const currentUser = await prisma.user.findUnique({ where: { id: currentUserId } });
+        if (!currentUser) {
+            return res.status(401).json({ error: 'Your session has expired or your account was deleted. Please log out and log in again.' });
         }
 
         const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
@@ -74,8 +86,13 @@ const followUser = async (req, res) => {
 
         return res.json({ following: true });
     } catch (error) {
-        console.error('Error toggling follow:', error);
-        res.status(500).json({ error: 'Server error' });
+        console.error('Error toggling follow! Details:', {
+            error: error.message,
+            stack: error.stack,
+            params: req.params,
+            user: req.user
+        });
+        res.status(500).json({ error: 'Server error', details: error.message });
     }
 };
 

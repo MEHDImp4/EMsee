@@ -34,25 +34,6 @@ const app = express();
 const server = http.createServer(app); // Create HTTP server
 const io = initializeSocket(server); // Initialize Socket.io
 
-// Security Middleware
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-
-app.use(helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" }, // Allow resource loading (images)
-}));
-
-// Rate limiting
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-app.use('/api', limiter);
-
-app.set('trust proxy', 1); // Trust first proxy (necessary for simple deployments behind Nginx/Docker)
-
 // CORS Configuration
 const allowedOrigins = [
     'http://localhost:5173',
@@ -76,8 +57,30 @@ app.use(cors({
         }
         return callback(null, true);
     },
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range']
 }));
+
+// Security Middleware
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }, // Allow resource loading (images)
+}));
+
+// Rate limiting - increased for dev/local with many assets
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 1000, // Increased limit
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+app.use('/api', limiter);
+
+app.set('trust proxy', 1); // Trust first proxy (necessary for simple deployments behind Nginx/Docker)
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));

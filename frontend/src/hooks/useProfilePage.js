@@ -79,6 +79,29 @@ const useProfilePage = ({ targetUsername, authUser }) => {
 
     const userView = useMemo(() => {
         if (!profileData) return null;
+
+        // Handle avatar URL - check if it's already an absolute URL
+        let avatarUrl = null;
+        if (profileData.avatar) {
+            // If avatar starts with http:// or https://, use it as is
+            if (profileData.avatar.startsWith('http://') || profileData.avatar.startsWith('https://')) {
+                avatarUrl = profileData.avatar;
+            } else {
+                // Otherwise, prepend BASE_URL
+                avatarUrl = `${BASE_URL}${profileData.avatar}`;
+            }
+        }
+
+        // Handle banner URL similarly
+        let bannerUrl = null;
+        if (profileData.banner) {
+            if (profileData.banner.startsWith('http://') || profileData.banner.startsWith('https://')) {
+                bannerUrl = profileData.banner;
+            } else {
+                bannerUrl = `${BASE_URL}${profileData.banner}`;
+            }
+        }
+
         return {
             name: profileData.full_name || profileData.username || 'User',
             handle: `@${profileData.username || 'user'}`,
@@ -90,8 +113,9 @@ const useProfilePage = ({ targetUsername, authUser }) => {
             location: profileData.location || 'Rabat, Maroc',
             bio: profileData.bio || '',
             joinDate: profileData.created_at || profileData.createdAt,
-            avatar: profileData.avatar ? `${BASE_URL}${profileData.avatar}` : null,
-            banner: profileData.banner ? `${BASE_URL}${profileData.banner}` : null,
+            avatar: avatarUrl,
+            banner: bannerUrl,
+            subjects: profileData.subjects,
             stats: {
                 posts: userPosts?.length || 0, // This might need adjustment if we want total count vs fetch count
                 followers: profileData.followersCount || 0,

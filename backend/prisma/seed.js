@@ -3,10 +3,15 @@ const { faker } = require('@faker-js/faker');
 
 const prisma = new PrismaClient();
 
-// Configuration
-const USERS_TO_CREATE = 100;
-const POSTS_PER_USER_MIN = 1;
-const POSTS_PER_USER_MAX = 5;
+// ===== CONFIGURATION FOR MASSIVE DATASET =====
+const USERS_TO_CREATE = 200;
+const POSTS_PER_USER_MIN = 150;
+const POSTS_PER_USER_MAX = 180;
+const COMMENTS_TO_CREATE = 1500; // ~5% of posts
+const REPOSTS_TO_CREATE = 750;
+const LIKES_TO_CREATE = 4000;
+const FOLLOWS_TO_CREATE = 500;
+const BOOKMARKS_TO_CREATE = 400;
 
 // SQLite/Postgres compatibility helper
 const isSqlite = process.env.DATABASE_PROVIDER === 'sqlite' || process.env.DATABASE_URL?.startsWith('file:');
@@ -19,30 +24,36 @@ function serializeJson(data) {
 }
 
 async function main() {
-    console.log(`Starting seed... (SQLite Mode: ${isSqlite})`);
-
-    // Clean up existing data (optional, be careful in prod)
-    // await prisma.post.deleteMany();
-    // await prisma.user.deleteMany();
-    // await prisma.hashtag.deleteMany();
+    console.log(`\n🚀 Starting MASSIVE seed... (SQLite Mode: ${isSqlite})`);
+    console.log(`📊 Expected totals:`);
+    console.log(`   - Users: ${USERS_TO_CREATE}`);
+    console.log(`   - Posts: ~${USERS_TO_CREATE * ((POSTS_PER_USER_MIN + POSTS_PER_USER_MAX) / 2)}`);
+    console.log(`   - Comments: ${COMMENTS_TO_CREATE}`);
+    console.log(`   - Reposts: ${REPOSTS_TO_CREATE}`);
+    console.log(`   - Likes: ${LIKES_TO_CREATE}`);
+    console.log(`   - Follows: ${FOLLOWS_TO_CREATE}`);
+    console.log(`   - Bookmarks: ${BOOKMARKS_TO_CREATE}`);
+    console.log(`⏱️  This will take approximately 5-10 minutes...\n`);
 
     const filieres = ['IIR', 'GESI', 'IAII', 'GCB', 'GI', 'GF'];
     const years = ['1', '2', '3', '4', '5'];
-    const subjectsList = ['Math', 'Physics', 'Programming', 'Algorithms', 'Databases', 'Networks', 'English', 'Management'];
+    const subjectsList = ['Math', 'Physics', 'Programming', 'Algorithms', 'Databases', 'Networks', 'English', 'Management', 'AI', 'Web Dev'];
 
-    console.log(`Creating ${USERS_TO_CREATE} users...`);
-
+    // ========== STEP 1: CREATE USERS ==========
+    console.log(`\n📝 Step 1/7: Creating ${USERS_TO_CREATE} users...`);
     const userIds = [];
+    let usersCreated = 0;
 
     for (let i = 0; i < USERS_TO_CREATE; i++) {
         const firstName = faker.person.firstName();
         const lastName = faker.person.lastName();
         const username = faker.internet.username({ firstName, lastName }).slice(0, 10).toLowerCase().replace(/[^a-z0-9.]/g, '');
-        // Ensure unique username by appending random if needed, simpler is using unique email and handling errors, but lets generate safe unique
         const uniqueSuffix = faker.string.alphanumeric(3);
         const finalUsername = (username.slice(0, 6) + uniqueSuffix).toLowerCase();
 
-        const role = faker.helpers.arrayElement(['student', 'student', 'student', 'professor']); // Mostly students
+        // 80% students, 15% professors, 5% admins
+        const rand = Math.random();
+        const role = rand < 0.80 ? 'student' : rand < 0.95 ? 'professor' : 'admin';
 
         const subjects = faker.helpers.arrayElements(subjectsList, { min: 1, max: 4 });
 
@@ -56,7 +67,7 @@ async function main() {
             location: faker.location.city(),
             avatar: faker.image.avatar(),
             banner: faker.image.url({ category: 'abstract' }),
-            created_at: faker.date.past(),
+            created_at: faker.date.past({ years: 2 }),
         };
 
         if (role === 'student') {
@@ -65,55 +76,80 @@ async function main() {
             userData.studentClass = `${userData.filiere}${userData.year} G${faker.number.int({ min: 1, max: 4 })}`;
             userData.subjects = serializeJson(subjects);
         } else {
-            userData.subjects = serializeJson(subjects); // Professors also have subjects taught
+            userData.subjects = serializeJson(subjects);
         }
 
         try {
             const user = await prisma.user.create({ data: userData });
             userIds.push(user.id);
-            // console.log(`Created user: ${user.username}`);
+            usersCreated++;
+
+            // Progress indicator
+            if (usersCreated % 50 === 0) {
+                console.log(`   ✅ Created ${usersCreated}/${USERS_TO_CREATE} users...`);
+            }
         } catch (e) {
-            console.warn(`Failed to create user ${finalUsername}: ${e.message.split('\n')[0]}`);
+            console.warn(`   ⚠️  Failed to create user ${finalUsername}: ${e.message.split('\n')[0]}`);
         }
     }
 
-    console.log(`Created ${userIds.length} users successfully.`);
+    console.log(`✅ Step 1 Complete: Created ${usersCreated} users successfully.\n`);
 
-    console.log('Creating posts...');
-
+    // ========== STEP 2: CREATE POSTS ==========
+    console.log(`📝 Step 2/7: Creating posts (150-180 per user)...`);
     let totalPostsCreated = 0;
-    let totalPostsFailed = 0;
+    const postIds = [];
 
     for (const userId of userIds) {
         const numPosts = faker.number.int({ min: POSTS_PER_USER_MIN, max: POSTS_PER_USER_MAX });
 
         for (let j = 0; j < numPosts; j++) {
-            const content = faker.lorem.paragraph();
+            const contentType = faker.number.int({ min: 1, max: 10 });
+            let content;
+
+            // Varied content types
+            if (contentType <= 3) {
+                // Question
+                content = `❓ ${faker.lorem.sentence()}`;
+            } else if (contentType <= 6) {
+                // Regular post
+                content = faker.lorem.paragraph();
+            } else if (contentType <= 8) {
+                // Short announcement
+                content = `📢 ${faker.lorem.sentence()}`;
+            } else {
+                // Code-related post
+                content = `💻 Working on ${faker.helpers.arrayElement(['JavaScript', 'Python', 'Java', 'C++', 'React', 'Node.js'])} project: ${faker.lorem.sentence()}`;
+            }
 
             try {
                 const post = await prisma.post.create({
                     data: {
                         userId: userId,
                         content: content,
-                        createdAt: faker.date.recent(),
+                        createdAt: faker.date.recent({ days: 30 }),
                     }
                 });
+                postIds.push({ id: post.id, userId: userId });
                 totalPostsCreated++;
             } catch (e) {
-                totalPostsFailed++;
-                console.warn(`✗ Failed to create post for user ${userId}: ${e.message}`);
+                // Silently skip errors
             }
+        }
+
+        // Progress indicator
+        if ((userIds.indexOf(userId) + 1) % 25 === 0) {
+            console.log(`   ✅ Processed ${userIds.indexOf(userId) + 1}/${userIds.length} users (${totalPostsCreated} posts so far)...`);
         }
     }
 
-    console.log(`\n=== Seeding Summary ===`);
-    console.log(`Users created: ${userIds.length}`);
-    console.log(`Posts created: ${totalPostsCreated}`);
-    console.log(`Posts failed: ${totalPostsFailed}`);
+    console.log(`✅ Step 2 Complete: Created ${totalPostsCreated} posts.\n`);
 
-    // Create hashtags
-    console.log(`\nCreating hashtags...`);
-    const hashtagNames = ['coding', 'emsi', 'exams', 'project', 'javascript', 'python', 'help', 'internship', 'hackathon', 'party'];
+    // ========== STEP 3: CREATE HASHTAGS ==========
+    console.log(`📝 Step 3/7: Creating hashtags...`);
+    const hashtagNames = ['coding', 'emsi', 'exams', 'project', 'javascript', 'python', 'help', 'internship',
+        'hackathon', 'party', 'study', 'ai', 'machinelearning', 'webdev', 'devops',
+        'cybersecurity', 'dataScience', 'mobile', 'backend', 'frontend'];
     const hashtagIds = {};
 
     for (const name of hashtagNames) {
@@ -123,27 +159,19 @@ async function main() {
             });
             hashtagIds[name] = hashtag.id;
         } catch (e) {
-            // Hashtag might already exist
             const existing = await prisma.hashtag.findUnique({ where: { name } });
             if (existing) hashtagIds[name] = existing.id;
         }
     }
-    console.log(`Created ${Object.keys(hashtagIds).length} hashtags`);
+    console.log(`✅ Step 3 Complete: Created ${Object.keys(hashtagIds).length} hashtags.\n`);
 
-    // Get all created posts
-    const allPosts = await prisma.post.findMany({ select: { id: true, userId: true } });
-    console.log(`\nAdding interactions...`);
-
-    let likesCreated = 0;
-    let repostsCreated = 0;
-    let commentsCreated = 0;
-    let conversationsCreated = 0;
+    // ========== STEP 4: LINK HASHTAGS TO POSTS ==========
+    console.log(`📝 Step 4/7: Linking hashtags to posts...`);
     let hashtagLinksCreated = 0;
 
-    // Add hashtags to posts (each post gets 0-3 random hashtags)
-    for (const post of allPosts) {
+    for (const post of postIds) {
         const numHashtags = faker.number.int({ min: 0, max: 3 });
-        const selectedHashtags = faker.helpers.arrayElements(Object.keys(hashtagIds), { min: 0, max: numHashtags });
+        const selectedHashtags = faker.helpers.arrayElements(Object.keys(hashtagIds), numHashtags);
 
         for (const hashtagName of selectedHashtags) {
             try {
@@ -159,102 +187,170 @@ async function main() {
             }
         }
     }
+    console.log(`✅ Step 4 Complete: Created ${hashtagLinksCreated} hashtag links.\n`);
 
-    // Add likes (each post gets 0-10 random likes)
-    for (const post of allPosts) {
-        const numLikes = faker.number.int({ min: 0, max: 10 });
-        const likers = faker.helpers.arrayElements(userIds.filter(id => id !== post.userId), { min: 0, max: numLikes });
+    // ========== STEP 5: CREATE COMMENTS ==========
+    console.log(`📝 Step 5/7: Creating ${COMMENTS_TO_CREATE} comments...`);
+    let commentsCreated = 0;
 
-        for (const likerId of likers) {
+    if (postIds.length > 0) {
+        for (let i = 0; i < COMMENTS_TO_CREATE; i++) {
+            const parentPost = postIds[Math.floor(Math.random() * postIds.length)];
+            const commenter = userIds[Math.floor(Math.random() * userIds.length)];
+
             try {
-                await prisma.like.create({
+                await prisma.post.create({
                     data: {
-                        postId: post.id,
-                        userId: likerId,
-                        createdAt: faker.date.recent()
+                        userId: commenter,
+                        content: faker.lorem.sentence(),
+                        parentId: parentPost.id,
+                        createdAt: faker.date.recent({ days: 25 })
                     }
                 });
-                likesCreated++;
+                commentsCreated++;
+
+                if (commentsCreated % 250 === 0) {
+                    console.log(`   ✅ Created ${commentsCreated}/${COMMENTS_TO_CREATE} comments...`);
+                }
             } catch (e) {
-                // Ignore duplicate likes
+                // Ignore errors
             }
         }
     }
+    console.log(`✅ Step 5 Complete: Created ${commentsCreated} comments.\n`);
 
-    // Add reposts (some posts get reposted)
-    const postsToRepost = faker.helpers.arrayElements(allPosts, { min: 10, max: 30 });
-    for (const post of postsToRepost) {
-        const reposter = faker.helpers.arrayElement(userIds.filter(id => id !== post.userId));
+    // ========== STEP 6: CREATE INTERACTIONS (Likes, Reposts, Bookmarks) ==========
+    console.log(`📝 Step 6/7: Creating interactions...`);
+    let likesCreated = 0;
+    let repostsCreated = 0;
+    let bookmarksCreated = 0;
+
+    // LIKES
+    console.log(`   Creating ${LIKES_TO_CREATE} likes...`);
+    for (let i = 0; i < LIKES_TO_CREATE; i++) {
+        const post = postIds[Math.floor(Math.random() * postIds.length)];
+        const availableLikers = userIds.filter(id => id !== post.userId);
+        const liker = availableLikers[Math.floor(Math.random() * availableLikers.length)];
+
+        try {
+            await prisma.like.create({
+                data: {
+                    postId: post.id,
+                    userId: liker,
+                    createdAt: faker.date.recent({ days: 20 })
+                }
+            });
+            likesCreated++;
+        } catch (e) {
+            // Ignore duplicates
+        }
+
+        if (likesCreated % 500 === 0) {
+            console.log(`      ✅ Created ${likesCreated}/${LIKES_TO_CREATE} likes...`);
+        }
+    }
+
+    // REPOSTS
+    console.log(`   Creating ${REPOSTS_TO_CREATE} reposts...`);
+    for (let i = 0; i < REPOSTS_TO_CREATE; i++) {
+        const post = postIds[Math.floor(Math.random() * postIds.length)];
+        const availableReposters = userIds.filter(id => id !== post.userId);
+        const reposter = availableReposters[Math.floor(Math.random() * availableReposters.length)];
+
         try {
             await prisma.repost.create({
                 data: {
                     postId: post.id,
                     userId: reposter,
-                    createdAt: faker.date.recent()
+                    createdAt: faker.date.recent({ days: 20 })
                 }
             });
             repostsCreated++;
         } catch (e) {
             // Ignore duplicates
         }
-    }
 
-    // Add comments (replies to posts)
-    const postsToComment = faker.helpers.arrayElements(allPosts, { min: 20, max: 50 });
-    for (const post of postsToComment) {
-        const numComments = faker.number.int({ min: 1, max: 3 });
-        for (let i = 0; i < numComments; i++) {
-            const commenter = faker.helpers.arrayElement(userIds);
-            try {
-                await prisma.post.create({
-                    data: {
-                        userId: commenter,
-                        content: faker.lorem.sentence(),
-                        parentId: post.id,
-                        createdAt: faker.date.recent()
-                    }
-                });
-                commentsCreated++;
-            } catch (e) {
-                // Ignore errors
-            }
+        if (repostsCreated % 250 === 0) {
+            console.log(`      ✅ Created ${repostsCreated}/${REPOSTS_TO_CREATE} reposts...`);
         }
     }
 
-    // Add some conversations between users
-    const numConversations = 20;
-    for (let i = 0; i < numConversations; i++) {
-        const [user1, user2] = faker.helpers.arrayElements(userIds, 2);
+    // BOOKMARKS
+    console.log(`   Creating ${BOOKMARKS_TO_CREATE} bookmarks...`);
+    for (let i = 0; i < BOOKMARKS_TO_CREATE; i++) {
+        const post = postIds[Math.floor(Math.random() * postIds.length)];
+        const bookmarker = userIds[Math.floor(Math.random() * userIds.length)];
 
         try {
-            // Create conversation
-            const conversation = await prisma.conversation.create({
+            await prisma.bookmark.create({
                 data: {
-                    participants: {
-                        create: [
-                            { userId: user1 },
-                            { userId: user2 }
-                        ]
-                    }
+                    postId: post.id,
+                    userId: bookmarker,
+                    createdAt: faker.date.recent({ days: 20 })
                 }
             });
-            conversationsCreated++;
+            bookmarksCreated++;
         } catch (e) {
-            console.warn(`Failed to create conversation: ${e.message.split('\n')[0]}`);
+            // Ignore duplicates
         }
     }
 
-    console.log(`\nInteractions created:`);
-    console.log(`- Likes: ${likesCreated}`);
-    console.log(`- Reposts: ${repostsCreated}`);
-    console.log(`- Comments: ${commentsCreated}`);
-    console.log(`- Hashtag links: ${hashtagLinksCreated}`);
-    console.log(`- Conversations: ${conversationsCreated}`);
-    console.log('\nSeeding completed.');
+    console.log(`✅ Step 6 Complete: Created ${likesCreated} likes, ${repostsCreated} reposts, ${bookmarksCreated} bookmarks.\n`);
+
+    // ========== STEP 7: CREATE FOLLOWS ==========
+    console.log(`📝 Step 7/7: Creating ${FOLLOWS_TO_CREATE} follow relationships...`);
+    let followsCreated = 0;
+
+    for (let i = 0; i < FOLLOWS_TO_CREATE; i++) {
+        const follower = userIds[Math.floor(Math.random() * userIds.length)];
+        const availableToFollow = userIds.filter(id => id !== follower);
+        const following = availableToFollow[Math.floor(Math.random() * availableToFollow.length)];
+
+        try {
+            await prisma.follow.create({
+                data: {
+                    followerId: follower,
+                    followingId: following,
+                    createdAt: faker.date.recent({ days: 60 })
+                }
+            });
+            followsCreated++;
+
+            if (followsCreated % 100 === 0) {
+                console.log(`   ✅ Created ${followsCreated}/${FOLLOWS_TO_CREATE} follows...`);
+            }
+        } catch (e) {
+            // Ignore duplicates
+        }
+    }
+    console.log(`✅ Step 7 Complete: Created ${followsCreated} follow relationships.\n`);
+
+    // ========== SUMMARY ==========
+    const totalItems = usersCreated + totalPostsCreated + commentsCreated + likesCreated +
+        repostsCreated + bookmarksCreated + followsCreated + hashtagLinksCreated;
+
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`🎉 SEEDING COMPLETED SUCCESSFULLY!`);
+    console.log(`${'='.repeat(60)}`);
+    console.log(`📊 Final Statistics:`);
+    console.log(`   👥 Users:           ${usersCreated.toLocaleString()}`);
+    console.log(`   📝 Posts:           ${totalPostsCreated.toLocaleString()}`);
+    console.log(`   💬 Comments:        ${commentsCreated.toLocaleString()}`);
+    console.log(`   ❤️  Likes:           ${likesCreated.toLocaleString()}`);
+    console.log(`   🔁 Reposts:         ${repostsCreated.toLocaleString()}`);
+    console.log(`   🔖 Bookmarks:       ${bookmarksCreated.toLocaleString()}`);
+    console.log(`   👤 Follows:         ${followsCreated.toLocaleString()}`);
+    console.log(`   #️⃣  Hashtag links:  ${hashtagLinksCreated.toLocaleString()}`);
+    console.log(`   ─────────────────────────────`);
+    console.log(`   📦 TOTAL ITEMS:     ${totalItems.toLocaleString()}`);
+    console.log(`${'='.repeat(60)}\n`);
+    console.log(`✨ You can now view your data in Prisma Studio!`);
+    console.log(`   Run: npx prisma studio\n`);
 }
 
 main()
     .catch((e) => {
+        console.error('❌ Seeding failed:');
         console.error(e);
         process.exit(1);
     })

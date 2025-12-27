@@ -151,6 +151,7 @@
         "register_subtitle": "Create your EMsee account now.",
         "student": "Student",
         "professor": "Professor",
+        "admin": "Admin",
         "username": "Username",
         "username_placeholder": "john.doe",
         "username_error": "Lowercase and dots only.",
@@ -212,11 +213,17 @@
         },
         "filieres": {
             "iir": "Comp. Sci. & Networks Eng.",
+            "IIR": "Comp. Sci. & Networks Eng.",
             "gesi": "Elec. Eng. & Intl. Systems",
+            "GESI": "Elec. Eng. & Intl. Systems",
             "iaii": "Auto. & Ind. IT Engineering",
+            "IAII": "Auto. & Ind. IT Engineering",
             "gcb": "Civil Engineering",
+            "GCB": "Civil Engineering",
             "gi": "Industrial Engineering",
-            "gf": "Financial Engineering"
+            "GI": "Industrial Engineering",
+            "gf": "Financial Engineering",
+            "GF": "Financial Engineering"
         },
         "years": {
             "prepa_1": "1st Year Preparatory",
@@ -228,7 +235,12 @@
             "year_2": "2nd Year",
             "year_3": "3rd Year",
             "year_4": "4th Year",
-            "year_5": "5th Year"
+            "year_5": "5th Year",
+            "1": "1st Year",
+            "2": "2nd Year",
+            "3": "3rd Year",
+            "4": "4th Year",
+            "5": "5th Year"
         }
     },
     "contact_page": {
@@ -334,6 +346,8 @@
     },
     "profile": {
         "edit": "Edit",
+        "follow": "Follow",
+        "unfollow": "Unfollow",
         "change_photo": "Change Photo",
         "location": "Location",
         "level": "Level",

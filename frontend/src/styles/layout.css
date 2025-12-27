@@ -41,8 +41,11 @@
 }
 
 .logo-area {
-  padding: 0.5rem 0.5rem;
+  padding: 0.75rem 1rem; /* Match nav-item left padding */
   margin-bottom: 0.25rem;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .logo-circle {
@@ -699,6 +702,7 @@
   gap: 0.75rem;
   cursor: pointer;
   transition: background 0.2s;
+  width: 100%;
 }
 
 .suggestion-item:hover {
@@ -716,28 +720,40 @@
 
 .suggestion-info {
   flex: 1;
+  min-width: 0; /* Allow text truncate */
+  display: flex;
+  flex-direction: column;
 }
 
 .suggestion-name {
   font-weight: 700;
   font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .suggestion-handle {
   color: var(--text-muted);
   font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-follow {
   background-color: var(--text-main);
   color: var(--bg-main);
   border: none;
-  padding: 0.35rem 1rem;
+  padding: 0.4rem 1rem;
   border-radius: 99px;
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
+  min-width: 85px; /* Ensure uniform alignment */
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .btn-follow:hover {

@@ -104,23 +104,23 @@ const TrendsSection = ({ t, trendingHashtags, loadingHashtags }) => (
 
 const SuggestionItem = ({ user, onFollow, t }) => {
     const navigate = useNavigate();
-    const toSearch = `/explore?q=%40${user.username}`;
+    const profilePath = `/profile/${user.username}`;
     const initials = getInitials(user.full_name || user.username);
 
     return (
         <div
             className="suggestion-item"
-            onClick={() => navigate(toSearch)}
+            onClick={() => navigate(profilePath)}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter') navigate(toSearch); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') navigate(profilePath); }}
             style={{ cursor: 'pointer' }}
         >
-            <Link to={toSearch} className="suggestion-avatar" style={{ textDecoration: 'none', display: 'block' }}>
+            <Link to={profilePath} className="suggestion-avatar" style={{ textDecoration: 'none', display: 'block' }}>
                 <UserAvatar user={user} size={40} className="avatar-circle" />
             </Link>
             <div className="suggestion-info">
-                <Link to={toSearch} className="suggestion-name" style={{ textDecoration: 'none', color: 'var(--text-main)', display: 'block' }}>
+                <Link to={profilePath} className="suggestion-name" style={{ textDecoration: 'none', color: 'var(--text-main)', display: 'block' }}>
                     {user.full_name || user.username}
                 </Link>
                 <div className="suggestion-handle">@{user.username}</div>
