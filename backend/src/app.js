@@ -40,7 +40,8 @@ const allowedOrigins = [
     'http://localhost:4173',
     'http://localhost:3000',
     'http://localhost',
-    'https://emsee.smp4.xyz'
+    'https://emsee.smp4.xyz',
+    'http://192.168.3.86:5173' // Specific LAN IP from error
 ];
 
 if (process.env.CLIENT_URL) {

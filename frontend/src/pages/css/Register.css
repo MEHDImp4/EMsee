@@ -336,3 +336,68 @@ select.form-input option {
 .password-toggle-btn:hover {
   color: var(--text-main);
 }
+
+/* Composite Input (Email + Domain) */
+.composite-input-container {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  transition: all 0.2s;
+  overflow: hidden;
+  position: relative;
+}
+
+.composite-input-container:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.composite-input-container[data-error="true"] {
+  border-color: var(--danger);
+}
+
+.composite-input-container[data-valid="true"] {
+  border-color: #10B981;
+}
+
+.composite-input-field {
+  flex: 1;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding-right: 0.5rem !important; /* Override standard input padding */
+  height: auto; /* Let flex handle height */
+  min-height: 46px; /* Match standard input height usually */
+}
+
+.composite-input-field:focus {
+  outline: none;
+}
+
+.composite-input-suffix {
+  display: flex;
+  align-items: center;
+  background: var(--bg-soft, #f3f4f6); /* Fallback or variable */
+  padding: 0 1.25rem 0 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  border-left: 1px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Adjust dark mode background if needed */
+@media (prefers-color-scheme: dark) {
+  .composite-input-suffix {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Ensure status icon inside suffix is visible */
+.composite-input-suffix .input-status-icon {
+  position: static; /* Reset absolute positioning */
+  transform: none;
+  margin-left: 0.5rem;
+}

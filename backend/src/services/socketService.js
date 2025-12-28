@@ -12,7 +12,8 @@ const initializeSocket = (server) => {
                     'http://localhost:4173',
                     'http://localhost:3000',
                     'http://localhost',
-                    'https://emsee.smp4.xyz'
+                    'https://emsee.smp4.xyz',
+                    'http://192.168.3.86:5173' // Specific LAN IP from error
                 ];
                 // Allow requests with no origin (like mobile apps or curl requests)
                 if (!origin) return callback(null, true);

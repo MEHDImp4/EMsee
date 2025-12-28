@@ -74,33 +74,27 @@ const useRegisterForm = ({ loginAction, navigate, t }) => {
         if (!value) return;
         if (field === 'username' && validation.isUsernameValid !== false) {
             AuthService.checkAvailability({ username: value })
-                .then((response) => { // response is the axios response object (which has { data }) or similar
-                    // Wait, AuthService.checkAvailability calls api.post which assumes standard axios/fetch wrapper.
-                    // Previous code used fetch: await response.json().
-                    // api.js usually returns response.data directly or response.
-                    // Let's assume standard behavior: api methods throw on error?
-                    // No, existing checkAvailability code used fetch then response.json().
-                    // api.js wrapper should handle this. I will assume Promise resolution means success if api.js handles it well,
-                    // but I should check if api.js throws on 400.
+                .then((response) => {
                     clearAvailabilityError('username');
                 })
                 .catch((error) => {
-                    // api.js usually throws on error status
                     if (error.response?.data) {
                         applyAvailabilityError(error.response.data);
                     }
                 });
         }
-        if (field === 'email' && validation.isEmailValid !== false) {
-            AuthService.checkAvailability({ email: value })
-                .then(() => {
-                    clearAvailabilityError('email');
-                })
-                .catch((error) => {
-                    if (error.response?.data) {
-                        applyAvailabilityError(error.response.data);
-                    }
-                });
+        if (field === 'email') {
+            if (validation.isEmailValid !== false) {
+                AuthService.checkAvailability({ email: value })
+                    .then(() => {
+                        clearAvailabilityError('email');
+                    })
+                    .catch((error) => {
+                        if (error.response?.data) {
+                            applyAvailabilityError(error.response.data);
+                        }
+                    });
+            }
         }
     };
 

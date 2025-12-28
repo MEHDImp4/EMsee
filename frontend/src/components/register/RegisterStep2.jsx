@@ -63,27 +63,37 @@ const RegisterStep2 = (props) => {
 
             <div className="form-group">
                 <label className="form-label" htmlFor="email">
-                    {t('auth.email')} <span className="student-email-hint">({accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'})</span>
+                    {t('auth.email')}
                 </label>
                 <div className="input-wrapper">
-                    <Mail size={20} className="input-icon" aria-hidden="true" />
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setField('email', e.target.value)}
-                        onBlur={() => onBlur('email', email)}
-                        placeholder={accountType === 'student' ? t('auth.student_placeholder') : t('auth.professor_placeholder')}
-                        className="form-input"
-                        style={{
-                            paddingRight: '2.5rem',
-                            borderColor: (showErrors && !email) || isEmailValid === false ? '#EF4444' : isEmailValid === true ? '#10B981' : undefined
-                        }}
-                        aria-invalid={isEmailValid === false ? "true" : "false"}
-                        aria-describedby="email-error"
-                    />
-                    {isEmailValid === true && <CheckCircle size={20} color="#10B981" className="input-status-icon" aria-hidden="true" />}
-                    {isEmailValid === false && <AlertCircle size={20} color="#EF4444" className="input-status-icon" aria-hidden="true" />}
+                    <Mail size={20} className="input-icon" aria-hidden="true" style={{ zIndex: 20 }} />
+                    <div
+                        className="composite-input-container"
+                        data-error={(showErrors && !email) || isEmailValid === false}
+                        data-valid={isEmailValid === true}
+                    >
+                        <input
+                            id="email"
+                            type="text"
+                            value={email.replace(accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma', '')}
+                            onChange={(e) => {
+                                const domain = accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma';
+                                const val = e.target.value.replace(/@.*/, ''); // Prevent user from typing @domain
+                                setField('email', val + domain);
+                            }}
+                            onBlur={() => onBlur('email', email)}
+                            placeholder={accountType === 'student' ? t('auth.student_placeholder').replace('@emsi-edu.ma', '') : t('auth.professor_placeholder').replace('@emsi.ma', '')}
+                            className="form-input composite-input-field"
+                            style={{ paddingLeft: '2.5rem' }} // Space for Mail icon
+                            aria-invalid={isEmailValid === false ? "true" : "false"}
+                            aria-describedby="email-error"
+                        />
+                        <div className="composite-input-suffix">
+                            {accountType === 'student' ? '@emsi-edu.ma' : '@emsi.ma'}
+                            {isEmailValid === true && <CheckCircle size={20} color="#10B981" className="input-status-icon" aria-hidden="true" />}
+                            {isEmailValid === false && <AlertCircle size={20} color="#EF4444" className="input-status-icon" aria-hidden="true" />}
+                        </div>
+                    </div>
                 </div>
                 {showErrors && !email && <p className="error-message" role="alert">{t('auth.field_required')}</p>}
                 {isEmailValid === false && (
