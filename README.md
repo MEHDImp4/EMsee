@@ -1,90 +1,58 @@
 # EMsee
 
-[![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white)](https://react.dev)
-[![Vite](https://img.shields.io/badge/-Vite-646cff?logo=vite&logoColor=white)](https://vitejs.dev)
-[![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white)](https://expressjs.com)
-[![Prisma](https://img.shields.io/badge/-Prisma-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io)
-[![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org)
-[![Docker](https://img.shields.io/badge/-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com)
-[![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?logo=github-actions&logoColor=white)](https://github.com/features/actions)
+EMsee is a full-stack social platform for sharing content and communicating in real time. The repository contains a React client, an Express API, and a PostgreSQL database, with Docker-based deployment configuration.
 
-EMsee est une plateforme sociale moderne permettant le partage de contenu et la communication en temps réel. Cette application full-stack utilise une architecture robuste et conteneurisée, prête pour la production.
+## Technology
 
-## 🚀 Architecture
+- **Frontend:** React, Vite, Nginx
+- **Backend:** Node.js, Express, Prisma
+- **Database:** PostgreSQL
+- **Live communication:** Socket.IO
+- **Deployment:** Docker Compose, GitHub Actions, and GitHub Container Registry
 
-L'application est divisée en services conteneurisés (Docker) :
+## Run the production Compose stack
 
-*   **Frontend** : React + Vite, servi par **Nginx** (image `ghcr.io/mehdimp4/projetjs-frontend`). Nginx gère aussi le reverse-proxy vers l'API (`/api`) et les websockets (`/socket.io`).
-*   **Backend** : Node.js + Express (image `ghcr.io/mehdimp4/projetjs-backend`). Persistance via **Prisma**.
-*   **Base de données** : **PostgreSQL** 15 avec optimisations de performance.
-*   **Mises à jour auto** : **Watchtower** surveille le registre d'images et met à jour les conteneurs automatiquement.
+1. Create a local environment file from the example and replace its placeholder values:
 
-## 🛠️ Installation & Développement
+   ```sh
+   cp .env.production.example .env
+   ```
 
-### Pré-requis
-*   Docker & Docker Compose
-*   Node.js 20+ (pour le dev local hors Docker)
+2. Start the stack:
 
-### Démarrage rapide (Local avec Docker)
-Le moyen le plus simple de lancer l'application est via Docker Compose.
+   ```sh
+   docker compose -f docker-compose.prod.yml up -d
+   ```
 
-1.  Créez un fichier `.env` à la racine (voir `.env.production.example` pour les variables).
-2.  Lancez le stack :
-    ```bash
-    docker compose -f docker-compose.prod.yml up -d
-    ```
-3.  L'application est accessible sur `http://localhost:80`.
+3. Open [http://localhost](http://localhost).
 
-### Développement sans Docker
-1.  **Backend** :
-    ```bash
-    cd backend
-    npm install
-    # Configurer .env avec DATABASE_URL
-    npm run dev
-    ```
-2.  **Frontend** :
-    ```bash
-    cd frontend
-    npm install
-    npm run dev
-    ```
+The production Compose file uses the published frontend and backend container images. Review the environment example and deployment configuration before exposing a deployment publicly.
 
-## 📦 Déploiement (Production / Unraid)
+## Local development
 
-Le déploiement est automatisé via **GitHub Actions** et conçu pour s'exécuter facilement sur un serveur **Unraid** (ou tout VPS Docker).
+Requirements: Node.js and npm.
 
-### 1. CI/CD Pipeline
-À chaque `push` sur la branche `main` :
-1.  GitHub Actions construit les images Docker (Backend & Frontend).
-2.  Les images sont poussées sur le **GitHub Container Registry (GHCR)**.
+1. Install the root and service dependencies:
 
-### 2. Déploiement sur Unraid
-Un script automatisé est fourni pour déployer le stack sur Unraid.
+   ```sh
+   npm run install:all
+   ```
 
-1.  Sur votre serveur, créez un dossier (ex: `/mnt/user/appdata/emsee`).
-2.  Copiez-y :
-    *   `docker-compose.prod.yml`
-    *   Le dossier `scripts/`
-    *   Un fichier `.env` (basé sur `.env.production.example`)
-3.  Exécutez le script :
-    ```bash
-    chmod +x scripts/deploy_unraid.sh
-    ./scripts/deploy_unraid.sh
-    ```
-    Cela va pull les images, configurer les permissions et lancer les conteneurs.
+2. Configure the backend environment and start both services:
 
-## 🔑 Variables d'Environnement
+   ```sh
+   npm run dev
+   ```
 
-*   **Backend** : Gérées dans le fichier `.env` racine (secrets, DB creds, JWT).
-*   **Frontend** : Gérées dans `frontend/.env.production` pour les variables publiques (`VITE_API_URL`).
+For a local SQLite development database, use `npm run dev:local`. The root development scripts start the backend and frontend together.
 
-## 🛡️ Sécurité
-*   **Helmet** & **Rate Limiting** sur le backend.
-*   **Nginx** configuré comme reverse proxy sécurisé.
-*   Authentification **JWT**.
-*   Scan de vulnérabilités via GitHub Actions (SonarCloud/CodeQL recommandés).
+## Repository layout
 
----
-*Projet réalisé par Mehdi MP4 et l'équipe.*
+- `frontend/` — React application and Vite configuration
+- `backend/` — Express API, Prisma schema, and database scripts
+- `docker-compose.prod.yml` — production-oriented container setup
+- `scripts/` — deployment helpers
+
+## Security
+
+The backend uses JWT authentication, Helmet, and rate limiting. Keep credentials in local environment files, use unique secrets, and terminate public traffic with HTTPS.
